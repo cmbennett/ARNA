@@ -4,9 +4,19 @@
     android:layout_height="fill_parent" 
       android:orientation="vertical" >
 
+    
+     <FrameLayout
+    android:id="@+id/camera_preview"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_weight="1"
+    />
+     
+     
+    
       <Button
           android:id="@+id/button_capture"
-              android:text="Capture" 
+              android:text="Capture222" 
      
           android:layout_height="wrap_content"
           android:layout_width="fill_parent"
