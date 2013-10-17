@@ -7,7 +7,12 @@ public class Waypoint {
 	private double distanceFromUser; 
 	
 	public Waypoint() {
-		loc = new Location(-1,-1,-1);
+		loc = new Location(-1.0,-1.0,-1.0);
+		description = "No Description.";
+	}
+	
+	public Waypoint(double x, double y, double z) {
+		loc = new Location(x, y, z);
 		description = "No Description.";
 	}
 	
@@ -27,15 +32,11 @@ public class Waypoint {
 		loc = new Location(x, y, z);
 	}
 	
-	public void setDistance(double d){
+	public void setDistance(double d) {
 		distanceFromUser = d; 
 	}
 	
-	public double getDistance(){
+	public double getDistance() {
 		return distanceFromUser; 
-	}
-	
-	public void updateDistanceFromUser(User u){
-		//TODO: Haversine formula
 	}
 }

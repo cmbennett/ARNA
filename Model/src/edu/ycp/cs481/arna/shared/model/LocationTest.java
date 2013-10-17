@@ -8,38 +8,38 @@ public class LocationTest extends TestCase {
 	
 	@Override
 	protected void setUp() throws Exception {
-		test = new Location(1,1,1);
+		test = new Location(1.0,1.0,1.0);
 	}
 	
-	public void testGetX() throws Exception {
-			assertEquals(1, test.getX());
+	public void testGetLatitude() throws Exception {
+			assertEquals(1.0, test.getLatitude());
 	}
 	
-	public void testSetX() throws Exception {
-		test.setX(3);
-		assertEquals(3, test.getX());
+	public void testSetLatitude() throws Exception {
+		test.setLatitude(3.0);
+		assertEquals(3.0, test.getLatitude());
 	}
 	
-	public void testGetY() throws Exception {
-		assertEquals(1, test.getY());
+	public void testGetLongitude() throws Exception {
+		assertEquals(1.0, test.getLongitude());
 	}
 	
-	public void testSetY() throws Exception {
-		test.setY(6);
-		assertEquals(6, test.getY());
+	public void testSetLongitude() throws Exception {
+		test.setLongitude(6.0);
+		assertEquals(6.0, test.getLongitude());
 	}
 	
-	public void testGetZ() throws Exception {
-		assertEquals(1, test.getZ());
+	public void testGetElevation() throws Exception {
+		assertEquals(1.0, test.getElevation());
 	}
 	
-	public void testSetZ() throws Exception {
-		test.setZ(9);
-		assertEquals(9, test.getZ());
+	public void testSetElevation() throws Exception {
+		test.setElevation(9.0);
+		assertEquals(9.0, test.getElevation());
 	}
 	
 	public void testCompareTo() throws Exception {
-		assertEquals(-1, test.compareTo(new Location(0,0,0)));
-		assertEquals(1, test.compareTo(new Location(1,1,1)));
+		assertEquals(-1, test.compareTo(new Location(0.0,0.0,0.0)));
+		assertEquals(1, test.compareTo(new Location(1.0,1.0,1.0)));
 	}
 }

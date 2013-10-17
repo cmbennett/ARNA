@@ -30,7 +30,7 @@ public class Mode {
 		this.user = user;
 	}
 	
-	public void addWaypoint(Waypoint w){
+	public void addWaypoint(Waypoint w) {
 		wpList.add(w); 
 	}
 }

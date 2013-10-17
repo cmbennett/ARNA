@@ -2,41 +2,41 @@ package edu.ycp.cs481.arna.shared.model;
 
 public class Location {
 	
-	private float x, y, z;
+	private double latitude, longitude, elevation;
 	
-	public Location(float X, float Y, float Z) {
-		x = X;
-		y = Y;
-		z = Z;
+	public Location(double x, double y, double z) {
+		latitude = x;
+		longitude = y;
+		elevation = z;
 	}
 
-	public float getX() {
-		return x;
+	public double getLatitude() {
+		return latitude;
 	}
 
-	public void setX(float x) {
-		this.x = x;
+	public void setLatitude(double x) {
+		latitude = x;
 	}
 	
-	public float getY() {
-		return y;
+	public double getLongitude() {
+		return longitude;
 	}
 
-	public void setY(float y) {
-		this.y = y;
+	public void setLongitude(double y) {
+		longitude = y;
 	}
 
-	public float getZ() {
-		return z;
+	public double getElevation() {
+		return elevation;
 	}
 
-	public void setZ(float z) {
-		this.z = z;
+	public void setElevation(double z) {
+		elevation = z;
 	}
 	
 	// Compares this Location object to another given Location object.
 	public int compareTo(Location loc) {
-		if(this.x == loc.getX() && this.y == loc.getY() && this.z == loc.getZ()) {
+		if(latitude == loc.getLatitude() && longitude == loc.getLongitude() && elevation == loc.getElevation()) {
 			return 1;
 		} else {
 			return -1;
