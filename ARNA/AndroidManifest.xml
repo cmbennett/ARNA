@@ -22,6 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="edu.ycp.cs481.arna.client.ui.Camera2"
+            android:label="@string/title_activity_camera2" >
+        </activity>
     </application>
 
 </manifest>

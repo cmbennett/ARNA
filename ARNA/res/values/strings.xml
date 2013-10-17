@@ -6,5 +6,6 @@
     <string name="hello_world">Camera App</string>
     <string name="button_camera">Camera</string>
     <string name="image_cd_camera">This is a genreic content Description</string>
+    <string name="title_activity_camera2">Camera2</string>
 
 </resources>

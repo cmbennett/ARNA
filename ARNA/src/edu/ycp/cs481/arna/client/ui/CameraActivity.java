@@ -29,7 +29,7 @@ public class CameraActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_camera);
 		
-		Button cameraButton = (Button)findViewById(R.id.button_camera);
+		Button cameraButton = (Button)findViewById(R.id.button_capture);
 		cameraButton.setOnClickListener(cameraListener);
 				
 	}
@@ -58,7 +58,7 @@ public class CameraActivity extends Activity {
 			Uri selectedImage = imageUri;
 			getContentResolver().notifyChange(selectedImage, null);
 			
-			ImageView imageView = (ImageView)findViewById(R.id.image_camera);
+			ImageView imageView = (ImageView)findViewById(R.id.camera_preview);
 			ContentResolver cr = getContentResolver();
 			Bitmap bitmap;
 			
