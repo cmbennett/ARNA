@@ -3,6 +3,8 @@
 
     <string name="app_name">ARNA</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world">Camera App</string>
+    <string name="button_camera">Camera</string>
+    <string name="image_cd_camera">This is a genreic content Description</string>
 
 </resources>
