@@ -3,8 +3,11 @@ package edu.ycp.cs481.arna.client.ui;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
 import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -34,27 +37,28 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback{
        surfaceHolder = surfaceView.getHolder();
        surfaceHolder.addCallback(this);
        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+       this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); 
       
        buttonStartCameraPreview.setOnClickListener(new Button.OnClickListener(){
 
-   @Override
-   public void onClick(View v) {
-    // TODO Auto-generated method stub
-    if(!previewing){
-     camera = Camera.open();
-     if (camera != null){
-      try {
-       camera.setPreviewDisplay(surfaceHolder);
-       camera.startPreview();
-       previewing = true;
-      } catch (IOException e) {
-       // TODO Auto-generated catch block
-       e.printStackTrace();
-      }
-     }
-    }
-   }});
+    	   public void onClick(View v) {
+    		    // TODO Auto-generated method stub
+    		    if(!previewing){
+    		     camera = Camera.open();
+    		     if (camera != null){
+    		      try {
+    		       camera.setPreviewDisplay(surfaceHolder);
+    		       camera.startPreview();
+    		       previewing = true;
+    		      } catch (IOException e) {
+    		       // TODO Auto-generated catch block
+    		       e.printStackTrace();
+    		      }
+    		     }
+    		    }
+    		   }});
       
+     // this stops the view
        buttonStopCameraPreview.setOnClickListener(new Button.OnClickListener(){
 
    @Override
@@ -70,94 +74,36 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback{
    }});
       
    }
-  
+
   
 
  @Override
  public void surfaceChanged(SurfaceHolder holder, int format, int width,
    int height) {
-  // TODO Auto-generated method stub
-  
+	/* // TODO Auto-generated method stub
+     Parameters params = camera.getParameters(); 
+     camera.setParameters(params);
+     this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); 
+     camera.startPreview();
+*/
  }
 
  @Override
  public void surfaceCreated(SurfaceHolder holder) {
   // TODO Auto-generated method stub
-  
+	/*  camera = Camera.open();
+      try{
+          camera.setPreviewDisplay(surfaceHolder);
+      }
+      catch(Exception e){
+          e.printStackTrace();
+      }*/
  }
 
  @Override
  public void surfaceDestroyed(SurfaceHolder holder) {
   // TODO Auto-generated method stub
-  
+	 // camera.stopPreview();
+    //  camera.release();
  }
 }
-//
-//public class CameraActivity extends Activity {
-//	
-//	private static String logtag = "camera";
-//	private static int TAKE_PICTURE = 1;
-//	private Uri imageUri;
-//	
-//
-//	@Override
-//	protected void onCreate(Bundle savedInstanceState) {
-//		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_camera);
-//		
-//		Button cameraButton = (Button)findViewById(R.id.button_capture);
-//		cameraButton.setOnClickListener(cameraListener);
-//				
-//	}
-//
-//	
-//	private OnClickListener cameraListener = new OnClickListener() {
-//		public void onClick(View v){
-//			takePhoto(v);
-//		}
-//	};
-//	
-//	private void takePhoto(View v)
-//	{
-//	/*	Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-//		File photo = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "picture.jpg");
-//		imageUri = Uri.fromFile(photo);
-//		intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-//		startActivityForResult(intent,TAKE_PICTURE);
-//	
-//	}
-//	@Override
-//	protected void onActivityResult(int requestCode, int resultCode, Intent intent)
-//	{
-//		super.onActivityResult(requestCode, resultCode, intent);
-//		if (resultCode == Activity.RESULT_OK){
-//			Uri selectedImage = imageUri;
-//			getContentResolver().notifyChange(selectedImage, null);
-//			
-//			ImageView imageView = (ImageView)findViewById(R.id.image_camera);
-//			ContentResolver cr = getContentResolver();
-//			Bitmap bitmap;
-//			
-//			try {
-//				bitmap = MediaStore.Images.Media.getBitmap(cr, selectedImage);
-//				imageView.setImageBitmap(bitmap);
-//				Toast.makeText(CameraActivity.this, selectedImage.toString(), Toast.LENGTH_LONG).show();
-//				
-//				
-//			} catch(Exception e){
-//				Log.e(logtag, e.toString());
-//			}
-//			
-//		}
-//		
-//	}
-//	
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.camera, menu);
-//		return true;
-//	}
-//
-//}/*
-//
