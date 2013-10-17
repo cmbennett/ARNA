@@ -4,6 +4,7 @@ public class Waypoint {
 	
 	private Location loc;
 	private String description;
+	private double distanceFromUser; 
 	
 	public Waypoint() {
 		loc = new Location(-1,-1,-1);
@@ -24,5 +25,17 @@ public class Waypoint {
 	
 	public void setLocation(int x, int y, int z) {
 		loc = new Location(x, y, z);
+	}
+	
+	public void setDistance(double d){
+		distanceFromUser = d; 
+	}
+	
+	public double getDistance(){
+		return distanceFromUser; 
+	}
+	
+	public void updateDistanceFromUser(User u){
+		//TODO: Haversine formula
 	}
 }

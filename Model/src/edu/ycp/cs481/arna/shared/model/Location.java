@@ -2,35 +2,35 @@ package edu.ycp.cs481.arna.shared.model;
 
 public class Location {
 	
-	private int x, y, z;
+	private float x, y, z;
 	
-	public Location(int X, int Y, int Z) {
+	public Location(float X, float Y, float Z) {
 		x = X;
 		y = Y;
 		z = Z;
 	}
 
-	public int getX() {
+	public float getX() {
 		return x;
 	}
 
-	public void setX(int x) {
+	public void setX(float x) {
 		this.x = x;
 	}
 	
-	public int getY() {
+	public float getY() {
 		return y;
 	}
 
-	public void setY(int y) {
+	public void setY(float y) {
 		this.y = y;
 	}
 
-	public int getZ() {
+	public float getZ() {
 		return z;
 	}
 
-	public void setZ(int z) {
+	public void setZ(float z) {
 		this.z = z;
 	}
 	
