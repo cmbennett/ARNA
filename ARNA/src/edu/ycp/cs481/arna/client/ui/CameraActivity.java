@@ -58,7 +58,7 @@ public class CameraActivity extends Activity {
 			Uri selectedImage = imageUri;
 			getContentResolver().notifyChange(selectedImage, null);
 			
-			ImageView imageView = (ImageView)findViewById(R.id.camera_preview);
+			ImageView imageView = (ImageView)findViewById(R.id.image_camera);
 			ContentResolver cr = getContentResolver();
 			Bitmap bitmap;
 			
