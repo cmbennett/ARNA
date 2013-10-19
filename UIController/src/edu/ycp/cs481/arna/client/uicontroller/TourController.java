@@ -1,7 +1,5 @@
 package edu.ycp.cs481.arna.client.uicontroller;
 
-import edu.ycp.cs481.arna.shared.model.Location;
-import edu.ycp.cs481.arna.shared.model.Orientation;
 import edu.ycp.cs481.arna.shared.model.TourMode;
 import edu.ycp.cs481.arna.shared.model.User;
 
@@ -24,8 +22,8 @@ public class TourController {
 		
 	}
 	
-	public void updateOrientation(float az, float pitch, float roll){
+	public void updateOrientation(double azimuth, double pitch, double roll){
 		User u = tour.getUser();
-		u.setOrient(az, pitch, roll); 
+		u.setOrient(azimuth, pitch, roll); 
 	}
 }

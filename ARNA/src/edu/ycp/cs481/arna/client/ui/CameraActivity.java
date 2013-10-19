@@ -1,6 +1,7 @@
 package edu.ycp.cs481.arna.client.ui;
 
 
+import edu.ycp.cs481.arna.client.uicontroller.TourController;
 import edu.ycp.cs481.arna.shared.model.TourMode;
 import android.location.LocationManager;
 import android.location.LocationListener; 
@@ -15,7 +16,7 @@ import android.hardware.SensorEvent;
 import android.util.Log; 
 import android.view.SurfaceHolder; 
 import android.view.SurfaceView; 
-import android.widget.TextView;
+
 
 
 public class CameraActivity extends Activity {
@@ -45,13 +46,15 @@ public class CameraActivity extends Activity {
 	int magnetometerSensor;
 	
 	TourMode tour; 
-	//TourController cont; 
+	TourController cont; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_camera);
-
+		
+		cont.setModel(tour); 
+		
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, locationListener); 
 
@@ -75,7 +78,8 @@ public class CameraActivity extends Activity {
 			latitude = location.getLatitude(); 
 			longitude = location.getLongitude(); 
 			altitude = location.getAltitude(); 
-
+			
+			cont.updateLocation(latitude, longitude, altitude); 
 			Log.d(TAG, "Latitude: " + String.valueOf(latitude));
 			Log.d(TAG, "Longitude: " + String.valueOf(longitude));
 			Log.d(TAG, "Altitude: " + String.valueOf(altitude));
@@ -115,12 +119,7 @@ public class CameraActivity extends Activity {
 					double pitch = (double)orientation[1];
 					double roll = (double)orientation[2]; 
 					
-					tour.getUser().getOrient().setAzimuth(Math.toDegrees(azimuth)); 
-					tour.getUser().getOrient().setPitch(Math.toDegrees(pitch)); 
-					tour.getUser().getOrient().setRoll(Math.toDegrees(roll)); 
-					
-					//AzimuthValue.setText(String.valueOf(tour.getUser().getOrient().getAzimuth()));
-				
+					cont.updateOrientation(azimuth, pitch, roll); 
 				}
 			}
 		}
