@@ -13,6 +13,11 @@ public class TourMode extends Mode {
 		onScreen = new ArrayList<Waypoint>(); 
 	}
 	
+	public TourMode() {
+		super(new User(), new ArrayList<Waypoint>()); 
+		onScreen = new ArrayList<Waypoint>(); 
+	}
+
 	public List<Waypoint> getOnScreen() {
 		return onScreen;
 	}

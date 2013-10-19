@@ -53,7 +53,7 @@ public class CameraActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_camera);
 		
-		/*locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
+		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, locationListener); 
 
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); 
@@ -62,25 +62,25 @@ public class CameraActivity extends Activity {
 		accelerometerSensor = Sensor.TYPE_ACCELEROMETER; 
 		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_NORMAL); 
 		sensorManager.registerListener(sensorEventListener,  sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_NORMAL); 
-		*/
+		
 		
 		inPreview = false; 
 
 		cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
 		previewHolder = cameraPreview.getHolder(); 
 		previewHolder.addCallback(surfaceCallback); 
-		previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS); 
+	
 		
-		//cont = new TourController(tour); 
+		//cont = new TourController(new TourMode()); 
 	}
 
-	/*LocationListener locationListener = new LocationListener() {
+	LocationListener locationListener = new LocationListener() {
 		public void onLocationChanged(Location location){
 			latitude = location.getLatitude(); 
 			longitude = location.getLongitude(); 
 			altitude = location.getAltitude(); 
 			
-			cont.updateLocation(latitude, longitude, altitude); 
+			//cont.updateLocation(latitude, longitude, altitude); 
 			Log.d(TAG, "Latitude: " + String.valueOf(latitude));
 			Log.d(TAG, "Longitude: " + String.valueOf(longitude));
 			Log.d(TAG, "Altitude: " + String.valueOf(altitude));
@@ -96,9 +96,9 @@ public class CameraActivity extends Activity {
 		public void onStatusChanged(String arg0, int arg1, Bundle arg2){
 			//TODO Auto-generated method sub
 		}
-	}; */
+	}; 
 
-	/*final SensorEventListener sensorEventListener = new SensorEventListener(){
+	final SensorEventListener sensorEventListener = new SensorEventListener(){
 		float[] gravity; 
 		float[] geomagnetic; 
 		public void onSensorChanged(SensorEvent sensorEvent){
@@ -116,11 +116,15 @@ public class CameraActivity extends Activity {
 					float orientation[] = new float[3]; 
 					SensorManager.getOrientation(R, orientation); 
 					
-					double azimuth = (double)orientation[0];
-					double pitch = (double)orientation[1];
-					double roll = (double)orientation[2]; 
+					double azimuth = Math.toDegrees((double)orientation[0]);
+					double pitch = Math.toDegrees((double)orientation[1]);
+					double roll = Math.toDegrees((double)orientation[2]); 
 					
-					cont.updateOrientation(azimuth, pitch, roll); 
+					Log.d(TAG, "Azimuth: " + String.valueOf(azimuth));
+					Log.d(TAG, "Pitch: " + String.valueOf(pitch));
+					Log.d(TAG, "Roll: " + String.valueOf(roll));
+					
+					//cont.updateOrientation(azimuth, pitch, roll); 
 				}
 			}
 		}
@@ -128,7 +132,7 @@ public class CameraActivity extends Activity {
 		public void onAccuracyChanged(Sensor sensor, int accuracy){
 			//Not used
 		}
-	}; */
+	}; 
 
 	@Override
 	public void onResume(){
@@ -153,6 +157,8 @@ public class CameraActivity extends Activity {
 		camera.release();
 		camera=null;
 		inPreview=false;
+		
+		super.onPause(); 
 	}
 
 	private Camera.Size getBestPreviewSize(int width, int height, Camera.Parameters parameters) {
