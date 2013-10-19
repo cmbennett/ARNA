@@ -1,4 +1,4 @@
-package edu.ycp.cs481.arna.client.controller;
+package edu.ycp.cs481.arna.client.uicontroller;
 
 import edu.ycp.cs481.arna.shared.model.Location;
 import edu.ycp.cs481.arna.shared.model.Orientation;
