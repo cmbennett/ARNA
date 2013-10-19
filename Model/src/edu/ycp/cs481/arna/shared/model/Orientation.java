@@ -1,37 +1,37 @@
 package edu.ycp.cs481.arna.shared.model;
 
 public class Orientation {
-	private float azimuth; 
-	private float pitch;
-	private float roll; 
+	private double azimuth; 
+	private double pitch;
+	private double roll; 
 	
-	public Orientation(float az, float pitch, float roll){
+	public Orientation(double az, double pitch, double roll){
 		this.azimuth = az; 
 		this.pitch = pitch; 
 		this.roll = roll;
 	}
 
-	public float getAzimuth() {
+	public double getAzimuth() {
 		return azimuth;
 	}
 
-	public void setAzimuth(float azimuth) {
-		this.azimuth = azimuth;
+	public void setAzimuth(double az) {
+		this.azimuth = az;
 	}
 
-	public float getPitch() {
+	public double getPitch() {
 		return pitch;
 	}
 
-	public void setPitch(float pitch) {
+	public void setPitch(double pitch) {
 		this.pitch = pitch;
 	}
 
-	public float getRoll() {
+	public double getRoll() {
 		return roll;
 	}
 
-	public void setRoll(float roll) {
+	public void setRoll(double roll) {
 		this.roll = roll;
 	}
 	

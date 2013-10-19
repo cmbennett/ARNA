@@ -9,24 +9,17 @@ public class User {
 		this.orient = o; 
 	}
 	
-	public void updateLoc(float x, float y, float z){
-		loc.setLatitude(x); 
-		loc.setLongitude(y); 
-		loc.setElevation(z);
+	
+	public void setOrient(double az, double pitch, double roll){
+		this.orient.setAzimuth(az); 
+		this.orient.setPitch(pitch);
+		this.orient.setRoll(roll); 
 	}
 	
-	public void updateOrient(float az, float p, float r){
-		orient.setAzimuth(az); 
-		orient.setPitch(p); 
-		orient.setRoll(r); 
-	}
-	
-	public void setOrient(Orientation o){
-		this.orient = o; 
-	}
-	
-	public void setLocation(Location l){
-		this.loc = l; 
+	public void setLocation(double lat, double lon, double elev){
+		this.loc.setLatitude(lat); 
+		this.loc.setLongitude(lon); 
+		this.loc.setElevation(elev); 
 	}
 	
 	public Location getLocation() {

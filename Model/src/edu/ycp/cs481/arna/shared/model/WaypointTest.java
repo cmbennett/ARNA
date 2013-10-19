@@ -8,7 +8,7 @@ public class WaypointTest extends TestCase {
 	
 	@Override
 	protected void setUp() throws Exception {
-		test = new Waypoint();
+		test = new Waypoint(-1.0,-1.0,-1.0);	
 	}
 	
 	public void testGetDescription() {
@@ -21,12 +21,13 @@ public class WaypointTest extends TestCase {
 	}
 	
 	public void testGetLocation() {
-		assertEquals(new Location(-1,-1,-1), test.getLocation());
+	
+		assertEquals(new Location(-1.0,-1.0,-1.0), test.getLocation());
 	}
 	
 	public void testSetLocation() {
-		test.setLocation(3,4,5);
-		assertEquals(1, test.getLocation().compareTo(new Location(3,4,5)));
+		test.setLocation(3.0,4.0,5.0);
+		assertEquals(1, test.getLocation().compareTo(new Location(3.0,4.0,5.0)));
 	}
 	
 }

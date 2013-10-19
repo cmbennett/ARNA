@@ -4,12 +4,6 @@ public class Waypoint {
 	
 	private Location loc;
 	private String description;
-	private double distanceFromUser; 
-	
-	public Waypoint() {
-		loc = new Location(-1.0,-1.0,-1.0);
-		description = "No Description.";
-	}
 	
 	public Waypoint(double x, double y, double z) {
 		loc = new Location(x, y, z);
@@ -28,15 +22,8 @@ public class Waypoint {
 		return loc;
 	}
 	
-	public void setLocation(int x, int y, int z) {
+	public void setLocation(double x, double y, double z) {
 		loc = new Location(x, y, z);
 	}
 	
-	public void setDistance(double d) {
-		distanceFromUser = d; 
-	}
-	
-	public double getDistance() {
-		return distanceFromUser; 
-	}
 }

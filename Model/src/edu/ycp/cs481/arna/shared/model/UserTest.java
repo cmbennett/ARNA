@@ -34,6 +34,6 @@ public class UserTest extends TestCase {
 	}*/
 	
 	public void testGetDistanceTo() {
-		assertEquals(0.4, test_user.getDistanceTo(test_wp));
+		assertEquals(0.4, test_user.getDistanceTo(test_wp), .05);
 	}
 }
