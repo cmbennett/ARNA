@@ -10,6 +10,12 @@ public class User {
 	}
 	
 	
+	public User() {
+		loc = new Location(); 
+		orient = new Orientation(); 
+	}
+
+
 	public void setOrient(double az, double pitch, double roll){
 		this.orient.setAzimuth(az); 
 		this.orient.setPitch(pitch);

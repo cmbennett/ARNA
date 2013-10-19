@@ -53,9 +53,7 @@ public class CameraActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_camera);
 		
-		cont.setModel(tour); 
-		
-		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
+		/*locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, locationListener); 
 
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); 
@@ -64,6 +62,7 @@ public class CameraActivity extends Activity {
 		accelerometerSensor = Sensor.TYPE_ACCELEROMETER; 
 		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_NORMAL); 
 		sensorManager.registerListener(sensorEventListener,  sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_NORMAL); 
+		*/
 		
 		inPreview = false; 
 
@@ -71,9 +70,11 @@ public class CameraActivity extends Activity {
 		previewHolder = cameraPreview.getHolder(); 
 		previewHolder.addCallback(surfaceCallback); 
 		previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS); 
+		
+		//cont = new TourController(tour); 
 	}
 
-	LocationListener locationListener = new LocationListener() {
+	/*LocationListener locationListener = new LocationListener() {
 		public void onLocationChanged(Location location){
 			latitude = location.getLatitude(); 
 			longitude = location.getLongitude(); 
@@ -95,9 +96,9 @@ public class CameraActivity extends Activity {
 		public void onStatusChanged(String arg0, int arg1, Bundle arg2){
 			//TODO Auto-generated method sub
 		}
-	}; 
+	}; */
 
-	final SensorEventListener sensorEventListener = new SensorEventListener(){
+	/*final SensorEventListener sensorEventListener = new SensorEventListener(){
 		float[] gravity; 
 		float[] geomagnetic; 
 		public void onSensorChanged(SensorEvent sensorEvent){
@@ -127,16 +128,16 @@ public class CameraActivity extends Activity {
 		public void onAccuracyChanged(Sensor sensor, int accuracy){
 			//Not used
 		}
-	}; 
+	}; */
 
 	@Override
 	public void onResume(){
 		super.onResume(); 
 
 
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, locationListener);
-		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_NORMAL);
-		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_NORMAL);
+		//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, locationListener);
+		//sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_NORMAL);
+		//sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_NORMAL);
 		camera = Camera.open(); 
 
 	}
@@ -147,8 +148,8 @@ public class CameraActivity extends Activity {
 			camera.stopPreview();
 		}
 
-		locationManager.removeUpdates(locationListener);
-		sensorManager.unregisterListener(sensorEventListener);
+		//locationManager.removeUpdates(locationListener);
+		//sensorManager.unregisterListener(sensorEventListener);
 		camera.release();
 		camera=null;
 		inPreview=false;

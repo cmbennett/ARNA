@@ -10,6 +10,12 @@ public class Location {
 		elevation = z;
 	}
 
+	public Location() {
+		latitude = 0; 
+		longitude = 0; 
+		elevation = 0; 
+	}
+
 	public double getLatitude() {
 		return latitude;
 	}

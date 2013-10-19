@@ -7,8 +7,8 @@ public class TourController {
 
 	TourMode tour; 
 	
-	public TourController(){
-		
+	public TourController(TourMode t){
+		this.tour = t; 
 	}
 	
 	public void setModel(TourMode t){

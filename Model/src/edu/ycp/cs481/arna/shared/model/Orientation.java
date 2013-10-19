@@ -11,6 +11,12 @@ public class Orientation {
 		this.roll = roll;
 	}
 
+	public Orientation() {
+		azimuth = 0; 
+		pitch = 0; 
+		roll = 0; 
+	}
+
 	public double getAzimuth() {
 		return azimuth;
 	}
