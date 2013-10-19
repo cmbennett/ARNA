@@ -7,8 +7,6 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
-    
-    
 
     <application
         android:allowBackup="true"
@@ -29,5 +27,5 @@
             android:label="@string/title_activity_camera2" >
         </activity>
     </application>
-<uses-permission android:name="android.permission.CAMERA"></uses-permission>
+
 </manifest>
