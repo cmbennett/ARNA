@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 public class LocationTest extends TestCase {
 
 	private Location test;
-	
+	//aa
 	@Override
 	protected void setUp() throws Exception {
 		test = new Location(1,1,1);
