@@ -8,11 +8,12 @@ public class WaypointTest extends TestCase {
 	
 	@Override
 	protected void setUp() throws Exception {
-		test = new Waypoint(-1.0,-1.0,-1.0);	
+		//GPS coordinates of Kinsley Engineering Center
+		test = new Waypoint(39.949054, -76.735405, 0.0);	
 	}
 	
 	public void testGetDescription() {
-		assertEquals("No description.", test.getDescription());
+		assertEquals("No Description.", test.getDescription());
 	}
 	
 	public void testSetDescription() {
@@ -21,8 +22,10 @@ public class WaypointTest extends TestCase {
 	}
 	
 	public void testGetLocation() {
-	
-		assertEquals(new Location(-1.0,-1.0,-1.0), test.getLocation());
+		
+		assertEquals(39.949054, test.getLocation().getLatitude());
+		assertEquals(-76.735405, test.getLocation().getLongitude());
+		assertEquals(0.0, test.getLocation().getElevation());
 	}
 	
 	public void testSetLocation() {

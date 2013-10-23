@@ -11,10 +11,17 @@ public class TourController {
 		this.tour = t; 
 	}
 	
+	public TourController() {
+		tour = new TourMode(); 
+	}
+
 	public void setModel(TourMode t){
 		this.tour = t; 
 	}
 	
+	public TourMode getModel(){
+		return tour; 
+	}
 	
 	public void updateLocation(double lat, double lon, double elev){
 		User u = tour.getUser();

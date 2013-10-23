@@ -29,20 +29,9 @@ public class CameraActivity extends Activity {
 	SensorManager sensorManager;
 	Sensor accelerometer; 
 	
-
-	float azimuth; 
-	float pitchAngle; 
-	float rollAngle; 
-
 	int accelerometerSensor; 
-	float xAxis; 
-	float yAxis; 
-	float zAxis; 
-
+	
 	LocationManager locationManager; 
-	double latitude; 
-	double longitude; 
-	double altitude;
 	int magnetometerSensor;
 	
 	TourMode tour; 
@@ -54,7 +43,7 @@ public class CameraActivity extends Activity {
 		setContentView(R.layout.activity_camera);
 		
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, locationListener); 
+		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 2, locationListener); 
 
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); 
 		
@@ -70,17 +59,17 @@ public class CameraActivity extends Activity {
 		previewHolder = cameraPreview.getHolder(); 
 		previewHolder.addCallback(surfaceCallback); 
 	
-		
-		//cont = new TourController(new TourMode()); 
+		tour = new TourMode(); 
+		cont = new TourController(tour); 
 	}
 
 	LocationListener locationListener = new LocationListener() {
 		public void onLocationChanged(Location location){
-			latitude = location.getLatitude(); 
-			longitude = location.getLongitude(); 
-			altitude = location.getAltitude(); 
+			double latitude = location.getLatitude(); 
+			double longitude = location.getLongitude(); 
+			double altitude = location.getAltitude(); 
 			
-			//cont.updateLocation(latitude, longitude, altitude); 
+			cont.updateLocation(latitude, longitude, altitude); 
 			Log.d(TAG, "Latitude: " + String.valueOf(latitude));
 			Log.d(TAG, "Longitude: " + String.valueOf(longitude));
 			Log.d(TAG, "Altitude: " + String.valueOf(altitude));
@@ -124,7 +113,7 @@ public class CameraActivity extends Activity {
 					Log.d(TAG, "Pitch: " + String.valueOf(pitch));
 					Log.d(TAG, "Roll: " + String.valueOf(roll));
 					
-					//cont.updateOrientation(azimuth, pitch, roll); 
+					cont.updateOrientation(azimuth, pitch, roll); 
 				}
 			}
 		}
@@ -139,9 +128,9 @@ public class CameraActivity extends Activity {
 		super.onResume(); 
 
 
-		//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, locationListener);
-		//sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_NORMAL);
-		//sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_NORMAL);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, locationListener);
+		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_NORMAL);
+		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_NORMAL);
 		camera = Camera.open(); 
 
 	}
@@ -152,8 +141,8 @@ public class CameraActivity extends Activity {
 			camera.stopPreview();
 		}
 
-		//locationManager.removeUpdates(locationListener);
-		//sensorManager.unregisterListener(sensorEventListener);
+		locationManager.removeUpdates(locationListener);
+		sensorManager.unregisterListener(sensorEventListener);
 		camera.release();
 		camera=null;
 		inPreview=false;
