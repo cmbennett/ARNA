@@ -85,9 +85,7 @@ public class TourModeView extends Activity {
 			double altitude = location.getAltitude(); 
 			
 			cont.updateLocation(latitude, longitude, altitude); 
-		/*	Log.d(TAG, "Latitude: " + String.valueOf(latitude));
-			Log.d(TAG, "Longitude: " + String.valueOf(longitude));
-			Log.d(TAG, "Altitude: " + String.valueOf(altitude));*/
+
 		}
 
 		public void onProviderDisabled(String arg0){
@@ -124,19 +122,27 @@ public class TourModeView extends Activity {
 				 SensorManager.getRotationMatrix( R, I, gravity, geomagnetic);
 				 SensorManager.getOrientation(R, orientation); 
 
-					orientation[0] = (float) Math.toDegrees(orientation[0]); // convert 0-360
-					orientation[1] = (float) Math.toDegrees(orientation[1]); // convert 0 - 360
-					orientation[2] = (float) Math.toDegrees(orientation[2]); // convert 0 - 360
+					float azimuth = (float) Math.toDegrees(orientation[0]);
+					if (azimuth < 0.0f)
+					{
+						azimuth += 360.f;
+					}
+					float pitch = (float) Math.toDegrees(orientation[1]);
+					if (pitch < 0.0f)
+					{
+						pitch += 360.f;
+					}
+					float roll  = (float) Math.toDegrees(orientation[2]); 
+					if (roll < 0.0f)
+					{
+						roll += 360.f;
+					}
+								
+					 headingValue.setText(String.valueOf(azimuth));
+                       pitchValue.setText(String.valueOf(pitch));
+                       rollValue.setText(String.valueOf(roll)); 
 					
-					//Log.d(TAG, "Azimuth: " + String.valueOf(azimuth));
-					Log.d(TAG, "Pitch: " + String.valueOf(orientation[1]));
-					//Log.d(TAG, "Roll: " + String.valueOf(roll));
-					
-					 headingValue.setText(String.valueOf(orientation[0]));
-                       pitchValue.setText(String.valueOf(orientation[1]));
-                       rollValue.setText(String.valueOf(orientation[2])); 
-					
-					//cont.updateOrientation(azimuth, pitch, roll); 
+				cont.updateOrientation(azimuth, pitch, roll); 
 				
 			}		
 		}
