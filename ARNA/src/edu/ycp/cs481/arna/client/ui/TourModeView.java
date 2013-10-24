@@ -16,6 +16,7 @@ import android.hardware.SensorEvent;
 import android.util.Log; 
 import android.view.SurfaceHolder; 
 import android.view.SurfaceView; 
+import android.widget.TextView;
 
 
 
@@ -37,20 +38,29 @@ public class TourModeView extends Activity {
 	TourMode tour; 
 	TourController cont; 
 	
+    float headingAngle;
+    float pitchAngle;
+    float rollAngle;
+    
+    TextView headingValue;
+    TextView pitchValue;
+    TextView rollValue;
+    private static final float ALPHA = 0.25f;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tour_mode);
 		
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
-		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 2, locationListener); 
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, locationListener); 
 
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); 
 		
 		magnetometerSensor = Sensor.TYPE_MAGNETIC_FIELD; 
 		accelerometerSensor = Sensor.TYPE_ACCELEROMETER; 
-		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_NORMAL); 
-		sensorManager.registerListener(sensorEventListener,  sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_NORMAL); 
+		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_FASTEST); 
+		sensorManager.registerListener(sensorEventListener,  sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_FASTEST); 
 		
 		
 		inPreview = false; 
@@ -61,6 +71,11 @@ public class TourModeView extends Activity {
 	
 		tour = new TourMode(); 
 		cont = new TourController(tour); 
+		
+		 headingValue = (TextView) findViewById(R.id.headingValue);
+	        pitchValue = (TextView) findViewById(R.id.pitchValue);
+	        rollValue = (TextView) findViewById(R.id.rollValue);
+	
 	}
 
 	LocationListener locationListener = new LocationListener() {
@@ -70,9 +85,9 @@ public class TourModeView extends Activity {
 			double altitude = location.getAltitude(); 
 			
 			cont.updateLocation(latitude, longitude, altitude); 
-			Log.d(TAG, "Latitude: " + String.valueOf(latitude));
+		/*	Log.d(TAG, "Latitude: " + String.valueOf(latitude));
 			Log.d(TAG, "Longitude: " + String.valueOf(longitude));
-			Log.d(TAG, "Altitude: " + String.valueOf(altitude));
+			Log.d(TAG, "Altitude: " + String.valueOf(altitude));*/
 		}
 
 		public void onProviderDisabled(String arg0){
@@ -91,33 +106,48 @@ public class TourModeView extends Activity {
 		float[] gravity; 
 		float[] geomagnetic; 
 		public void onSensorChanged(SensorEvent sensorEvent){
+			double azmith = sensorEvent.values[0];
+		
+			float R[] = new float[9]; 
+			float I[] = new float[9]; 
+			float orientation[] = new float[3];
+	
+			
 			if(sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
-				gravity = sensorEvent.values; 
+				gravity = lowPass(sensorEvent.values.clone(), gravity);
 			}
 			if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
-				geomagnetic = sensorEvent.values; 
+				geomagnetic = lowPass(sensorEvent.values.clone(), geomagnetic);
 			}
 			if(gravity != null && geomagnetic != null){
-				float R[] = new float[9]; 
-				float I[] = new float[9]; 
-				
-				if(SensorManager.getRotationMatrix(R, I, gravity, geomagnetic)){
-					float orientation[] = new float[3]; 
-					SensorManager.getOrientation(R, orientation); 
-					
-					double azimuth = Math.toDegrees((double)orientation[0]);
-					double pitch = Math.toDegrees((double)orientation[1]);
-					double roll = Math.toDegrees((double)orientation[2]); 
-					
-					Log.d(TAG, "Azimuth: " + String.valueOf(azimuth));
-					Log.d(TAG, "Pitch: " + String.valueOf(pitch));
-					Log.d(TAG, "Roll: " + String.valueOf(roll));
-					
-					cont.updateOrientation(azimuth, pitch, roll); 
-				}
-			}
-		}
+			 
+				 SensorManager.getRotationMatrix( R, I, gravity, geomagnetic);
+				 SensorManager.getOrientation(R, orientation); 
 
+					orientation[0] = (float) Math.toDegrees(orientation[0]); // convert 0-360
+					orientation[1] = (float) Math.toDegrees(orientation[1]); // convert 0 - 360
+					orientation[2] = (float) Math.toDegrees(orientation[2]); // convert 0 - 360
+					
+					//Log.d(TAG, "Azimuth: " + String.valueOf(azimuth));
+					Log.d(TAG, "Pitch: " + String.valueOf(orientation[1]));
+					//Log.d(TAG, "Roll: " + String.valueOf(roll));
+					
+					 headingValue.setText(String.valueOf(orientation[0]));
+                       pitchValue.setText(String.valueOf(orientation[1]));
+                       rollValue.setText(String.valueOf(orientation[2])); 
+					
+					//cont.updateOrientation(azimuth, pitch, roll); 
+				
+			}		
+		}
+		protected float[] lowPass( float[] input, float[] output ) {
+		    if ( output == null ) return input;
+
+		    for ( int i=0; i<input.length; i++ ) {
+		        output[i] = output[i] + ALPHA * (input[i] - output[i]);
+		    }
+		    return output;
+		}
 		public void onAccuracyChanged(Sensor sensor, int accuracy){
 			//Not used
 		}

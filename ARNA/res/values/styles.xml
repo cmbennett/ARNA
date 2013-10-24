@@ -16,5 +16,10 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-
+ <string name="heading">Heading:</string>
+        <string name="pitch">Pitch:</string>
+        <string name="roll">Roll:</string>
+        <string name="altitude">Altitude:</string>
+        <string name="longitude">Longitude:</string>
+        <string name="latitude">Latitude:</string>
 </resources>
