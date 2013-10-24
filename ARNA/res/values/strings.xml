@@ -7,5 +7,7 @@
     <string name="button_camera">Camera</string>
     <string name="image_cd_camera">This is a genreic content Description</string>
     <string name="title_activity_camera2">Camera2</string>
+    <string name="title_activity_home_menu">HomeMenu</string>
+    <string name="title_activity_compass_mode_view">CompassModeView</string>
 
 </resources>

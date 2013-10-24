@@ -19,7 +19,7 @@ import android.view.SurfaceView;
 
 
 
-public class CameraActivity extends Activity {
+public class TourModeView extends Activity {
 	SurfaceView cameraPreview; 
 	SurfaceHolder previewHolder; 
 	Camera camera; 
@@ -40,7 +40,7 @@ public class CameraActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_camera);
+		setContentView(R.layout.activity_tour_mode);
 		
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
 		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 2, locationListener); 
