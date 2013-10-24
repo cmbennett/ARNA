@@ -6,7 +6,7 @@ import java.util.List;
 
 public class TourMode extends Mode {
 	
-	List<Waypoint> onScreen; 
+	private List<Waypoint> onScreen; 
 	
 	public TourMode(User u, List<Waypoint> wpList){
 		super(u, wpList); 
@@ -33,5 +33,4 @@ public class TourMode extends Mode {
 	public void removeWaypoint(Waypoint w){
 		onScreen.remove(w); 
 	}
-	
 }

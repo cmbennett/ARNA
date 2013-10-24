@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Mode {
 	private User user; 
-	List<Waypoint> wpList;
+	private List<Waypoint> wpList;
 	
 	public Mode(User u, List<Waypoint> wpList){
 		this.setUser(u); 
@@ -15,16 +15,13 @@ public class Mode {
 		return wpList;
 	}
 
-
 	public void setWpList(List<Waypoint> wpList) {
 		this.wpList = wpList;
 	}
-
-
+	
 	public User getUser() {
 		return user;
 	}
-
 
 	public void setUser(User user) {
 		this.user = user;

@@ -10,7 +10,7 @@ public class ModeTest extends TestCase {
 	private User user;
 	private Location loc;
 	private Orientation orient;
-	List<Waypoint> wpList;
+	private List<Waypoint> wpList;
 
 	@Override
 	protected void setUp() throws Exception {
