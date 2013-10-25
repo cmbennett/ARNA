@@ -27,11 +27,6 @@
             
         </activity>
         <activity
-            android:name="edu.ycp.cs481.arna.client.ui.HomeMenu"
-            android:label="@string/title_activity_home_menu" >
-    
-        </activity>
-        <activity
             android:name="edu.ycp.cs481.arna.client.ui.CompassModeView"   
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"

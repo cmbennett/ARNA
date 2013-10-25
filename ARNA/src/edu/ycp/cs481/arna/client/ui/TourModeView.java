@@ -8,6 +8,7 @@ import android.location.LocationListener;
 import android.location.Location; 
 import android.os.Bundle;
 import android.app.Activity; 
+import android.content.Intent;
 import android.hardware.Camera; 
 import android.hardware.Sensor; 
 import android.hardware.SensorManager;
@@ -41,6 +42,7 @@ public class TourModeView extends Activity {
     float headingAngle;
     float pitchAngle;
     float rollAngle;
+    boolean started;
     
     TextView headingValue;
     TextView pitchValue;
@@ -64,6 +66,7 @@ public class TourModeView extends Activity {
 		
 		
 		inPreview = false; 
+		started = false;
 
 		cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
 		previewHolder = cameraPreview.getHolder(); 
@@ -139,8 +142,17 @@ public class TourModeView extends Activity {
 					}
 								
 					 headingValue.setText(String.valueOf(azimuth));
-                       pitchValue.setText(String.valueOf(pitch));
+                      pitchValue.setText(String.valueOf(pitch));
                        rollValue.setText(String.valueOf(roll)); 
+                       
+                   /*  if(roll > 131 || roll < 150 && !started)
+                       {
+                    	   Intent intent = new Intent(edu.ycp.cs481.arna.client.ui.TourModeView.this, edu.ycp.cs481.arna.client.ui.CompassModeView.class);  
+                    	   startActivity(intent);
+                    	   started = true;
+                       }
+                  */
+					
 					
 				cont.updateOrientation(azimuth, pitch, roll); 
 				
