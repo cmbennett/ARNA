@@ -131,16 +131,21 @@ public class TourModeView extends Activity {
 						azimuth += 360.f;
 					}
 					float pitch = (float) Math.toDegrees(orientation[1]);
-					if (pitch < 0.0f)
+					/*if (pitch > 24.5 || pitch < 25.5)
 					{
-						pitch += 360.f;
+						pitch = 0;
 					}
+					else
+					{
+						pitch  = pitch;
+					}*/
 					float roll  = (float) Math.toDegrees(orientation[2]); 
-					if (roll < 0.0f)
+					/*if (roll < 0.0f)
 					{
-						roll += 360.f;
-					}
-								
+						roll += 90.f;
+					}*/
+					
+					
 					 headingValue.setText(String.valueOf(azimuth));
                       pitchValue.setText(String.valueOf(pitch));
                        rollValue.setText(String.valueOf(roll)); 

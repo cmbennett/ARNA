@@ -131,12 +131,12 @@ public class CompassModeView extends Activity {
 					float pitch = (float) Math.toDegrees(orientation[1]);
 					if (pitch < 0.0f)
 					{
-						pitch += 360.f;
+						pitch += 90.f;
 					}
 					float roll  = (float) Math.toDegrees(orientation[2]); 
 					if (roll < 0.0f)
 					{
-						roll += 360.f;
+						roll += 180.f;
 					}
 								
 					// headingValue.setText(String.valueOf(azimuth));
