@@ -10,4 +10,13 @@
         android:layout_height="fill_parent"
         android:layout_centerInParent="true" />
 
+      <TextView
+          android:id="@+id/rollValues"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentLeft="true"
+          android:layout_below="@+id/pitchValue"
+          android:layout_marginTop="18dp"
+          android:text="@string/roll" />
+
 </RelativeLayout>

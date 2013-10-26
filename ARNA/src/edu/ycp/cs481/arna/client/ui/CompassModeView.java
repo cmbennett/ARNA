@@ -8,6 +8,7 @@ import android.location.LocationListener;
 import android.location.Location; 
 import android.os.Bundle;
 import android.app.Activity; 
+import android.content.Context;
 import android.content.Intent;
 import android.hardware.Camera; 
 import android.hardware.Sensor; 
@@ -15,8 +16,11 @@ import android.hardware.SensorManager;
 import android.hardware.SensorEventListener; 
 import android.hardware.SensorEvent;  
 import android.util.Log; 
+import android.view.Display;
+import android.view.Surface;
 import android.view.SurfaceHolder; 
 import android.view.SurfaceView; 
+import android.view.WindowManager;
 import android.widget.TextView;
 
 
@@ -43,15 +47,18 @@ public class CompassModeView extends Activity {
     float pitchAngle;
     float rollAngle;
     
-    TextView headingValue;
-    TextView pitchValue;
-    TextView rollValue;
+    float roll;
+    float pitch;
+    float azimuth;
+    boolean started;
+    int count;
+    TextView rollValues;
     private static final float ALPHA = 0.25f;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_tour_mode);
+		setContentView(R.layout.activity_compass_mode_view);
 		
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, locationListener); 
@@ -65,6 +72,8 @@ public class CompassModeView extends Activity {
 		
 		
 		inPreview = false; 
+		started = false;
+		count = 0;
 
 		cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
 		previewHolder = cameraPreview.getHolder(); 
@@ -73,9 +82,9 @@ public class CompassModeView extends Activity {
 		tour = new TourMode(); 
 		cont = new TourController(tour); 
 		
-		 headingValue = (TextView) findViewById(R.id.headingValue);
-	        pitchValue = (TextView) findViewById(R.id.pitchValue);
-	        rollValue = (TextView) findViewById(R.id.rollValue);
+		// headingValue = (TextView) findViewById(R.id.headingValue);
+	      //  pitchValue = (TextView) findViewById(R.id.pitchValue);
+	        rollValues = (TextView) findViewById(R.id.rollValues);
 	
 	}
 
@@ -122,40 +131,49 @@ public class CompassModeView extends Activity {
 			 
 				 SensorManager.getRotationMatrix( R, I, gravity, geomagnetic);
 				 SensorManager.getOrientation(R, orientation); 
-
-					float azimuth = (float) Math.toDegrees(orientation[0]);
-					if (azimuth < 0.0f)
+				int orientations =  getResources().getConfiguration().orientation;
+				// 1 is portrait
+				// 2 is landscape
+				 				  
+					 azimuth = (float) Math.toDegrees(orientation[0]);
+					if ( azimuth < 0.0f)
 					{
-						azimuth += 360.f;
+						azimuth += 360.0f; 
 					}
-					float pitch = (float) Math.toDegrees(orientation[1]);
-					if (pitch < 0.0f)
+					 pitch = (float) Math.toDegrees(orientation[1]); // -180 to 180
+					if ( pitch < 180.0f)
 					{
-						pitch += 90.f;
+						pitch -= 180.0f; 
 					}
-					float roll  = (float) Math.toDegrees(orientation[2]); 
-					if (roll < 0.0f)
+					
+					 roll  = (float) Math.toDegrees(orientation[2]); // -90 to 90
+					if (roll > -90.f)
 					{
-						roll += 180.f;
+						roll +=  90.0f;
 					}
-								
-					// headingValue.setText(String.valueOf(azimuth));
-                    //  pitchValue.setText(String.valueOf(pitch));
-                    //   rollValue.setText(String.valueOf(roll)); 
-                       
-					 /* if(roll > 131 || roll < 150)
-                      {
-                   	   Intent intent = new Intent(edu.ycp.cs481.arna.client.ui.CompassModeView.this, edu.ycp.cs481.arna.client.ui.TourModeView.class);  
-                   	   startActivity(intent);
-                   	 
-                      }*/
-                 
+					if (roll > 90.0f)
+					{
+						roll -= 90.f;
+					} 
 					
 					
-				cont.updateOrientation(azimuth, pitch, roll); 
+					//headingValue.setText(String.valueOf(azimuth));
+                     // pitchValue.setText(String.valueOf(pitch));
+                       rollValues.setText(String.valueOf(roll)); 
+                       cont.updateOrientation(azimuth, pitch, roll); 
+                       count++;
 				
-			}		
+			}	
+			
+			if(roll < 120 && count > 10)
+             {
+          	   Intent intent = new Intent(CompassModeView.this, TourModeView.class);  
+          	   startActivity(intent);
+				count=0;         	
+             }
 		}
+		
+
 		protected float[] lowPass( float[] input, float[] output ) {
 		    if ( output == null ) return input;
 
@@ -240,6 +258,7 @@ public class CompassModeView extends Activity {
 				camera.startPreview(); 
 				inPreview = true; 
 			}	
+
 		}
 
 		@Override

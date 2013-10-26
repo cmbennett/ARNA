@@ -8,6 +8,7 @@ import android.location.LocationListener;
 import android.location.Location; 
 import android.os.Bundle;
 import android.app.Activity; 
+import android.content.Context;
 import android.content.Intent;
 import android.hardware.Camera; 
 import android.hardware.Sensor; 
@@ -15,8 +16,11 @@ import android.hardware.SensorManager;
 import android.hardware.SensorEventListener; 
 import android.hardware.SensorEvent;  
 import android.util.Log; 
+import android.view.Display;
+import android.view.Surface;
 import android.view.SurfaceHolder; 
 import android.view.SurfaceView; 
+import android.view.WindowManager;
 import android.widget.TextView;
 
 
@@ -42,6 +46,10 @@ public class TourModeView extends Activity {
     float headingAngle;
     float pitchAngle;
     float rollAngle;
+    
+    float roll;
+    float pitch;
+    float azimuth;
     boolean started;
     
     TextView headingValue;
@@ -124,45 +132,48 @@ public class TourModeView extends Activity {
 			 
 				 SensorManager.getRotationMatrix( R, I, gravity, geomagnetic);
 				 SensorManager.getOrientation(R, orientation); 
-
-					float azimuth = (float) Math.toDegrees(orientation[0]);
-					if (azimuth < 0.0f)
+				int orientations =  getResources().getConfiguration().orientation;
+				// 1 is portrait
+				// 2 is landscape
+				 				  
+					 azimuth = (float) Math.toDegrees(orientation[0]);
+					if ( azimuth < 0.0f)
 					{
-						azimuth += 360.f;
+						azimuth += 360.0f; 
 					}
-					float pitch = (float) Math.toDegrees(orientation[1]);
-					/*if (pitch > 24.5 || pitch < 25.5)
+					 pitch = (float) Math.toDegrees(orientation[1]); // -180 to 180
+					if ( pitch < 180.0f)
 					{
-						pitch = 0;
+						pitch -= 180.0f; 
 					}
-					else
+					
+					 roll  = (float) Math.toDegrees(orientation[2]); // -90 to 90
+					if (roll > -90.f)
 					{
-						pitch  = pitch;
-					}*/
-					float roll  = (float) Math.toDegrees(orientation[2]); 
-					/*if (roll < 0.0f)
+						roll +=  90.0f;
+					}
+					if (roll > 90.0f)
 					{
-						roll += 90.f;
-					}*/
+						roll -= 90.f;
+					} 
 					
 					
 					 headingValue.setText(String.valueOf(azimuth));
                       pitchValue.setText(String.valueOf(pitch));
-                       rollValue.setText(String.valueOf(roll)); 
-                       
-                   /*  if(roll > 131 || roll < 150 && !started)
-                       {
-                    	   Intent intent = new Intent(edu.ycp.cs481.arna.client.ui.TourModeView.this, edu.ycp.cs481.arna.client.ui.CompassModeView.class);  
-                    	   startActivity(intent);
-                    	   started = true;
-                       }
-                  */
-					
+                       rollValue.setText(String.valueOf(roll));  				
 					
 				cont.updateOrientation(azimuth, pitch, roll); 
 				
-			}		
+			}	
+			 if(roll > 145)
+             {
+          	   Intent intent = new Intent(TourModeView.this, CompassModeView.class);  
+          	   startActivity(intent);
+             }
+			
 		}
+		
+
 		protected float[] lowPass( float[] input, float[] output ) {
 		    if ( output == null ) return input;
 
@@ -247,6 +258,7 @@ public class TourModeView extends Activity {
 				camera.startPreview(); 
 				inPreview = true; 
 			}	
+			
 		}
 
 		@Override
