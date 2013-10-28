@@ -171,6 +171,10 @@ public class CompassModeView extends Activity {
           	   startActivity(intent);
 				count=0;         	
              }
+			if (count > 11)
+			{
+				count = 0;
+			}
 		}
 		
 
