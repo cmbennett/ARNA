@@ -1,6 +1,9 @@
 package edu.ycp.cs481.arna.client.ui;
 
 
+import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapView;
+
 import edu.ycp.cs481.arna.client.uicontroller.TourController;
 import edu.ycp.cs481.arna.shared.model.TourMode;
 import android.location.LocationManager;
@@ -9,32 +12,25 @@ import android.location.Location;
 import android.os.Bundle;
 import android.app.Activity; 
 import android.content.Context;
-import android.content.Intent;
-import android.hardware.Camera; 
+import android.content.Intent; 
 import android.hardware.Sensor; 
 import android.hardware.SensorManager;
 import android.hardware.SensorEventListener; 
 import android.hardware.SensorEvent;  
 import android.util.Log; 
 import android.view.Display;
-import android.view.Surface;
-import android.view.SurfaceHolder; 
-import android.view.SurfaceView; 
-import android.view.WindowManager;
-import android.widget.TextView;
+
+import com.google.android.maps.MapView;
+import com.google.android.maps.MapController;
 
 
-
-public class CompassModeView extends Activity {
-	SurfaceView cameraPreview; 
-	SurfaceHolder previewHolder; 
-	Camera camera; 
-	boolean inPreview; 
+public class CompassModeView extends MapActivity  {
 
 	final static String TAG = "test"; 
 	SensorManager sensorManager;
 	Sensor accelerometer; 
-	
+	private MapView mapView;
+	private MapController mapController;
 	int accelerometerSensor; 
 	
 	LocationManager locationManager; 
@@ -52,7 +48,6 @@ public class CompassModeView extends Activity {
     float azimuth;
     boolean started;
     int count;
-    TextView rollValues;
     private static final float ALPHA = 0.25f;
 	
 	@Override
@@ -62,30 +57,35 @@ public class CompassModeView extends Activity {
 		
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, locationListener); 
-
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); 
 		
 		magnetometerSensor = Sensor.TYPE_MAGNETIC_FIELD; 
 		accelerometerSensor = Sensor.TYPE_ACCELEROMETER; 
 		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_FASTEST); 
 		sensorManager.registerListener(sensorEventListener,  sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_FASTEST); 
-		
-		
-		inPreview = false; 
-		started = false;
-		count = 0;
 
-		cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
-		previewHolder = cameraPreview.getHolder(); 
-		previewHolder.addCallback(surfaceCallback); 
+		count = 0;
 	
 		tour = new TourMode(); 
 		cont = new TourController(tour); 
+	 
+		 mapView = (MapView) findViewById(R.id.map);
+		  
+		  // enable Street view by default
+		  mapView.setStreetView(true);
+		  
+		  // enable to show Satellite view
+		  // mapView.setSatellite(true);
+		  
+		  // enable to show Traffic on map
+		  // mapView.setTraffic(true);
+		  
+		  mapView.setBuiltInZoomControls(true);
+		  
+		  mapController = mapView.getController();
+		  mapController.setZoom(16); 
+	    
 		
-		// headingValue = (TextView) findViewById(R.id.headingValue);
-	      //  pitchValue = (TextView) findViewById(R.id.pitchValue);
-	        rollValues = (TextView) findViewById(R.id.rollValues);
-	
 	}
 
 	LocationListener locationListener = new LocationListener() {
@@ -155,11 +155,6 @@ public class CompassModeView extends Activity {
 					{
 						roll -= 90.f;
 					} 
-					
-					
-					//headingValue.setText(String.valueOf(azimuth));
-                     // pitchValue.setText(String.valueOf(pitch));
-                       rollValues.setText(String.valueOf(roll)); 
                        cont.updateOrientation(azimuth, pitch, roll); 
                        count++;
 				
@@ -199,76 +194,19 @@ public class CompassModeView extends Activity {
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, locationListener);
 		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_NORMAL);
 		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_NORMAL);
-		camera = Camera.open(); 
-
+		
 	}
 
 	@Override
 	public void onPause() {
-		if (inPreview) {
-			camera.stopPreview();
-		}
-
 		locationManager.removeUpdates(locationListener);
-		sensorManager.unregisterListener(sensorEventListener);
-		camera.release();
-		camera=null;
-		inPreview=false;
-		
+		sensorManager.unregisterListener(sensorEventListener);		
 		super.onPause(); 
 	}
 
-	private Camera.Size getBestPreviewSize(int width, int height, Camera.Parameters parameters) {
-		Camera.Size result = null; 
-
-		for(Camera.Size size : parameters.getSupportedPreviewSizes()){
-			if(size.width<=width && size.height <= height){
-				if(result == null){
-					result = size; 
-				}
-				else{
-					int resultArea = result.width * result.height; 
-					int newArea = size.width * size.height; 
-
-					if(newArea > resultArea){
-						result = size; 
-					}
-				}
-			}
-		}
-
-		return(result); 
+	@Override
+	protected boolean isRouteDisplayed() {
+		// TODO Auto-generated method stub
+		return false;
 	}
-
-	SurfaceHolder.Callback surfaceCallback = new SurfaceHolder.Callback() {
-		public void surfaceCreated(SurfaceHolder holder){
-			try{
-				camera.setPreviewDisplay(previewHolder); 
-			}
-			catch(Throwable t){
-				Log.e("Camera", "Exception in setPreviewDisplay()", t); 
-			}
-		}
-
-		@Override
-		public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-			Camera.Parameters parameters = camera.getParameters(); 
-			Camera.Size size = getBestPreviewSize(width, height, parameters); 
-
-			if(size != null){
-				parameters.setPreviewSize(size.width, size.height); 
-				camera.setParameters(parameters); 
-
-				camera.startPreview(); 
-				inPreview = true; 
-			}	
-
-		}
-
-		@Override
-		public void surfaceDestroyed(SurfaceHolder holder) {
-			// TODO Auto-generated method stub
-			
-		}
-	};
 }
