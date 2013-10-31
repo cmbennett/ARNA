@@ -12,7 +12,7 @@ public class CompassModeTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		user  = new User(new Location(), new Orientation());
-		way = new Waypoint(3.0,4.0,5.0);
+		way = new Waypoint(3.0,4.0,0.0);
 		test = new CompassMode(user, way);
 	}
 	
@@ -41,8 +41,11 @@ public class CompassModeTest extends TestCase {
 	}
 	
 	public void testGetDirection() throws Exception {
-		Waypoint way3 = new Waypoint(0.8660254037844386,0.5,0);
-		test.setDestination(way3);
-		assertEquals(30.0, test.getDirection(), 0.01);
+		assertEquals(0, test.getDirection());
+	}
+	
+	public void testSetDirection() throws Exception {
+		test.setDirection(30);
+		assertEquals(30, test.getDirection());
 	}
 }

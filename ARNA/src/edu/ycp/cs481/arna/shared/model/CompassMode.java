@@ -10,6 +10,7 @@ public class CompassMode {
 	public CompassMode(User u, Waypoint w) {
 		 user = u;
 		 destination = w;
+		 direction = 0;
 	}
 	
 	public Waypoint getDestination() {
