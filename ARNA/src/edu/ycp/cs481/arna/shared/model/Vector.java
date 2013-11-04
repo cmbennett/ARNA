@@ -34,4 +34,6 @@ public class Vector {
 	public double getZ(){
 		return z; 
 	}
+
+
 }
