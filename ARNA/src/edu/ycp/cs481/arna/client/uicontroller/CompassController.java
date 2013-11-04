@@ -24,6 +24,12 @@ public class CompassController {
 		u.setLocation(lat, lon, elev);
 	}
 	
+	//Need method to update the destination
+	public void updateDestination(){
+		
+	}
+	
+	
 	public void updateOrientation(double azimuth, double pitch, double roll){
 		User u = compass.getUser();
 		u.setOrient(azimuth, pitch, roll); 
