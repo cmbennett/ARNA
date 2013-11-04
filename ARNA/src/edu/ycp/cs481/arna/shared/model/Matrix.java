@@ -1,21 +1,4 @@
-/*
- * Copyright (C) 2010- Peer internet solutions
- * 
- * This file was an original part of mixare.
- * 
- * This program is free software: you can redistribute it and/or modify it 
- * under the terms of the GNU General Public License as published by 
- * the Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License 
- * for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with 
- * this program. If not, see <http://www.gnu.org/licenses/>
- */
+
 package edu.ycp.cs481.arna.shared.model;
 
 public class Matrix {
@@ -114,16 +97,6 @@ public class Matrix {
     public synchronized void setC3(float c3) {
         this.c3 = c3;
     }
-
-    /**
-     * Get the Matrix values.
-     * 
-     * array[0] = a1 array[1] = a2 array[2] = a3 array[3] = b1 array[4] = b2
-     * array[5] = b3 array[6] = c1 array[7] = c2 array[8] = c3
-     * 
-     * @param array
-     *            float[] array of size containing the matrix data.
-     */
     public synchronized void get(float[] array) {
         if (array == null || array.length != 9) throw new IllegalArgumentException("get() array must be non-NULL and size of 9");
 
@@ -140,27 +113,12 @@ public class Matrix {
         array[8] = this.c3;
     }
 
-    /**
-     * Set the Matrix from a given Matrix.
-     * 
-     * @param m
-     *            Matrix to use values from.
-     */
     public void set(Matrix m) {
         if (m == null) throw new NullPointerException();
 
         set(m.a1, m.a2, m.a3, m.b1, m.b2, m.b3, m.c1, m.c2, m.c3);
     }
 
-    /**
-     * Set the Matrix values.
-     * 
-     * array[0] = a1 array[1] = a2 array[2] = a3 array[3] = b1 array[4] = b2
-     * array[5] = b3 array[6] = c1 array[7] = c2 array[8] = c3
-     * 
-     * @param array
-     *            float[] array of size containing the matrix data.
-     */
     public void set(float[] array) {
         if (array == null || array.length != 9) throw new IllegalArgumentException("get() array must be non-NULL and size of 9");
 
@@ -373,9 +331,6 @@ public class Matrix {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public synchronized String toString() {
         return "[ (" + this.a1 + "," + this.a2 + "," + this.a3 + ")" + " (" + this.b1 + "," + this.b2 + "," + this.b3 + ")" + " (" + this.c1 + "," + this.c2
