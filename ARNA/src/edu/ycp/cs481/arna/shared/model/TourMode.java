@@ -82,8 +82,9 @@ public class TourMode extends Mode {
 			dx = Math.cos(roll) * (Math.sin(pitch) * dy + Math.cos(pitch) * dx) - Math.sin(roll) * dz; 
 			dy = Math.sin(pitch) * temp2 + Math.cos(pitch) * temp1; 
 			dz = Math.cos(pitch) * temp2 - Math.sin(pitch) * temp1; 
-			
-			displacementVectors.add(new Vector(dx, dy, dz)); 
+			Vector v = new Vector();
+			v.set((float)dx,(float)dy,(float)dz);
+			displacementVectors.add(v); 
 		}
 		
 		
