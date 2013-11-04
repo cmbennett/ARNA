@@ -7,12 +7,12 @@ public class CompassModeTest extends TestCase {
 
 	private CompassMode test;
 	private User user;
-	private Waypoint way;
+	private POI way;
 	
 	@Override
 	protected void setUp() throws Exception {
 		user  = new User(new Location(), new Orientation());
-		way = new Waypoint(3.0,4.0,0.0);
+		way = new POI(3.0,4.0,0.0);
 		test = new CompassMode(user, way);
 	}
 	
@@ -21,7 +21,7 @@ public class CompassModeTest extends TestCase {
 	}
 	
 	public void testSetDestination() throws Exception {
-		Waypoint way2 = new Waypoint(1.0,1.0,1.0);
+		POI way2 = new POI(1.0,1.0,1.0);
 		test.setDestination(way2);
 		assertEquals(way2, test.getDestination());
 	}

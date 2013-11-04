@@ -2,22 +2,23 @@ package edu.ycp.cs481.arna.shared.model;
 
 public class CompassMode {
 	
-	private Waypoint destination;
-	private int direction;
+	private POI destination;
+	private double direction;
 	private double distance;
 	private User user;
 	
-	public CompassMode(User u, Waypoint w) {
+	public CompassMode(User u, POI w) {
 		 user = u;
 		 destination = w;
 		 direction = 0;
 	}
 	
-	public Waypoint getDestination() {
+	
+	public POI getDestination() {
 		return destination;
 	}
 	
-	public void setDestination(Waypoint w) {
+	public void setDestination(POI w) {
 		destination = w;
 	}
 	
@@ -37,11 +38,11 @@ public class CompassMode {
 		distance = d;
 	}
 	
-	public int getDirection() {
+	public double getDirection() {
 		return direction;
 	}
 	
-	public void setDirection(int i) {
-		direction = i;
+	public void setDirection(double drctn) {
+		direction = drctn; 
 	}
 }

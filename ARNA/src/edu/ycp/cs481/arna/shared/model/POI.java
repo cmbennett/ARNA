@@ -1,14 +1,16 @@
 package edu.ycp.cs481.arna.shared.model;
 
-public class Waypoint {
+public class POI {
 	
 	private Location loc;
 	private String description, name;
 	
-	public Waypoint(double x, double y, double z) {
+	
+	public POI(double x, double y, double z) {
 		loc = new Location(x, y, z);
 		description = "No Description.";
 		name = "No name.";
+
 	}
 	
 	public String getDescription() {
@@ -35,4 +37,7 @@ public class Waypoint {
 		loc = new Location(x, y, z);
 	}
 	
+	public void calculateVector(User u){
+		double y = u.getLocation().getElevation() - loc.getElevation(); 
+	}
 }

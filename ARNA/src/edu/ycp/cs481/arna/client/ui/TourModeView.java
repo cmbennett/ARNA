@@ -34,59 +34,59 @@ public class TourModeView extends Activity {
 	final static String TAG = "test"; 
 	SensorManager sensorManager;
 	Sensor accelerometer; 
-	
+
 	int accelerometerSensor; 
-	
+
 	LocationManager locationManager; 
 	int magnetometerSensor;
-	
+
 	TourMode tour; 
 	TourController cont; 
-	
-    float headingAngle;
-    float pitchAngle;
-    float rollAngle;
-    
-    float roll;
-    float pitch;
-    float azimuth;
-    boolean started;
-    
-    TextView headingValue;
-    TextView pitchValue;
-    TextView rollValue;
-    private static final float ALPHA = 0.25f;
-	
+
+	float headingAngle;
+	float pitchAngle;
+	float rollAngle;
+
+	float roll;
+	float pitch;
+	float azimuth;
+	boolean started;
+
+	TextView headingValue;
+	TextView pitchValue;
+	TextView rollValue;
+	private static final float ALPHA = 0.25f;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tour_mode);
-		
+
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, locationListener); 
 
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); 
-		
+
 		magnetometerSensor = Sensor.TYPE_MAGNETIC_FIELD; 
 		accelerometerSensor = Sensor.TYPE_ACCELEROMETER; 
 		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_FASTEST); 
 		sensorManager.registerListener(sensorEventListener,  sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_FASTEST); 
-		
-		
+
+
 		inPreview = false; 
 		started = false;
 
 		cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
 		previewHolder = cameraPreview.getHolder(); 
 		previewHolder.addCallback(surfaceCallback); 
-	
+
 		tour = new TourMode(); 
 		cont = new TourController(tour); 
-		
-		 headingValue = (TextView) findViewById(R.id.headingValue);
-	        pitchValue = (TextView) findViewById(R.id.pitchValue);
-	        rollValue = (TextView) findViewById(R.id.rollValue);
-	
+
+		headingValue = (TextView) findViewById(R.id.headingValue);
+		pitchValue = (TextView) findViewById(R.id.pitchValue);
+		rollValue = (TextView) findViewById(R.id.rollValue);
+
 	}
 
 	LocationListener locationListener = new LocationListener() {
@@ -94,7 +94,7 @@ public class TourModeView extends Activity {
 			double latitude = location.getLatitude(); 
 			double longitude = location.getLongitude(); 
 			double altitude = location.getAltitude(); 
-			
+
 			cont.updateLocation(latitude, longitude, altitude); 
 
 		}
@@ -115,13 +115,12 @@ public class TourModeView extends Activity {
 		float[] gravity; 
 		float[] geomagnetic; 
 		public void onSensorChanged(SensorEvent sensorEvent){
-			double azmith = sensorEvent.values[0];
-		
+
 			float R[] = new float[9]; 
 			float I[] = new float[9]; 
 			float orientation[] = new float[3];
-	
-			
+
+
 			if(sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
 				gravity = lowPass(sensorEvent.values.clone(), gravity);
 			}
@@ -129,58 +128,58 @@ public class TourModeView extends Activity {
 				geomagnetic = lowPass(sensorEvent.values.clone(), geomagnetic);
 			}
 			if(gravity != null && geomagnetic != null){
-			 
-				 SensorManager.getRotationMatrix( R, I, gravity, geomagnetic);
-				 SensorManager.getOrientation(R, orientation); 
-				int orientations =  getResources().getConfiguration().orientation;
+
+				SensorManager.getRotationMatrix( R, I, gravity, geomagnetic);
+				SensorManager.getOrientation(R, orientation); 
+				//int orientations =  getResources().getConfiguration().orientation;
 				// 1 is portrait
 				// 2 is landscape
-				 				  
-					 azimuth = (float) Math.toDegrees(orientation[0]);
-					if ( azimuth < 0.0f)
-					{
-						azimuth += 360.0f; 
-					}
-					 pitch = (float) Math.toDegrees(orientation[1]); // -180 to 180
-					if ( pitch < 180.0f)
-					{
-						pitch -= 180.0f; 
-					}
-					
-					 roll  = (float) Math.toDegrees(orientation[2]); // -90 to 90
-					if (roll > -90.f)
-					{
-						roll +=  90.0f;
-					}
-					if (roll > 90.0f)
-					{
-						roll -= 90.f;
-					} 
-					
-					
-					 headingValue.setText(String.valueOf(azimuth));
-                      pitchValue.setText(String.valueOf(pitch));
-                       rollValue.setText(String.valueOf(roll));  				
-					
+
+				azimuth = (float) Math.toDegrees(orientation[0]);
+				if ( azimuth < 0.0f)
+				{
+					azimuth += 360.0f; 
+				}
+				pitch = (float) Math.toDegrees(orientation[1]); // -180 to 180
+				if ( pitch < 180.0f)
+				{
+					pitch -= 180.0f; 
+				}
+
+				roll  = (float) Math.toDegrees(orientation[2]); // -90 to 90
+				if (roll > -90.f)
+				{
+					roll +=  90.0f;
+				}
+				if (roll > 90.0f)
+				{
+					roll -= 90.f;
+				} 
+
+
+				headingValue.setText(String.valueOf(azimuth));
+				pitchValue.setText(String.valueOf(pitch));
+				rollValue.setText(String.valueOf(roll));  				
+
 				cont.updateOrientation(azimuth, pitch, roll); 
-				
+
 			}	
-			 if(roll > 145)
-             {
-          	   Intent intent = new Intent(TourModeView.this, CompassModeView.class);  
-          	   startActivity(intent);
-             }
-			
+			if(roll > 145)
+			{
+				Intent intent = new Intent(TourModeView.this, CompassModeView.class);  
+				startActivity(intent);
+			}
+
 		}
-		
+
 
 		protected float[] lowPass( float[] input, float[] output ) {
-		    if ( output == null ) return input;
+			if ( output == null ) return input;
 
-		    for ( int i=0; i<input.length; i++ ) {
-		        output[i] = output[i] + ALPHA * (input[i] - output[i]);
-		    }
-		    return output;
+			for ( int i=0; i<input.length; i++ ) {
+				output[i] = output[i] + ALPHA * (input[i] - output[i]);
+			}
+			return output;
 		}
 		public void onAccuracyChanged(Sensor sensor, int accuracy){
 			//Not used
@@ -210,7 +209,7 @@ public class TourModeView extends Activity {
 		camera.release();
 		camera=null;
 		inPreview=false;
-		
+
 		super.onPause(); 
 	}
 
@@ -258,13 +257,13 @@ public class TourModeView extends Activity {
 				camera.startPreview(); 
 				inPreview = true; 
 			}	
-			
+
 		}
 
 		@Override
 		public void surfaceDestroyed(SurfaceHolder holder) {
 			// TODO Auto-generated method stub
-			
+
 		}
 	};
 }

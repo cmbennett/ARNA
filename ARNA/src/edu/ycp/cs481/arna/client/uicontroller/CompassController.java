@@ -1,6 +1,7 @@
 package edu.ycp.cs481.arna.client.uicontroller;
 
 import edu.ycp.cs481.arna.shared.model.CompassMode;
+import edu.ycp.cs481.arna.shared.model.User;
 
 public class CompassController {
 	
@@ -18,25 +19,25 @@ public class CompassController {
 		return compass; 
 	}
 	
+	public void updateLocation(double lat, double lon, double elev){
+		User u = compass.getUser();
+		u.setLocation(lat, lon, elev);
+	}
+	
+	public void updateOrientation(double azimuth, double pitch, double roll){
+		User u = compass.getUser();
+		u.setOrient(azimuth, pitch, roll); 
+	}
+	
 	// Calculates the distance to the current destination Waypoint.
 	public void updateDistance() {
-		double x1 = compass.getUser().getLocation().getLatitude();
-		double x2 = compass.getDestination().getLocation().getLatitude();
-		double y1 = compass.getUser().getLocation().getLongitude();
-		double y2 = compass.getDestination().getLocation().getLongitude();
-		
-		// Distance formula for two dimensions
-		compass.setDistance(Math.sqrt((Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))));
+		double distance = compass.getUser().getDistanceTo(compass.getDestination());
+		compass.setDistance(distance); 
 	}
 	
 	// Calculates the direction that points to the destination Waypoint (two dimensions only).
 	public void updateDirection() {
-		double x1 = compass.getUser().getLocation().getLatitude();
-		double x2 = compass.getDestination().getLocation().getLatitude();
-		double y1 = compass.getUser().getLocation().getLongitude();
-		double y2 = compass.getDestination().getLocation().getLongitude();
-		
-		// Inverse tangent to calculate angle
-		compass.setDirection((int) Math.atan((y2-y1)/(x2-x1)));
+		double direction = compass.getUser().getBearingTo(compass.getDestination());
+		compass.setDirection(direction); 
 	}
 }

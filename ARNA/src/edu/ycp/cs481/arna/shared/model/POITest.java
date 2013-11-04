@@ -2,14 +2,14 @@ package edu.ycp.cs481.arna.shared.model;
 
 import junit.framework.TestCase;
 
-public class WaypointTest extends TestCase {
+public class POITest extends TestCase {
 
-	private Waypoint test;
+	private POI test;
 	
 	@Override
 	protected void setUp() throws Exception {
 		//GPS coordinates of Kinsley Engineering Center
-		test = new Waypoint(39.949054, -76.735405, 0.0);	
+		test = new POI(39.949054, -76.735405, 0.0);	
 	}
 	
 	public void testGetDescription() {

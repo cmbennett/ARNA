@@ -37,7 +37,7 @@ public class User {
 	}
 	
 	// Finds the distance from the user to a given waypoint.
-		public double getDistanceTo(Waypoint w) {
+		public double getDistanceTo(POI w) {
 			double earth_radius = 3958.75;
 			
 			double diff_lat = Math.toRadians(w.getLocation().getLatitude() - loc.getLatitude());
@@ -54,5 +54,20 @@ public class User {
 			double distance = earth_radius * c;
 			
 			return distance;
+		}
+		
+	// Finds bearing between user and waypoint
+		
+		public double getBearingTo(POI w){
+			double y = Math.sin(w.getLocation().getLongitude() - loc.getLongitude()) * Math.cos(w.getLocation().getLatitude());
+			double x = Math.cos(loc.getLatitude())*Math.sin(w.getLocation().getLatitude()) -
+			        Math.sin(loc.getLatitude())*Math.cos(w.getLocation().getLatitude())*Math.cos(w.getLocation().getLongitude() - loc.getLongitude());
+			double brng = Math.atan2(y, x); 
+			
+			brng = Math.toDegrees(brng); 
+			
+			brng = (brng + 360) % 360; 
+			
+			return brng; 
 		}
 }

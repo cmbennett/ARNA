@@ -114,7 +114,7 @@ public class CompassModeView extends MapActivity  {
 		float[] gravity; 
 		float[] geomagnetic; 
 		public void onSensorChanged(SensorEvent sensorEvent){
-			double azmith = sensorEvent.values[0];
+			double azimuth = sensorEvent.values[0];
 		
 			float R[] = new float[9]; 
 			float I[] = new float[9]; 

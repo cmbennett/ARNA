@@ -7,7 +7,7 @@ public class UserTest extends TestCase {
 	private User test_user;
 	private Location test_loc;
 	private Orientation test_ori;
-	private Waypoint test_wp;
+	private POI test_wp;
 	
 	
 	@Override
@@ -15,7 +15,7 @@ public class UserTest extends TestCase {
 		test_loc = new Location(39.949054, -76.735405, 0.0);
 		test_ori = new Orientation(52.0,100.0,1.0);
 		test_user = new User(test_loc, test_ori);
-		test_wp = new Waypoint(39.944222, -76.733237, 0.0);
+		test_wp = new POI(39.944222, -76.733237, 0.0);
 	}
 	
 	public void testGetOrient() {
