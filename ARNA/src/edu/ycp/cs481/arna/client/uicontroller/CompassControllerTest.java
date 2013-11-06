@@ -57,6 +57,12 @@ public void testupdateDirection() throws Exception {
    assertEquals(t,cont.getModel());
   
 }
+public void testupdateDestination() throws Exception {
+	   cont.updateDestination(poi);
+	   t.setDestination(poi);
+	   assertEquals(t,cont.getModel());
+	  
+	}
 
 
 }

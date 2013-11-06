@@ -1,6 +1,8 @@
 package edu.ycp.cs481.arna.client.uicontroller;
 
+import android.location.Location;
 import edu.ycp.cs481.arna.shared.model.CompassMode;
+import edu.ycp.cs481.arna.shared.model.POI;
 import edu.ycp.cs481.arna.shared.model.User;
 
 public class CompassController {
@@ -25,8 +27,8 @@ public class CompassController {
 	}
 	
 	//Need method to update the destination
-	public void updateDestination(){
-		
+	public void updateDestination(POI l){
+		compass.setDestination(l);
 	}
 	
 	
