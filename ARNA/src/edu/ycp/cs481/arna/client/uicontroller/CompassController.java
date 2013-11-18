@@ -48,4 +48,14 @@ public class CompassController {
 		double direction = compass.getUser().getBearingTo(compass.getDestination());
 		compass.setDirection(direction); 
 	}
+	public void updateSum() {
+		compass.calcsum();
+	}
+public void updateAverage() {
+		compass.calcaverage();
+	}
+
+public void updateFIFO(int value) {
+		compass.addvalue(value);
+}
 }
