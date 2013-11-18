@@ -48,4 +48,56 @@ public class CompassModeTest extends TestCase {
 		test.setDirection(30);
 		assertEquals(30, test.getDirection());
 	}
+	public void testGetSum() throws Exception {
+		assertEquals(0, test.getsum());
+	}
+	
+	public void testSetSum() throws Exception {
+		test.setsum(30);
+		assertEquals(30, test.getsum());
+	}
+	public void testGetaverage() throws Exception {
+		assertEquals(0, test.getsum());
+	}
+	
+	public void testSetaverage() throws Exception {
+		test.setaverage(6.5);
+		assertEquals(6.5, test.getaverage());
+	}
+	public void testGetlimit() throws Exception {
+		assertEquals(10, test.getlimit());
+	}
+	public void testfifofull() throws Exception {
+		assertEquals(false, test.fullfifo());
+	}
+	public void testadding() throws Exception {
+		test.addvalue(1);
+		assertEquals(1, test.getvalue(0));
+		test.addvalue(2);
+		assertEquals(2, test.getvalue(1));
+		test.addvalue(3);
+		assertEquals(3, test.getvalue(2));
+		test.addvalue(4);
+		assertEquals(4, test.getvalue(3));
+		test.addvalue(5);
+		assertEquals(5, test.getvalue(4));
+		test.addvalue(6);
+		assertEquals(6, test.getvalue(5));
+		test.addvalue(7);
+		assertEquals(7, test.getvalue(6));
+		test.addvalue(8);
+		assertEquals(8, test.getvalue(7));
+		test.addvalue(9);
+		assertEquals(9, test.getvalue(8));
+		test.addvalue(10);
+		assertEquals(10, test.getvalue(9));
+		assertEquals(true, test.fullfifo());
+		test.addvalue(11);
+		assertEquals(10, test.getvalue(9));
+		assertEquals(2, test.getvalue(0));
+		test.calcsum();
+		assertEquals(65, test.getsum());
+		 test.calcaverage();
+		 assertEquals(6.5, test.getaverage());
+	}
 }

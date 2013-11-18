@@ -20,6 +20,7 @@ public class CompassMode {
 		 fifo = new ArrayList<Integer>();
 		 sum=0;
 		 limit=10;
+		 average=0;
 		
 	}
 	
@@ -97,6 +98,9 @@ public class CompassMode {
 			fifo.add(value);
 		}
 		}
+	public int getvalue(int value){
+		return fifo.get(value);
+	}
 	}
 	
 
