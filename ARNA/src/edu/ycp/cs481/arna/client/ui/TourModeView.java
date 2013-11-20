@@ -169,7 +169,14 @@ public class TourModeView extends Activity {
 				Intent intent = new Intent(TourModeView.this, CompassModeView.class);  
 				startActivity(intent);
 			}
-
+			//changed the roll and the pitch
+			if (pitch >= -45 && pitch < 45 && roll < -45) {
+				roll=-roll;
+				pitch=-pitch;
+			}
+			
+				
+			
 		}
 
 
