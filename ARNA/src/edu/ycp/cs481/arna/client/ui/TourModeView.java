@@ -63,7 +63,7 @@ public class TourModeView extends Activity {
 		setContentView(R.layout.activity_tour_mode);
 
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener); 
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, locationListener); 
 
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); 
 
@@ -169,14 +169,7 @@ public class TourModeView extends Activity {
 				Intent intent = new Intent(TourModeView.this, CompassModeView.class);  
 				startActivity(intent);
 			}
-			//changed the roll and the pitch
-			if (pitch >= -45 && pitch < 45 && roll < -45) {
-				roll=-roll;
-				pitch=-pitch;
-			}
-			
-				
-			
+
 		}
 
 

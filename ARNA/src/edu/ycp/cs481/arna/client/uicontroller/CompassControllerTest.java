@@ -63,24 +63,6 @@ public void testupdateDestination() throws Exception {
 	   assertEquals(t,cont.getModel());
 	  
 	}
-public void testupdateSum() throws Exception {
-	   cont.updateSum();
-	   t.setsum(0);
-	   assertEquals(t,cont.getModel());
-	  
-	}
-public void testupdateaverage() throws Exception {
-	   cont.updateAverage();
-	   t.setaverage(0);
-	   assertEquals(t,cont.getModel());
-	  
-	}
-public void testupdatevalues() throws Exception {
-	   cont.updateFIFO(5);
-	   t.addvalue(5);
-	   assertEquals(t,cont.getModel());
-	  
-	}
 
 
 }

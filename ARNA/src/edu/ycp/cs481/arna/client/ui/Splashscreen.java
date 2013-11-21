@@ -11,7 +11,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 
-public class SplashScreen extends Activity {
+public class Splashscreen extends Activity {
 	LocationManager locationManager;
 	TourMode tour; 
 	TourController cont; 
@@ -36,7 +36,7 @@ public class SplashScreen extends Activity {
 			if (latitude > 0)
 			{
 			cont.updateLocation(latitude, longitude, altitude); 
-			Intent intent = new Intent(SplashScreen.this, TourModeView.class);  
+			Intent intent = new Intent(Splashscreen.this, TourModeView.class);  
 			startActivity(intent);
 			}
 		}
@@ -55,3 +55,5 @@ public class SplashScreen extends Activity {
 
 
 }
+
+
