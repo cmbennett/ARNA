@@ -7,31 +7,16 @@ import android.location.LocationManager;
 import android.location.LocationListener; 
 import android.location.Location; 
 import android.os.Bundle;
-import android.app.Activity; 
-import android.content.Context;
-import android.content.Intent;
+import android.app.Activity;
 import android.hardware.Camera; 
 import android.hardware.Sensor; 
 import android.hardware.SensorManager;
 import android.hardware.SensorEventListener; 
-import android.hardware.SensorEvent;  
-import android.util.Log; 
-import android.view.Display;
-import android.view.Surface;
-import android.view.SurfaceHolder; 
-import android.view.SurfaceView; 
-import android.view.WindowManager;
-import android.widget.TextView;
-
+import android.hardware.SensorEvent;
 
 
 public class CompassModeView extends Activity {
-	SurfaceView cameraPreview; 
-	SurfaceHolder previewHolder; 
-	Camera camera; 
-	boolean inPreview; 
 
-	final static String TAG = "test"; 
 	SensorManager sensorManager;
 	Sensor accelerometer; 
 
@@ -42,19 +27,11 @@ public class CompassModeView extends Activity {
 
 	TourMode tour; 
 	TourController cont; 
-
-	float headingAngle;
-	float pitchAngle;
-	float rollAngle;
-
 	float roll;
 	float pitch;
 	float azimuth;
 	boolean started;
 
-	TextView headingValue;
-	TextView pitchValue;
-	TextView rollValue;
 	private static final float ALPHA = 0.25f;
 
 	@Override
@@ -72,156 +49,154 @@ public class CompassModeView extends Activity {
 		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_FASTEST); 
 		sensorManager.registerListener(sensorEventListener,  sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_FASTEST); 
 
-
-		inPreview = false; 
-		started = false;
-
-		cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
-		previewHolder = cameraPreview.getHolder(); 
-		previewHolder.addCallback(surfaceCallback); 
-
 		tour = new TourMode(); 
 		cont = new TourController(tour); 
-
-		headingValue = (TextView) findViewById(R.id.headingValue);
-		pitchValue = (TextView) findViewById(R.id.pitchValue);
-		rollValue = (TextView) findViewById(R.id.rollValue);
-
 	}
 
 	LocationListener locationListener = new LocationListener() {
-		public void onLocationChanged(Location location){
+		
+		// Event handler for change in location.
+		public void onLocationChanged(Location location) {
 			double latitude = location.getLatitude(); 
 			double longitude = location.getLongitude(); 
 			double altitude = location.getAltitude(); 
 
 			cont.updateLocation(latitude, longitude, altitude); 
-
 		}
 
-		public void onProviderDisabled(String arg0){
+		public void onProviderDisabled(String arg0) {
 			//TODO Auto-generated method sub
 		}
 
-		public void onProviderEnabled(String arg0){
+		public void onProviderEnabled(String arg0) {
 			//TODO Auto-generated method sub
 		}
-		public void onStatusChanged(String arg0, int arg1, Bundle arg2){
+		public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
 			//TODO Auto-generated method sub
 		}
 	}; 
 
-	final SensorEventListener sensorEventListener = new SensorEventListener(){
+	final SensorEventListener sensorEventListener = new SensorEventListener() {
 		float[] gravity; 
 		float[] geomagnetic; 
-		public void onSensorChanged(SensorEvent sensorEvent){
-
+		float var;
+		float inclination;
+		
+		// Event handler for sensor event.
+		public void onSensorChanged(SensorEvent sensorEvent) {
+			//int orientations =  getResources().getConfiguration().orientation;
 			float R[] = new float[9]; 
 			float I[] = new float[9]; 
+			float outR[] = new float[9]; 
 			float orientation[] = new float[3];
 
-
-			if(sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
+			// Acquire and filter magnetic field data from device.
+			if(sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
 				gravity = lowPass(sensorEvent.values.clone(), gravity);
 			}
-			if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+			
+			// Acquire and filter accelerometer data from device.
+			if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 				geomagnetic = lowPass(sensorEvent.values.clone(), geomagnetic);
 			}
-			if(gravity != null && geomagnetic != null){
-
-				SensorManager.getRotationMatrix( R, I, gravity, geomagnetic);
-				SensorManager.getOrientation(R, orientation); 
-				//int orientations =  getResources().getConfiguration().orientation;
-				// 1 is portrait
-				// 2 is landscape
-
-				azimuth = (float) Math.toDegrees(orientation[0]);
-				if ( azimuth < 0.0f)
-				{
+			
+			// As long as acquired data is valid, acquire the transformation matrix.
+			if(gravity != null && geomagnetic != null) {
+				SensorManager.getRotationMatrix(R, I, gravity, geomagnetic);
+			
+				inclination = (float) Math.acos(outR[8]);
+				
+				// If the device is upright (or nearly so), use unadjusted values.
+				if (inclination < 25.0f || inclination > 155.0f ) {
+					SensorManager.getOrientation(R, orientation); 
+				}
+				else { // Otherwise, remap the coordinates for portrait mode.
+					SensorManager.remapCoordinateSystem(R, SensorManager.AXIS_X, SensorManager.AXIS_Z, outR);
+					SensorManager.getOrientation(outR, orientation); 
+				}	
+				
+				// Covert from radians to degrees.
+				double x180pi = 180.0 / Math.PI;
+				
+				azimuth = (float)(orientation[0] * x180pi);
+				
+				// Adjust starting angle due to device specs.
+				azimuth -= 90.0f;
+				
+				// Flip angle over the horizontal plane. This is done because android devices measure angles counterclockwise instead of clockwise.
+				if (azimuth < 180) { // West -> East
+					var = 2*(180-azimuth);
+					azimuth += var;
+				} else if (azimuth > 180) { //East -> West
+					var = 2*(azimuth - 180);
+					azimuth -= var;
+				}
+				
+				// Enforce wrap-around.
+				if ( azimuth < 0.0f) { // Lower bound
 					azimuth += 360.0f; 
-				}
-				pitch = (float) Math.toDegrees(orientation[1]); // -180 to 180
-				if ( pitch < 180.0f)
-				{
-					pitch -= 180.0f; 
+				} else if ( azimuth > 360.0f) { // Upper bound
+					azimuth -= 360.0f; 
 				}
 
-				roll  = (float) Math.toDegrees(orientation[2]); // -90 to 90
-				if (roll > -90.f)
-				{
-					roll +=  90.0f;
-				}
-				if (roll > 90.0f)
-				{
-					roll -= 90.f;
-				} 
+				pitch = (float)(orientation[1] * x180pi);
+				
+				roll = (float)(orientation[2] * x180pi);			
 
-
-				headingValue.setText(String.valueOf(azimuth));
-				pitchValue.setText(String.valueOf(pitch));
-				rollValue.setText(String.valueOf(roll));  				
-
+				// Update the model object.
 				cont.updateOrientation(azimuth, pitch, roll); 
-
-			}	
-			if(roll > 110)
-			{
-				Intent intent = new Intent(CompassModeView.this, TourMode.class);  
-				startActivity(intent);
 			}
-
-		}
-
+			
+			/*if(roll > 145)
+			{
+				Intent intent = new Intent(TourModeView.this, CompassModeView.class);  
+				startActivity(intent);
+			}*/
+		}	
 
 		protected float[] lowPass( float[] input, float[] output ) {
-			if ( output == null ) return input;
+			if (output == null) return input;
 
-			for ( int i=0; i<input.length; i++ ) {
+			for(int i = 0; i < input.length; i++) {
 				output[i] = output[i] + ALPHA * (input[i] - output[i]);
 			}
+			
 			return output;
 		}
-		public void onAccuracyChanged(Sensor sensor, int accuracy){
-			//Not used
+		
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+			//
 		}
 	}; 
 
 	@Override
 	public void onResume(){
 		super.onResume(); 
-
+		Sensor gsensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+		Sensor asensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		Sensor msensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, locationListener);
-		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_NORMAL);
-		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_NORMAL);
-		camera = Camera.open(); 
-
+		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_GAME);
+		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_GAME);
 	}
 
 	@Override
 	public void onPause() {
-		if (inPreview) {
-			camera.stopPreview();
-		}
-
 		locationManager.removeUpdates(locationListener);
 		sensorManager.unregisterListener(sensorEventListener);
-		camera.release();
-		camera=null;
-		inPreview=false;
-
+	
 		super.onPause(); 
 	}
 
 	private Camera.Size getBestPreviewSize(int width, int height, Camera.Parameters parameters) {
 		Camera.Size result = null; 
 
-		for(Camera.Size size : parameters.getSupportedPreviewSizes()){
-			if(size.width<=width && size.height <= height){
-				if(result == null){
+		for(Camera.Size size : parameters.getSupportedPreviewSizes()) {
+			if(size.width <= width && size.height <= height) {
+				if(result == null) {
 					result = size; 
-				}
-				else{
+				} else {
 					int resultArea = result.width * result.height; 
 					int newArea = size.width * size.height; 
 
@@ -234,36 +209,4 @@ public class CompassModeView extends Activity {
 
 		return(result); 
 	}
-
-	SurfaceHolder.Callback surfaceCallback = new SurfaceHolder.Callback() {
-		public void surfaceCreated(SurfaceHolder holder){
-			try{
-				camera.setPreviewDisplay(previewHolder); 
-			}
-			catch(Throwable t){
-				Log.e("Camera", "Exception in setPreviewDisplay()", t); 
-			}
-		}
-
-		@Override
-		public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-			Camera.Parameters parameters = camera.getParameters(); 
-			Camera.Size size = getBestPreviewSize(width, height, parameters); 
-
-			if(size != null){
-				parameters.setPreviewSize(size.width, size.height); 
-				camera.setParameters(parameters); 
-
-				camera.startPreview(); 
-				inPreview = true; 
-			}	
-
-		}
-
-		@Override
-		public void surfaceDestroyed(SurfaceHolder holder) {
-			// TODO Auto-generated method stub
-
-		}
-	};
 }

@@ -9,13 +9,12 @@ public class UserTest extends TestCase {
 	private Orientation test_ori;
 	private POI test_wp;
 	
-	
 	@Override
 	protected void setUp() throws Exception {
-		test_loc = new Location(39.949054, -76.735405, 0.0);
+		test_loc = new Location(39.949054, -76.735405, 0.0); // kinsley
 		test_ori = new Orientation(52.0,100.0,1.0);
 		test_user = new User(test_loc, test_ori);
-		test_wp = new POI(39.944222, -76.733237, 0.0);
+		test_wp = new POI(39.944222, -76.733237, 0.0); // intersection at grantley and country club
 	}
 	
 	public void testGetOrient() {
@@ -28,7 +27,6 @@ public class UserTest extends TestCase {
 		assertEquals(39.949054, test_user.getLocation().getLatitude()); 
 		assertEquals(-76.735405, test_user.getLocation().getLongitude());
 		assertEquals(0.0, test_user.getLocation().getElevation());
-		
 	}
 	
 	public void testSetOrient() {
@@ -47,5 +45,20 @@ public class UserTest extends TestCase {
 	
 	public void testGetDistanceTo() {
 		assertEquals(0.4, test_user.getDistanceTo(test_wp), .05);
+	}
+	
+	public void testGetBearingTo(){
+		
+		//assertEquals(195, test_user.getBearingTo(test_wp), 5);
+		test_wp.setLocation(39.949120, -76.735165,0.0); //Kinsley
+		test_user.setLocation(39.949778, -76.734095,0.0); //Parking lot outside kinsley
+		
+		assertEquals(240.0, test_user.getBearingTo(test_wp), 15.0); 
+		
+		test_user.setLocation(39.944201, -76.733221, 0.0); 
+		assertEquals(345.0, test_user.getBearingTo(test_wp), 15.0); 
+		
+		
+		
 	}
 }

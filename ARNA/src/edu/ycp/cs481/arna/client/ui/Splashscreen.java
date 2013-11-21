@@ -15,6 +15,10 @@ public class Splashscreen extends Activity {
 	LocationManager locationManager;
 	TourMode tour; 
 	TourController cont; 
+	int count;
+	boolean found;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -25,20 +29,30 @@ public class Splashscreen extends Activity {
 
 		tour = new TourMode(); 
 		cont = new TourController(tour); 
-	
+		count = 0;
+	found = false;
 	}
 	LocationListener locationListener = new LocationListener() {
 		public void onLocationChanged(Location location){
 			double latitude = location.getLatitude(); 
 			double longitude = location.getLongitude(); 
 			double altitude = location.getAltitude(); 
-
-			if (latitude > 0)
+			count++;
+			
+			if (latitude > 0 && count == 5 && found ==  false)
 			{
-			cont.updateLocation(latitude, longitude, altitude); 
-			Intent intent = new Intent(Splashscreen.this, TourModeView.class);  
-			startActivity(intent);
+				cont.updateLocation(latitude, longitude, altitude); 
+				Intent intent = new Intent(Splashscreen.this, TourModeView.class);  
+				startActivity(intent);
+				count = 0;
+				found = true;
 			}
+			
+			if (count > 5)
+			{
+				count = 0;
+			}
+		
 		}
 
 		public void onProviderDisabled(String arg0){

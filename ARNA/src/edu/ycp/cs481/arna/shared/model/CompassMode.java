@@ -12,7 +12,7 @@ public class CompassMode {
 		 destination = w;
 		 direction = 0;
 	}
-	
+
 	public POI getDestination() {
 		return destination;
 	}
@@ -41,7 +41,7 @@ public class CompassMode {
 		return direction;
 	}
 	
-	public void setDirection(double drctn) {
-		direction = drctn; 
+	public void setDirection(double dir) {
+		direction = dir; 
 	}
 }

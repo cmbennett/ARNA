@@ -9,6 +9,6 @@
     <string name="title_activity_camera2">Camera2</string>
     <string name="title_activity_home_menu">HomeMenu</string>
     <string name="title_activity_compass_mode_view">CompassModeView</string>
-    <string name="title_activity_splashscreen">Splashscreen</string>
+    <string name="title_activity_swipe_menu">SwipeMenu</string>
 
 </resources>

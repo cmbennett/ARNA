@@ -7,10 +7,10 @@ import java.util.List;
 public class TourMode extends Mode {
 	
 	private List<POI> onScreen;
-	private static double CUTOFF = 0.5;
+	private static double CUTOFF = 5555555;
 	private List<Vector> displacementVectors; 
 	
-	public TourMode(User u, List<POI> wpList){
+	public TourMode(User u, List<POI> wpList) {
 		super(u, wpList); 
 		onScreen = new ArrayList<POI>(); 
 	}
@@ -28,34 +28,35 @@ public class TourMode extends Mode {
 		this.onScreen = onScreen;
 	}
 	
-	public void addWaypoint(POI w){
-		onScreen.add(w); 
+	public void addWaypoint(POI w) {
+		wpList.add(w);
 	}
 	
-	public void removeWaypoint(POI w){
+	public void removeWaypoint(POI w) {
 		onScreen.remove(w); 
 	}
 	
-	public void populateOnScreen(double cameraAngle){
+	public void populateOnScreen(double cameraAngle) {
+		onScreen.clear();
 		
+		/*if(onScreen.isEmpty()){
+			System.out.println("SUCCESS"); 
+		}
+		*/
 		double halfAngle = cameraAngle/2; 
 		for(POI w: wpList){
 			double distance = user.getDistanceTo(w); 
 			
-			if(distance < CUTOFF){
-				
+			if(distance < CUTOFF){				
 				double bearing = user.getBearingTo(w); 
-				
-				if(bearing < user.getOrient().getAzimuth() + halfAngle || bearing > user.getOrient().getAzimuth() - halfAngle ){
-					onScreen.add(w); 
+				if(bearing < user.getOrient().getAzimuth() + halfAngle && bearing > user.getOrient().getAzimuth() - halfAngle ) {
+					onScreen.add(w); 					
 				}
 			}
-			
 		}
-		
 	}
 	
-	public void computeDisplacementVectors(){
+	public void computeDisplacementVectors() {
 		double temp1; 
 		double temp2; 
 		double dy; 
@@ -67,7 +68,7 @@ public class TourMode extends Mode {
 		double roll = user.getOrient().getRoll(); 
 		
 		//Populate array of vectors (each i vector in the list corresponds with the i POI in the onScreen list)
-		for(POI w: onScreen){
+		for(POI w: onScreen) {
 			dy = user.getLocation().getElevation() - w.getLocation().getElevation(); 
 			
 			dBearing = user.getOrient().getAzimuth() - user.getBearingTo(w); 
@@ -86,7 +87,5 @@ public class TourMode extends Mode {
 			v.set((float)dx,(float)dy,(float)dz);
 			displacementVectors.add(v); 
 		}
-		
-		
 	}
 }

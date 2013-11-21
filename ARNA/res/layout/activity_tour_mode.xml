@@ -10,30 +10,15 @@
         android:layout_height="fill_parent"
         android:layout_centerInParent="true" />
 
-        <TextView
-            android:id="@+id/pitchValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/headingLabel"
-            android:layout_below="@+id/headingLabel"
-            android:text="@string/pitch" />
-
-        <TextView
-            android:id="@+id/headingValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/pitchValue"
-            android:layout_marginTop="38dp"
-            android:text="@string/heading" />
-
-        <TextView
-            android:id="@+id/rollValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/pitchValue"
-            android:layout_marginTop="18dp"
-            android:text="@string/roll" />
+    <TextView
+        android:id="@+id/LocationID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="BUILDING"
+        android:textSize="50sp"
+        android:visibility="visible" />
 
 </RelativeLayout>

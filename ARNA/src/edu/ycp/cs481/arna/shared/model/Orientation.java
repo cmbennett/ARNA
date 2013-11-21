@@ -5,7 +5,7 @@ public class Orientation {
 	private double pitch;
 	private double roll; 
 	
-	public Orientation(double az, double pitch, double roll){
+	public Orientation(double az, double pitch, double roll) {
 		this.azimuth = az; 
 		this.pitch = pitch; 
 		this.roll = roll;
@@ -40,6 +40,4 @@ public class Orientation {
 	public void setRoll(double roll) {
 		this.roll = roll;
 	}
-	
-	
 }

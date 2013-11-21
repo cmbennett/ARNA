@@ -1,16 +1,13 @@
 package edu.ycp.cs481.arna.shared.model;
 
 public class POI {
-	
 	private Location loc;
 	private String description, name;
-	
 	
 	public POI(double x, double y, double z) {
 		loc = new Location(x, y, z);
 		description = "No Description.";
 		name = "No name.";
-
 	}
 	
 	public String getDescription() {

@@ -216,9 +216,20 @@ public class Vector {
         this.y = y;
         this.z = z;
     }
+/*
+    public synchronized void prod(Matrix m) {
+        if (m == null) return;
 
-  
+        m.get(matrixArray);
+        float xTemp = matrixArray[0] * this.x + matrixArray[1] * this.y + matrixArray[2] * this.z;
+        float yTemp = matrixArray[3] * this.x + matrixArray[4] * this.y + matrixArray[5] * this.z;
+        float zTemp = matrixArray[6] * this.x + matrixArray[7] * this.y + matrixArray[8] * this.z;
 
+        this.x = xTemp;
+        this.y = yTemp;
+        this.z = zTemp;
+    }
+*/
     /**
      * {@inheritDoc}
      */

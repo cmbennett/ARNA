@@ -22,7 +22,6 @@ public class POITest extends TestCase {
 	}
 	
 	public void testGetLocation() {
-		
 		assertEquals(39.949054, test.getLocation().getLatitude());
 		assertEquals(-76.735405, test.getLocation().getLongitude());
 		assertEquals(0.0, test.getLocation().getElevation());

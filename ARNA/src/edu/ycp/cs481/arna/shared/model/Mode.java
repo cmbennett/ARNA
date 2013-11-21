@@ -3,6 +3,7 @@ package edu.ycp.cs481.arna.shared.model;
 import java.util.List;
 
 public class Mode {
+	
 	protected User user; 
 	protected List<POI> wpList;
 	

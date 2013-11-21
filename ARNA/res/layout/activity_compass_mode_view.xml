@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:id="@+id/relativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:maxHeight="800dp"
+        android:maxWidth="100dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/arrow" />
 
-
-<com.google.android.maps.MapView  
-    android:id="@+id/map"
-    android:layout_width="fill_parent" 
-    android:layout_height="fill_parent" 
-    android:apiKey="AIzaSyDTNrusYgSb-whLEE-upNLnkzGtXlMDZYs"
-    android:enabled="true"
-    android:clickable="true"
-    />
-         
 </RelativeLayout>

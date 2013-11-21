@@ -37,15 +37,15 @@ public class CompassModeTest extends TestCase {
 	}
 
 	public void testGetDistance() throws Exception {
-		assertEquals(5.0, test.getDistance());
+		assertEquals(0.0, test.getDistance());
 	}
 	
 	public void testGetDirection() throws Exception {
-		assertEquals(0, test.getDirection());
+		assertEquals(0.0, test.getDirection());
 	}
 	
 	public void testSetDirection() throws Exception {
 		test.setDirection(30);
-		assertEquals(30, test.getDirection());
+		assertEquals(30.0, test.getDirection());
 	}
 }
