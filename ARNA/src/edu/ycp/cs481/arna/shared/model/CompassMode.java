@@ -12,6 +12,11 @@ public class CompassMode {
 		 destination = w;
 		 direction = 0;
 	}
+	public CompassMode() {
+		 user = new User();
+		 destination = new POI(39.950146, -76.734092,0.0); // for testing ONLY! NORTH SIDE
+		 
+	}
 
 	public POI getDestination() {
 		return destination;

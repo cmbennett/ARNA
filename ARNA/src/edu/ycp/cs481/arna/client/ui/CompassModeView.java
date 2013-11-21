@@ -1,12 +1,20 @@
 package edu.ycp.cs481.arna.client.ui;
 
 
-import edu.ycp.cs481.arna.client.uicontroller.TourController;
-import edu.ycp.cs481.arna.shared.model.TourMode;
+import java.awt.image.BufferedImage;
+
+import edu.ycp.cs481.arna.client.uicontroller.CompassController;
+import edu.ycp.cs481.arna.shared.model.CompassMode;
 import android.location.LocationManager;
 import android.location.LocationListener; 
 import android.location.Location; 
+import android.opengl.Matrix;
 import android.os.Bundle;
+import android.view.SurfaceView;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.hardware.Camera; 
 import android.hardware.Sensor; 
@@ -15,6 +23,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorEvent;
 
 
+@SuppressLint("NewApi")
 public class CompassModeView extends Activity {
 
 	SensorManager sensorManager;
@@ -23,13 +32,15 @@ public class CompassModeView extends Activity {
 	int accelerometerSensor; 
 
 	LocationManager locationManager; 
+	ImageView arrow;
 	int magnetometerSensor;
 
-	TourMode tour; 
-	TourController cont; 
+	CompassMode compass; 
+	CompassController cont; 
 	float roll;
 	float pitch;
 	float azimuth;
+	double latitude;
 	boolean started;
 
 	private static final float ALPHA = 0.25f;
@@ -46,18 +57,18 @@ public class CompassModeView extends Activity {
 
 		magnetometerSensor = Sensor.TYPE_MAGNETIC_FIELD; 
 		accelerometerSensor = Sensor.TYPE_ACCELEROMETER; 
-		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_FASTEST); 
-		sensorManager.registerListener(sensorEventListener,  sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_FASTEST); 
-
-		tour = new TourMode(); 
-		cont = new TourController(tour); 
+		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_UI); 
+		sensorManager.registerListener(sensorEventListener,  sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_UI); 
+		arrow =  (ImageView) findViewById(R.id.imageView1);
+		compass = new CompassMode(); 
+		cont = new CompassController(compass); 
 	}
 
 	LocationListener locationListener = new LocationListener() {
 		
 		// Event handler for change in location.
 		public void onLocationChanged(Location location) {
-			double latitude = location.getLatitude(); 
+			 latitude = location.getLatitude(); 
 			double longitude = location.getLongitude(); 
 			double altitude = location.getAltitude(); 
 
@@ -144,7 +155,13 @@ public class CompassModeView extends Activity {
 				roll = (float)(orientation[2] * x180pi);			
 
 				// Update the model object.
-				cont.updateOrientation(azimuth, pitch, roll); 
+				cont.updateOrientation(azimuth, pitch, roll); 			
+
+				if ( latitude > 0) // wait till we have a location to change the angle of rotation
+				{
+					float degree = (float) (compass.getUser().getBearingTo(compass.getDestination())) - azimuth + (float) (compass.getUser().getBearingTo(compass.getDestination()))  ;
+					arrow.setRotation(degree);
+				}
 			}
 			
 			/*if(roll > 145)
@@ -177,8 +194,8 @@ public class CompassModeView extends Activity {
 		Sensor msensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, locationListener);
-		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_GAME);
-		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_GAME);
+		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_UI);
+		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_UI);
 	}
 
 	@Override

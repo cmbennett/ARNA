@@ -26,8 +26,6 @@ public class TourModeView extends Activity {
 	SurfaceHolder previewHolder; 
 	Camera camera; 
 	boolean inPreview; 
-
-	final static String TAG = "test"; 
 	SensorManager sensorManager;
 	Sensor accelerometer; 
 
@@ -230,7 +228,7 @@ public class TourModeView extends Activity {
 		Sensor msensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
 
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2.0f, locationListener);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, locationListener);
 		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_UI);
 		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_UI);
 		camera = Camera.open(); 
