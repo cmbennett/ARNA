@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 
 import edu.ycp.cs481.arna.client.uicontroller.CompassController;
 import edu.ycp.cs481.arna.shared.model.CompassMode;
+import edu.ycp.cs481.arna.shared.model.POI;
 import android.location.LocationManager;
 import android.location.LocationListener; 
 import android.location.Location; 
@@ -14,6 +15,7 @@ import android.view.SurfaceView;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.TextView;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.hardware.Camera; 
@@ -42,6 +44,10 @@ public class CompassModeView extends Activity {
 	float azimuth;
 	double latitude;
 	boolean started;
+	
+	TextView Location;
+	TextView Distance;
+	
 
 	private static final float ALPHA = 0.25f;
 
@@ -60,8 +66,18 @@ public class CompassModeView extends Activity {
 		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_UI); 
 		sensorManager.registerListener(sensorEventListener,  sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_UI); 
 		arrow =  (ImageView) findViewById(R.id.imageView1);
+		
+		Location =  (TextView) findViewById(R.id.POI);
+		Distance =  (TextView) findViewById(R.id.DistanceTo);
+		
+		
 		compass = new CompassMode(); 
 		cont = new CompassController(compass); 
+		POI kinsley = new POI(39.949120, -76.735165,32.0);
+		kinsley.setName("Kinsley Enginnering Center");
+		POI northSide = new POI(39.949792, -76.734041,70.0);
+		northSide.setName("North side Commons");
+	
 	}
 
 	LocationListener locationListener = new LocationListener() {
@@ -73,6 +89,13 @@ public class CompassModeView extends Activity {
 			double altitude = location.getAltitude(); 
 
 			cont.updateLocation(latitude, longitude, altitude); 
+			
+			String distance = Double.toString(compass.getUser().getDistanceTo(compass.getDestination()));
+			Distance.setText(distance); // remaining distance to the waypoint		
+			
+			Location.setText(compass.getDestination().getName()); // Display the name of the place we want to go
+
+		
 		}
 
 		public void onProviderDisabled(String arg0) {
