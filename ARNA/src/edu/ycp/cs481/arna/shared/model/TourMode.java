@@ -8,7 +8,7 @@ public class TourMode extends Mode {
 	
 	private List<POI> onScreen;
 	private static double CUTOFF = 5555555;
-	private List<Vector> displacementVectors; 
+
 	
 	public TourMode(User u, List<POI> wpList) {
 		super(u, wpList); 
@@ -56,11 +56,10 @@ public class TourMode extends Mode {
 		}
 	}
 	
-	public void computeDisplacementVectors() {
-		double temp1; 
-		double temp2; 
+	public void computePOIVector(double horzCamAngle, double vertCamAngle, double maxX, double maxY) {
+		
 		double dy; 
-		double dBearing; 
+	
 		double dx; 
 		double dz; 
 		
@@ -69,23 +68,39 @@ public class TourMode extends Mode {
 		
 		//Populate array of vectors (each i vector in the list corresponds with the i POI in the onScreen list)
 		for(POI w: onScreen) {
-			dy = user.getLocation().getElevation() - w.getLocation().getElevation(); 
 			
-			dBearing = user.getOrient().getAzimuth() - user.getBearingTo(w); 
-			dx = Math.sin(dBearing) * user.getDistanceTo(w); 
-			dz = Math.cos(dBearing) * user.getDistanceTo(w); 
+			//Use arc lengths and to compute a ratio of distance from azimuth to
+			//total distance at cutoff to map the coordinates to the screen
 			
-			//Compensate for rotation of camera (NEEDS TESTED!!!)
-			//Refactored equation thanks to aldream.net
-			temp1 = Math.cos(pitch) * dy - Math.sin(pitch) * dx; 
-			temp2 = Math.cos(roll) * dz + Math.sin(roll) * (Math.sin(pitch) * dy + Math.cos(pitch) * dz); 
+			//Map X using arc lengths
+			double twoPiR = 2 * Math.PI * CUTOFF; 
+			double totalArc = twoPiR * (horzCamAngle / 360); 
 			
-			dx = Math.cos(roll) * (Math.sin(pitch) * dy + Math.cos(pitch) * dx) - Math.sin(roll) * dz; 
-			dy = Math.sin(pitch) * temp2 + Math.cos(pitch) * temp1; 
-			dz = Math.cos(pitch) * temp2 - Math.sin(pitch) * temp1; 
-			Vector v = new Vector();
-			v.set((float)dx,(float)dy,(float)dz);
-			displacementVectors.add(v); 
+			double azimuth = user.getOrient().getAzimuth(); 
+			double bearing = user.getBearingTo(w); 
+			double POIAngle = Math.abs(azimuth - bearing); 
+			
+			double POIArc = twoPiR * (POIAngle / 360); 
+			
+			//(poiarc / totalarc) = (dx / DX)
+			dx = (POIArc * maxX / totalArc); 
+			
+			if(azimuth - bearing < 0){
+				dx = dx * -1; 
+			}	
+			
+			//Map Y using trigonometry
+			double POIheight = w.getLocation().getElevation() - user.getLocation().getElevation(); 
+			double maxHeight = Math.tan(vertCamAngle) * user.getDistanceTo(w); 
+			
+			dy = (POIheight * maxY) / maxHeight; 
+			dz = 0.0; 
+			w.setVector((float) dx, (float) dy, (float) dz); 
+			
+			
+			//TODO: Rotate Vector by pitch and roll and determine the screen coordinates
+			//If screen coordinates are outside of the device coordinate system, we can disregard
+			//drawing it
 		}
 	}
 }
