@@ -29,25 +29,6 @@ public class Splashscreen extends Activity {
 		count = 0;
 		found = false;
 
-		/*
-		dbhelper = new DatabaseHelper(this);
-		// Create database (if it doesn't already exist)
-		try {
-		    dbhelper.createDataBase();
-		}
-		catch(IOException e) {
-		    throw new Error("Error: Unable to create database");
-		}
-
-		// Open database
-		try {
-			db.openDataBase();
-		}
-		catch(SQLException e) {
-		    throw e;
-		}
-
-		dbhelper.close()*/
 	}
 	
 	LocationListener locationListener = new LocationListener() {
@@ -61,7 +42,7 @@ public class Splashscreen extends Activity {
 			if(latitude > 0 && count == 5 && found ==  false)
 			{
 				cont.updateLocation(latitude, longitude, altitude); 
-				Intent intent = new Intent(Splashscreen.this, TourModeView.class);  
+				Intent intent = new Intent(Splashscreen.this, MainMenu.class);  
 				startActivity(intent);
 				count = 0;
 				found = true;

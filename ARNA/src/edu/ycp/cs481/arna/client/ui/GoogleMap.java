@@ -1,30 +1,30 @@
 package edu.ycp.cs481.arna.client.ui;
 
 
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapView;
-
 import edu.ycp.cs481.arna.client.uicontroller.TourController;
 import edu.ycp.cs481.arna.shared.model.TourMode;
 import android.location.LocationManager;
 import android.location.LocationListener; 
 import android.location.Location; 
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.widget.Toast;
+import android.app.Activity;
 import android.content.Intent; 
 import android.hardware.Sensor; 
 import android.hardware.SensorManager;
 import android.hardware.SensorEventListener; 
 import android.hardware.SensorEvent;  
-import com.google.android.maps.MapController;
 
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.*;
 
-public class GoogleMap extends MapActivity  {
+public class GoogleMap extends FragmentActivity   {
+	 private com.google.android.gms.maps.GoogleMap googleMap;
 
-	final static String TAG = "test"; 
 	SensorManager sensorManager;
 	Sensor accelerometer; 
-	private MapView mapView;
-	private MapController mapController;
+
 	int accelerometerSensor; 
 	
 	LocationManager locationManager; 
@@ -63,23 +63,10 @@ public class GoogleMap extends MapActivity  {
 	
 		tour = new TourMode(); 
 		cont = new TourController(tour); 
-	 
-		 mapView = (MapView) findViewById(R.id.map);
-		  
-		  // Enable street view by default.
-		  mapView.setStreetView(true);
-		  
-		  // Enable to show satellite view.
-		  // mapView.setSatellite(true);
-		  
-		  // Enable to show traffic on map.
-		  // mapView.setTraffic(true);
-		  
-		  mapView.setBuiltInZoomControls(true);
-		  
-		  mapController = mapView.getController();
-		  mapController.setZoom(16);
-	}
+     	googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+     	googleMap.setMyLocationEnabled(true);
+
+ }
 
 	LocationListener locationListener = new LocationListener() {
 		// Event handler for change in location.
@@ -147,11 +134,11 @@ public class GoogleMap extends MapActivity  {
 			}	
 			
 			// Toggle mode based on device orientation.
-			if(roll < 120 && count > 10) {
+			/*if(roll < 120 && count > 10) {
           	   Intent intent = new Intent(GoogleMap.this, TourModeView.class);  
           	   startActivity(intent);
           	   count=0;         	
-            }
+            }*/
 			
 			if (count > 11)
 			{
@@ -189,9 +176,5 @@ public class GoogleMap extends MapActivity  {
 		super.onPause(); 
 	}
 
-	@Override
-	protected boolean isRouteDisplayed() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+
 }

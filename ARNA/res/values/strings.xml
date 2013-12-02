@@ -10,5 +10,7 @@
     <string name="title_activity_home_menu">HomeMenu</string>
     <string name="title_activity_compass_mode_view">CompassModeView</string>
     <string name="title_activity_swipe_menu">SwipeMenu</string>
+    <string name="title_activity_main_menu">MainMenu</string>
+    <string name="title_activity_setings">Setings</string>
 
 </resources>

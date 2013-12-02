@@ -4,52 +4,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="500dp"
-        android:layout_height="200dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="84dp"
-        android:maxHeight="800dp"
-        android:maxWidth="100dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/arrow" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/imageView1"
-        android:layout_marginLeft="27dp"
-        android:layout_marginTop="85dp"
-        android:text="Point of Interest: " />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="20dp"
-        android:text="Distance Away: " />
-
     <TextView
         android:id="@+id/POI"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView1"
-        android:layout_alignTop="@+id/textView1"
+        android:layout_alignBottom="@+id/textView12"
+        android:layout_alignTop="@+id/textView12"
         android:layout_marginLeft="42dp"
-        android:layout_toRightOf="@+id/textView1" />
+        android:layout_toRightOf="@+id/textView12" />
 
     <TextView
         android:id="@+id/DistanceTo"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView2"
+        android:layout_alignBottom="@+id/textView121"
         android:layout_alignLeft="@+id/POI"
-        android:layout_alignTop="@+id/textView2" />
+        android:layout_alignTop="@+id/textView121" />
+
+    <TextView
+        android:id="@+id/textView121"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView12"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="108dp"
+        android:text="Distance Away: " />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/DistanceTo"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="55dp"
+        android:layout_marginLeft="48dp"
+        android:text="Point of Interest: " />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_above="@+id/POI"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="73dp"
+        android:src="@drawable/arrow1" />
+
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/DistanceTo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp" />
 
 </RelativeLayout>
