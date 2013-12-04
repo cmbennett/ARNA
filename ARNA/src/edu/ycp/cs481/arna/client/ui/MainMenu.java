@@ -44,5 +44,8 @@ public class MainMenu extends Activity {
 		  
 	}
 
-
+	 public void onBackPressed() {
+		 	return;
+	      
+	    }
 }

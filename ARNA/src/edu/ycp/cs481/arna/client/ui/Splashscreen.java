@@ -1,13 +1,28 @@
 package edu.ycp.cs481.arna.client.ui;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
 import edu.ycp.cs481.arna.client.uicontroller.TourController;
 import edu.ycp.cs481.arna.shared.model.TourMode;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.RelativeLayout;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 
 public class Splashscreen extends Activity {
 	LocationManager locationManager;
@@ -15,11 +30,16 @@ public class Splashscreen extends Activity {
 	TourController cont; 
 	int count;
 	boolean found;
-
+	ImageView image;
+	
+	static int width;
+	static int height;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash_screen);
+
 
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener); 
@@ -64,4 +84,5 @@ public class Splashscreen extends Activity {
 			//TODO Auto-generated method sub
 		}
 	}; 
+	
 }

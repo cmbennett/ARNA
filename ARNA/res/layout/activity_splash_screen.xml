@@ -6,15 +6,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".SplashScreen" >
-
-    <ImageView
-        android:id="@+id/arrow"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:maxHeight="@dimen/activity_vertical_margin"
-        android:maxWidth="@dimen/activity_horizontal_margin"
-        android:scaleType="fitXY"
-        android:src="@drawable/spalshscreen" />
+    tools:context=".SplashScreen"
+    android:background="@drawable/splashscreen"
+  
+     >
 
 </RelativeLayout>
