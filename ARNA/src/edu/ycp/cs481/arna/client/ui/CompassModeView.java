@@ -2,6 +2,8 @@ package edu.ycp.cs481.arna.client.ui;
 
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.ycp.cs481.arna.client.uicontroller.CompassController;
 import edu.ycp.cs481.arna.shared.model.CompassMode;
@@ -12,9 +14,14 @@ import android.location.Location;
 import android.opengl.Matrix;
 import android.os.Bundle;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.animation.RotateAnimation;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -43,10 +50,16 @@ public class CompassModeView extends Activity {
 	float pitch;
 	float azimuth;
 	double latitude;
+	double longitude;
+	double altitude;
+	
 	boolean started;
 	
 	TextView Location;
 	TextView Distance;
+	
+	Spinner locations;
+	
 	
 
 	private static final float ALPHA = 0.25f;
@@ -71,6 +84,43 @@ public class CompassModeView extends Activity {
 		Distance =  (TextView) findViewById(R.id.DistanceTo);
 		
 		
+		final List<String> list=new ArrayList<String>();
+		 list.add(" Please Select a location");
+	    list.add("Kinsley Engineering Center");
+	    list.add("Northside Commons");
+	    list.add("Grumbacher");
+	    list.add("Campbell Hall");
+	    list.add("Beard Hall");
+	    list.add("Evergreen Hall");
+	    list.add("Willow Hall");
+	    list.add("Brockie Commons");
+	    list.add("Diehl Hall");
+	    list.add("Penn Hall");
+	    list.add("Cordorus Hall");
+	    java.util.Collections.sort(list);
+		
+	   
+		locations = (Spinner)findViewById(R.id.spinner1);
+		ArrayAdapter<String> adp1=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,list);
+		adp1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		locations.setAdapter(adp1);
+		
+		locations.setOnItemSelectedListener(
+                new OnItemSelectedListener() {
+                    public void onItemSelected( AdapterView<?> parent, View view, int position, long id) 
+                    {
+                     
+                        Location.setText((CharSequence) locations.getSelectedItem()); // Display the name of the place we want to go
+                        String distance = Double.toString(compass.getUser().getDistanceTo(compass.getDestination()));
+                        Distance.setText(distance); // remaining distance to the waypoint	
+                    }
+
+                    public void onNothingSelected(AdapterView<?> parent) {
+                   
+                    }
+                });
+		
+		
 		compass = new CompassMode(); 
 		cont = new CompassController(compass); 
 		POI kinsley = new POI(39.949120, -76.735165,32.0);
@@ -79,21 +129,25 @@ public class CompassModeView extends Activity {
 		northSide.setName("North side Commons");
 	
 	}
+	
+
 
 	LocationListener locationListener = new LocationListener() {
 		
 		// Event handler for change in location.
 		public void onLocationChanged(Location location) {
 			 latitude = location.getLatitude(); 
-			double longitude = location.getLongitude(); 
-			double altitude = location.getAltitude(); 
+			 longitude = location.getLongitude(); 
+			 altitude = location.getAltitude(); 
 
 			cont.updateLocation(latitude, longitude, altitude); 
 			
-			String distance = Double.toString(compass.getUser().getDistanceTo(compass.getDestination()));
+		/*	String distance = Double.toString(compass.getUser().getDistanceTo(compass.getDestination()));
 			Distance.setText(distance); // remaining distance to the waypoint		
 			
 			Location.setText(compass.getDestination().getName()); // Display the name of the place we want to go
+			*/
+		
 
 		
 		}
@@ -180,7 +234,7 @@ public class CompassModeView extends Activity {
 				// Update the model object.
 				cont.updateOrientation(azimuth, pitch, roll); 			
 
-				if ( latitude > 0) // wait till we have a location to change the angle of rotation
+				if ( latitude > 0 && locations.getSelectedItemPosition() != 0) // wait till we have a location to change the angle of rotation
 				{
 					float degree = (float) (compass.getUser().getBearingTo(compass.getDestination())) - azimuth + (float) (compass.getUser().getBearingTo(compass.getDestination()))  ;
 					arrow.setRotation(degree);
@@ -249,4 +303,5 @@ public class CompassModeView extends Activity {
 
 		return(result); 
 	}
+	
 }
