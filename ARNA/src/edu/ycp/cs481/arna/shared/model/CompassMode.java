@@ -1,6 +1,7 @@
 package edu.ycp.cs481.arna.shared.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CompassMode {
 	
@@ -10,6 +11,7 @@ public class CompassMode {
 	private User user;
 	private ArrayList<Integer> queue;
 	private int sum, limit;
+	private List<POI> wpList;
 	
 	public CompassMode(User u, POI w) {
 		user = u;
@@ -21,10 +23,16 @@ public class CompassMode {
 	}
 	public CompassMode() {
 		 user = new User();
-		 destination = new POI(39.950146, -76.734092,0.0); // for testing ONLY! NORTH SIDE
+		destination = new POI(39.950146, -76.734092,0.0); // for testing ONLY! NORTH SIDE
 		 
 	}
+	public List<POI> getWpList() {
+		return wpList;
+	}
 
+	public void setWpList(List<POI> wpList) {
+		this.wpList = wpList;
+	}
 	public POI getDestination() {
 		return destination;
 	}

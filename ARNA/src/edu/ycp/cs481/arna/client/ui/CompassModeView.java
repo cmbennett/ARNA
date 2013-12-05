@@ -1,30 +1,26 @@
 package edu.ycp.cs481.arna.client.ui;
-
-
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.ycp.cs481.arna.client.uicontroller.CompassController;
 import edu.ycp.cs481.arna.shared.model.CompassMode;
 import edu.ycp.cs481.arna.shared.model.POI;
+import edu.ycp.cs481.arna.shared.model.POIList;
+import edu.ycp.cs481.shared.persistence.DatabaseHelper;
 import android.location.LocationManager;
 import android.location.LocationListener; 
 import android.location.Location; 
-import android.opengl.Matrix;
 import android.os.Bundle;
-import android.view.SurfaceView;
 import android.view.View;
-import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.database.Cursor;
 import android.hardware.Camera; 
 import android.hardware.Sensor; 
 import android.hardware.SensorManager;
@@ -46,21 +42,24 @@ public class CompassModeView extends Activity {
 
 	CompassMode compass; 
 	CompassController cont; 
+
 	float roll;
 	float pitch;
 	float azimuth;
 	double latitude;
 	double longitude;
 	double altitude;
-	
+
 	boolean started;
-	
+
 	TextView Location;
 	TextView Distance;
-	
+
 	Spinner locations;
-	
-	
+
+	private DatabaseHelper db;
+	private POIList lists;
+
 
 	private static final float ALPHA = 0.25f;
 
@@ -78,78 +77,93 @@ public class CompassModeView extends Activity {
 		accelerometerSensor = Sensor.TYPE_ACCELEROMETER; 
 		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_UI); 
 		sensorManager.registerListener(sensorEventListener,  sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_UI); 
-		
+
 		arrow =  (ImageView) findViewById(R.id.imageView1);
 		Location =  (TextView) findViewById(R.id.POI);
 		Distance =  (TextView) findViewById(R.id.DistanceTo);
-		
-		
+
+		lists = getPOIList(null);
+		compass.setWpList(lists.getList());
+
+
 		final List<String> list=new ArrayList<String>();
-		 list.add(" Please Select a location");
-	    list.add("Kinsley Engineering Center");
-	    list.add("Northside Commons");
-	    list.add("Grumbacher");
-	    list.add("Campbell Hall");
-	    list.add("Beard Hall");
-	    list.add("Evergreen Hall");
-	    list.add("Willow Hall");
-	    list.add("Brockie Commons");
-	    list.add("Diehl Hall");
-	    list.add("Penn Hall");
-	    list.add("Cordorus Hall");
-	    java.util.Collections.sort(list);
+		list.add(" Please Select a location");
+
+		for (POI poi: compass.getWpList())
+		{
+			list.add(poi.getName());
+
+		}
 		
-	   
+		java.util.Collections.sort(list);
+		
 		locations = (Spinner)findViewById(R.id.spinner1);
 		ArrayAdapter<String> adp1=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,list);
 		adp1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		locations.setAdapter(adp1);
-		
-		locations.setOnItemSelectedListener(
-                new OnItemSelectedListener() {
-                    public void onItemSelected( AdapterView<?> parent, View view, int position, long id) 
-                    {
-                     
-                        Location.setText((CharSequence) locations.getSelectedItem()); // Display the name of the place we want to go
-                        String distance = Double.toString(compass.getUser().getDistanceTo(compass.getDestination()));
-                        Distance.setText(distance); // remaining distance to the waypoint	
-                    }
 
-                    public void onNothingSelected(AdapterView<?> parent) {
-                   
-                    }
-                });
-		
-		
-		compass = new CompassMode(); 
+		locations.setOnItemSelectedListener(
+				new OnItemSelectedListener() {
+					public void onItemSelected( AdapterView<?> parent, View view, int position, long id) 
+					{
+
+						Location.setText((CharSequence) locations.getSelectedItem()); // Display the name of the place we want to go
+						String distance = Double.toString(compass.getUser().getDistanceTo(compass.getDestination()));
+						Distance.setText(distance); // remaining distance to the waypoint	
+					}
+
+					public void onNothingSelected(AdapterView<?> parent) {
+
+					}
+				});
+
+
+		/*	compass = new CompassMode(); 
 		cont = new CompassController(compass); 
 		POI kinsley = new POI(39.949120, -76.735165,32.0);
 		kinsley.setName("Kinsley Enginnering Center");
 		POI northSide = new POI(39.949792, -76.734041,70.0);
-		northSide.setName("North side Commons");
-	
+		northSide.setName("North side Commons");*/
+
+
+
+
+
 	}
-	
+
+	public POIList getPOIList(String tag) {
+		try {
+			db.openDatabase();
+		} catch (java.sql.SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Cursor cursor = db.getCursorfromDatabase(tag);
+		POIList poi_list = new POIList();    
+		poi_list.getListFromCursor(cursor);
+		db.close();
+		return poi_list;
+	}
 
 
 	LocationListener locationListener = new LocationListener() {
-		
+
 		// Event handler for change in location.
 		public void onLocationChanged(Location location) {
-			 latitude = location.getLatitude(); 
-			 longitude = location.getLongitude(); 
-			 altitude = location.getAltitude(); 
+			latitude = location.getLatitude(); 
+			longitude = location.getLongitude(); 
+			altitude = location.getAltitude(); 
 
 			cont.updateLocation(latitude, longitude, altitude); 
-			
-		/*	String distance = Double.toString(compass.getUser().getDistanceTo(compass.getDestination()));
-			Distance.setText(distance); // remaining distance to the waypoint		
-			
-			Location.setText(compass.getDestination().getName()); // Display the name of the place we want to go
-			*/
-		
 
-		
+			/*	String distance = Double.toString(compass.getUser().getDistanceTo(compass.getDestination()));
+			Distance.setText(distance); // remaining distance to the waypoint		
+
+			Location.setText(compass.getDestination().getName()); // Display the name of the place we want to go
+			 */
+
+
+
 		}
 
 		public void onProviderDisabled(String arg0) {
@@ -169,7 +183,7 @@ public class CompassModeView extends Activity {
 		float[] geomagnetic; 
 		float var;
 		float inclination;
-		
+
 		// Event handler for sensor event.
 		public void onSensorChanged(SensorEvent sensorEvent) {
 			//int orientations =  getResources().getConfiguration().orientation;
@@ -182,18 +196,18 @@ public class CompassModeView extends Activity {
 			if(sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
 				gravity = lowPass(sensorEvent.values.clone(), gravity);
 			}
-			
+
 			// Acquire and filter accelerometer data from device.
 			if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 				geomagnetic = lowPass(sensorEvent.values.clone(), geomagnetic);
 			}
-			
+
 			// As long as acquired data is valid, acquire the transformation matrix.
 			if(gravity != null && geomagnetic != null) {
 				SensorManager.getRotationMatrix(R, I, gravity, geomagnetic);
-			
+
 				inclination = (float) Math.acos(outR[8]);
-				
+
 				// If the device is upright (or nearly so), use unadjusted values.
 				if (inclination < 25.0f || inclination > 155.0f ) {
 					SensorManager.getOrientation(R, orientation); 
@@ -202,15 +216,15 @@ public class CompassModeView extends Activity {
 					SensorManager.remapCoordinateSystem(R, SensorManager.AXIS_X, SensorManager.AXIS_Z, outR);
 					SensorManager.getOrientation(outR, orientation); 
 				}	
-				
+
 				// Covert from radians to degrees.
 				double x180pi = 180.0 / Math.PI;
-				
+
 				azimuth = (float)(orientation[0] * x180pi);
-				
+
 				// Adjust starting angle due to device specs.
 				azimuth -= 90.0f;
-				
+
 				// Flip angle over the horizontal plane. This is done because android devices measure angles counterclockwise instead of clockwise.
 				if (azimuth < 180) { // West -> East
 					var = 2*(180-azimuth);
@@ -219,7 +233,7 @@ public class CompassModeView extends Activity {
 					var = 2*(azimuth - 180);
 					azimuth -= var;
 				}
-				
+
 				// Enforce wrap-around.
 				if ( azimuth < 0.0f) { // Lower bound
 					azimuth += 360.0f; 
@@ -228,7 +242,7 @@ public class CompassModeView extends Activity {
 				}
 
 				pitch = (float)(orientation[1] * x180pi);
-				
+
 				roll = (float)(orientation[2] * x180pi);			
 
 				// Update the model object.
@@ -240,7 +254,7 @@ public class CompassModeView extends Activity {
 					arrow.setRotation(degree);
 				}
 			}
-			
+
 			/*if(roll > 145)
 			{
 				Intent intent = new Intent(TourModeView.this, CompassModeView.class);  
@@ -254,10 +268,10 @@ public class CompassModeView extends Activity {
 			for(int i = 0; i < input.length; i++) {
 				output[i] = output[i] + ALPHA * (input[i] - output[i]);
 			}
-			
+
 			return output;
 		}
-		
+
 		public void onAccuracyChanged(Sensor sensor, int accuracy) {
 			//
 		}
@@ -279,7 +293,7 @@ public class CompassModeView extends Activity {
 	public void onPause() {
 		locationManager.removeUpdates(locationListener);
 		sensorManager.unregisterListener(sensorEventListener);
-	
+
 		super.onPause(); 
 	}
 
@@ -303,5 +317,5 @@ public class CompassModeView extends Activity {
 
 		return(result); 
 	}
-	
+
 }

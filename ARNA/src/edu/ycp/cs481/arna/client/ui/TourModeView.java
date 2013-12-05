@@ -1,23 +1,33 @@
 package edu.ycp.cs481.arna.client.ui;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import edu.ycp.cs481.arna.client.uicontroller.TourController;
 import edu.ycp.cs481.arna.shared.model.POI;
+import edu.ycp.cs481.arna.shared.model.POIList;
 import edu.ycp.cs481.arna.shared.model.TourMode;
+import edu.ycp.cs481.shared.persistence.DatabaseHelper;
 import android.location.LocationManager;
 import android.location.LocationListener; 
 import android.location.Location; 
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.database.Cursor;
+import android.graphics.Point;
 import android.hardware.Camera; 
 import android.hardware.Sensor; 
 import android.hardware.SensorManager;
 import android.hardware.SensorEventListener; 
 import android.hardware.SensorEvent;  
 import android.util.Log;
+import android.view.Display;
 import android.view.SurfaceHolder; 
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -31,27 +41,41 @@ public class TourModeView extends Activity {
 
 	int accelerometerSensor; 
 
+	float[] buffer = new float[10];
+
 	LocationManager locationManager; 
 	int magnetometerSensor;
 
 	TourMode tour; 
 	TourController cont; 
-	
+
 	float roll;
 	float pitch;
 	float azimuth;
-	
+
 	boolean started;
 	double latitude;
 	double longitude;
 	double altitude;
 	TextView LocationID;
+	TextView Description;
+	boolean touched;
+	
+	ImageView waypoint;
 
+	int counterForMarker;
+	boolean flagForMarker;
 
 	double viewAngle;
+	double viewVertAngle;
+	
+	Point size = new Point();
+
+	private DatabaseHelper db;
 
 	private static final float ALPHA = 0.25f;
 
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -78,8 +102,28 @@ public class TourModeView extends Activity {
 		tour = new TourMode(); 
 		cont = new TourController(tour); 
 
+		////// change the color of the text based on the time
+		
+		Calendar c = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss a");
+		String strDate = sdf.format(c.getTime());
+		//System.out.println(strDate);
+		
+		/////
+	Display display = getWindowManager().getDefaultDisplay();
+		
+		display.getSize(size);
+		
 		LocationID = (TextView) findViewById(R.id.LocationID);
 		LocationID.setTextColor(0xFF000000); //black
+		
+		Description= (TextView) findViewById(R.id.textView1);
+		touched = true;
+
+		counterForMarker = 0;
+		flagForMarker = false;
+
+		waypoint = (ImageView) findViewById(R.id.imageView1);
 
 		POI kinsley = new POI(39.949120, -76.735165,32.0);
 		kinsley.setName("Kinsley Enginnering Center");
@@ -87,15 +131,36 @@ public class TourModeView extends Activity {
 		northSide.setName("North side Commons");
 		tour.addWaypoint(kinsley);
 		tour.addWaypoint(northSide);
+		/*
+		tour.setWpList(getPOIList(null).getList());
+		
+		System.out.println(tour.getWpList().get(0));
+		*/
+
 	}
 	
+	public POIList getPOIList(String tag) {
+		try {
+			db.openDatabase();
+		} catch (java.sql.SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Cursor cursor = db.getCursorfromDatabase(tag);
+		POIList poi_list = new POIList();    
+		poi_list.getListFromCursor(cursor);
+		db.close();
+		return poi_list;
+	}
+
+
 	LocationListener locationListener = new LocationListener() {
 		@Override
 		public void onLocationChanged(Location location){	
-			
-			 latitude = location.getLatitude(); 
-			 longitude = location.getLongitude(); 
-			 altitude = location.getAltitude(); 
+
+			latitude = location.getLatitude(); 
+			longitude = location.getLongitude(); 
+			altitude = location.getAltitude(); 
 
 			cont.updateLocation(latitude, longitude, altitude); 
 			tour.populateOnScreen(viewAngle);
@@ -120,6 +185,7 @@ public class TourModeView extends Activity {
 		float[] geomagnetic; 
 		float var;
 		float inclination;
+		@SuppressLint("NewApi")
 		public void onSensorChanged(SensorEvent sensorEvent){
 			//int orientations =  getResources().getConfiguration().orientation;
 			float R[] = new float[9]; 
@@ -131,18 +197,18 @@ public class TourModeView extends Activity {
 			if(sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
 				gravity = lowPass(sensorEvent.values.clone(), gravity);
 			}
-			
+
 			// Acquire and filter accelerometer data from device.
 			if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 				geomagnetic = lowPass(sensorEvent.values.clone(), geomagnetic);
 			}
-			
+
 			// As long as acquired data is valid, acquire the transformation matrix.
 			if(gravity != null && geomagnetic != null){
 				SensorManager.getRotationMatrix(R, I, gravity, geomagnetic);
-			
+
 				inclination = (float) Math.acos(outR[8]);
-				
+
 				// If the device is upright (or nearly so), use unadjusted values.
 				if (inclination < 25.0f || inclination > 155.0f ) {
 					SensorManager.getOrientation(R, orientation); 
@@ -150,15 +216,15 @@ public class TourModeView extends Activity {
 					SensorManager.remapCoordinateSystem(R, SensorManager.AXIS_X, SensorManager.AXIS_Z, outR);
 					SensorManager.getOrientation(outR, orientation); 
 				}	
-				
+
 				// Covert from radians to degrees.
 				double x180pi = 180.0 / Math.PI;
-				
+
 				azimuth = (float)(orientation[0] * x180pi);
-				
+
 				// Adjust starting angle due to device specs.
 				azimuth -= 90.0f;
-				
+
 				// Flip angle over the horizontal plane. This is done because android devices measure angles counterclockwise instead of clockwise.
 				if (azimuth < 180) { // West -> East
 					var = 2*(180-azimuth);
@@ -167,7 +233,7 @@ public class TourModeView extends Activity {
 					var = 2*(azimuth - 180);
 					azimuth -= var;
 				}
-				
+
 				// Enforce wrap-around.
 				if ( azimuth < 0.0f) { // Lower bound
 					azimuth += 360.0f; 
@@ -176,26 +242,78 @@ public class TourModeView extends Activity {
 				}
 
 				pitch = (float)(orientation[1] * x180pi);
-				
+
 				roll = (float)(orientation[2] * x180pi);	
 
 				// Update the model object.
 				cont.updateOrientation(azimuth, pitch, roll);
-				
-			
-				tour.populateOnScreen(viewAngle);
 
+				
+				tour.populateOnScreen(viewAngle);
+				tour.computePOIVector(viewAngle, viewVertAngle, size.x, size.y);
+				//tour.computePOIVector(viewAngle, 1, size.x, size.y);
+				
 				if (!tour.getOnScreen().isEmpty() )
 				{
+					waypoint.setVisibility(View.VISIBLE);
+					float x = tour.getOnScreen().get(0).getVector().getX();
+					buffer[counterForMarker] = x;
+					counterForMarker++;
+
+					if (counterForMarker == 10)
+					{
+						flagForMarker = true;
+					}
+
+					if (counterForMarker >= 10)
+					{
+						counterForMarker = 0;
+					}
+
+					if (!flagForMarker)
+					{
+						waypoint.setX(x);
+					}
+					else
+					{
+						x = 0;
+						for (int i= 0; i < 10; i++)
+						{
+							x += buffer[i];
+						}
+						x = x/10;
+						waypoint.setX(x);
+					}
+
+					//waypoint.setY(tour.getOnScreen().get(0).getVector().getY());
+						waypoint.setY(300.0f);
 					LocationID.setText(tour.getOnScreen().get(0).getName()); // if not empty
-					
-				}
-				else if (tour.getOnScreen().isEmpty() )
+
+				}	// end of populate on screen			
+				else if(tour.getOnScreen().isEmpty())
 				{
-					LocationID.setText("NOTHING IN SIGHT"); // if empty
+					waypoint.setVisibility(View.INVISIBLE);
+					LocationID.setText(""); // if not empty
 					
 				}
-		
+				waypoint.setOnClickListener(new View.OnClickListener(){
+				    public void onClick(View v) {
+				    	touched = !touched; // first time, you have to tap TWICE!
+				        if (!touched)
+				        {
+				    	Description.setVisibility(View.VISIBLE);
+			
+				        }    
+				        else
+				       if (touched)
+				        {
+				    	Description.setVisibility(View.INVISIBLE);
+				    	
+				        }  
+				      
+				        
+				    }
+				});
 			}
 
 			/*if(roll > 145)
@@ -222,7 +340,7 @@ public class TourModeView extends Activity {
 
 	@Override
 	public void onResume(){
-		
+
 		Sensor gsensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 		Sensor asensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		Sensor msensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
@@ -233,7 +351,7 @@ public class TourModeView extends Activity {
 		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_UI);
 		camera = Camera.open(); 
 		super.onResume(); 
-		
+
 
 	}
 
@@ -296,7 +414,8 @@ public class TourModeView extends Activity {
 				camera.startPreview(); 
 				inPreview = true; 
 				viewAngle = camera.getParameters().getHorizontalViewAngle();
-				
+				viewVertAngle = camera.getParameters().getVerticalViewAngle();
+
 			}	
 		}
 

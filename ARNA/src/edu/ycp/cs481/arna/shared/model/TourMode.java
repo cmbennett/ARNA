@@ -73,7 +73,7 @@ public class TourMode extends Mode {
 			//total distance at cutoff to map the coordinates to the screen
 			
 			//Map X using arc lengths
-			double twoPiR = 2 * Math.PI * CUTOFF; 
+			double twoPiR = 2 * Math.PI * user.getDistanceTo(w); 
 			double totalArc = twoPiR * (horzCamAngle / 360); 
 			
 			double azimuth = user.getOrient().getAzimuth(); 
@@ -85,10 +85,11 @@ public class TourMode extends Mode {
 			//(poiarc / totalarc) = (dx / DX)
 			dx = (POIArc * maxX / totalArc); 
 			
-			if(azimuth - bearing < 0){
+			
+			if(azimuth - bearing > 0){
 				dx = dx * -1; 
 			}	
-			
+			dx = (maxX/2) + dx;
 			//Map Y using trigonometry
 			double POIheight = w.getLocation().getElevation() - user.getLocation().getElevation(); 
 			double maxHeight = Math.tan(vertCamAngle) * user.getDistanceTo(w); 
