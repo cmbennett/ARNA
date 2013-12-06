@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.hardware.Camera; 
 import android.hardware.Sensor; 
@@ -105,17 +106,27 @@ public class TourModeView extends Activity {
 		////// change the color of the text based on the time
 		
 		Calendar c = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss a");
-		String strDate = sdf.format(c.getTime());
-		//System.out.println(strDate);
+		SimpleDateFormat hour = new SimpleDateFormat("HH"); // 24 hour 		
+		int hours = Integer.parseInt(hour.format(c.getTime()));
+		
+		LocationID = (TextView) findViewById(R.id.LocationID);
+		
+		if(hours > 5 || hours < 17) // its night time
+		{
+			LocationID.setTextColor(Color.WHITE); //white
+		}
+		else
+		{			
+			LocationID.setTextColor(Color.BLACK); //black
+		
+		}
 		
 		/////
-	Display display = getWindowManager().getDefaultDisplay();
+		Display display = getWindowManager().getDefaultDisplay();
 		
 		display.getSize(size);
 		
-		LocationID = (TextView) findViewById(R.id.LocationID);
-		LocationID.setTextColor(0xFF000000); //black
+
 		
 		Description= (TextView) findViewById(R.id.textView1);
 		touched = true;

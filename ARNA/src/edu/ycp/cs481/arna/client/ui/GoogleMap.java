@@ -16,11 +16,11 @@ import android.hardware.SensorManager;
 import android.hardware.SensorEventListener; 
 import android.hardware.SensorEvent;  
 
-import com.google.android.gms.maps.*;
-import com.google.android.gms.maps.model.*;
+/*import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.*;*/
 
 public class GoogleMap extends FragmentActivity   {
-	 private com.google.android.gms.maps.GoogleMap googleMap;
+	// private com.google.android.gms.maps.GoogleMap googleMap;
 
 	SensorManager sensorManager;
 	Sensor accelerometer; 
@@ -63,9 +63,9 @@ public class GoogleMap extends FragmentActivity   {
 	
 		tour = new TourMode(); 
 		cont = new TourController(tour); 
-     	googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+     	/*googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
      	googleMap.setMyLocationEnabled(true);
-
+*/
  }
 
 	LocationListener locationListener = new LocationListener() {
