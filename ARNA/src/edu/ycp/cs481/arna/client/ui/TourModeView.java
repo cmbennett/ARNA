@@ -64,6 +64,8 @@ public class TourModeView extends Activity {
 	TextView Description;
 	boolean touched;
 	
+	boolean firstTime = false;
+	
 	ImageView waypoint;
 
 	int counterForMarker;
@@ -104,8 +106,13 @@ public class TourModeView extends Activity {
 
 		tour = new TourMode(); 
 		cont = new TourController(tour); 
+		
+		if (firstTime == false)
+		{
 		waypoints = new addingTourModeWaypoints(tour);
-
+		firstTime = true;
+		}
+		
 		////// change the color of the text based on the time
 		
 		Calendar c = Calendar.getInstance();

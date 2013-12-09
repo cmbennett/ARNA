@@ -7,7 +7,7 @@ import java.util.List;
 public class TourMode extends Mode {
 	
 	private List<POI> onScreen;
-	private static double CUTOFF = 5555555;
+	private static double CUTOFF = 400;
 
 	
 	public TourMode(User u, List<POI> wpList) {

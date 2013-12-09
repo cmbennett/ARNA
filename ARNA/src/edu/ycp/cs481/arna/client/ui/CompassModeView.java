@@ -7,6 +7,8 @@ import edu.ycp.cs481.arna.shared.model.CompassMode;
 import edu.ycp.cs481.arna.shared.model.POI;
 import edu.ycp.cs481.arna.shared.model.POIList;
 import edu.ycp.cs481.shared.persistence.DatabaseHelper;
+import edu.ycp.cs481.shared.persistence.addingCompassModeWaypoints;
+import edu.ycp.cs481.shared.persistence.addingTourModeWaypoints;
 import android.location.LocationManager;
 import android.location.LocationListener; 
 import android.location.Location; 
@@ -42,6 +44,9 @@ public class CompassModeView extends Activity {
 
 	CompassMode compass; 
 	CompassController cont; 
+	
+	
+	addingCompassModeWaypoints waypoints;
 
 	float roll;
 	float pitch;
@@ -51,6 +56,8 @@ public class CompassModeView extends Activity {
 	double altitude;
 
 	boolean started;
+	
+	boolean firstTime = false;
 
 	TextView Location;
 	TextView Distance;
@@ -82,16 +89,27 @@ public class CompassModeView extends Activity {
 		Location =  (TextView) findViewById(R.id.POI);
 		Distance =  (TextView) findViewById(R.id.DistanceTo);
 
-		lists = getPOIList(null);
+		/*lists = getPOIList(null);
 		compass.setWpList(lists.getList());
 
-
-		final List<String> list=new ArrayList<String>();
+*/
+		
+		compass = new CompassMode(); 
+		cont = new CompassController(compass); 
+		if (firstTime == false)
+		{
+		waypoints = new addingCompassModeWaypoints(compass);
+		firstTime = true;
+		}
+		
+		 List<String> list = new ArrayList<String>();
 		list.add(" Please Select a location");
 
 		for (POI poi: compass.getWpList())
 		{
 			list.add(poi.getName());
+			
+			System.out.println(poi.getName());
 
 		}
 		
@@ -118,19 +136,21 @@ public class CompassModeView extends Activity {
 				});
 
 
-		/*	compass = new CompassMode(); 
-		cont = new CompassController(compass); 
+
+		/*
 		POI kinsley = new POI(39.949120, -76.735165,32.0);
 		kinsley.setName("Kinsley Enginnering Center");
 		POI northSide = new POI(39.949792, -76.734041,70.0);
 		northSide.setName("North side Commons");*/
+		
+		
 
 
 
 
 
 	}
-
+/*
 	public POIList getPOIList(String tag) {
 		try {
 			db.openDatabase();
@@ -145,7 +165,7 @@ public class CompassModeView extends Activity {
 		return poi_list;
 	}
 
-
+*/
 	LocationListener locationListener = new LocationListener() {
 
 		// Event handler for change in location.

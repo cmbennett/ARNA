@@ -37,7 +37,7 @@ public class User {
 	
 	// Finds the distance from the user to a given waypoint.
 	public double getDistanceTo(POI w) {
-		double earth_radius = 3958.75;
+		double earth_radius = 6378100;
 		
 		double diff_lat = Math.toRadians(w.getLocation().getLatitude() - loc.getLatitude());
 		double diff_long = Math.toRadians(w.getLocation().getLongitude() - loc.getLongitude());

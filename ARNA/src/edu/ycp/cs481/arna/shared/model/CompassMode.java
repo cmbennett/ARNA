@@ -3,7 +3,7 @@ package edu.ycp.cs481.arna.shared.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompassMode {
+public class CompassMode  {
 	
 	private POI destination;
 	private double direction;
@@ -20,12 +20,18 @@ public class CompassMode {
 		sum = 0;
 		limit = 10;
 		queue = new ArrayList<Integer>();
+		wpList = new ArrayList<POI>(); 
 	}
 	public CompassMode() {
 		 user = new User();
 		destination = new POI(39.950146, -76.734092,0.0); // for testing ONLY! NORTH SIDE
-		 
+		wpList = new ArrayList<POI>(); 
 	}
+	
+	public void addWaypoint(POI w) {
+		wpList.add(w); 
+	}
+	
 	public List<POI> getWpList() {
 		return wpList;
 	}
@@ -90,4 +96,6 @@ public class CompassMode {
 	public void removeValue() {
 		queue.remove(0);
 	}
+	
+	
 }
