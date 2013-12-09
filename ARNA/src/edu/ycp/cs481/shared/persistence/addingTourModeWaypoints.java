@@ -7,19 +7,19 @@ public class addingTourModeWaypoints {
 
 	public addingTourModeWaypoints(TourMode tour) {
 		// adding waypoints to the tour mode		 
-		POI kinsley = new POI(39.949120, -76.735165,75.0);
+		POI kinsley = new POI(39.949120, -76.735165,9.7536);
 		kinsley.setName("Kinsley Enginnering Center");
 		
-		POI northSide = new POI(39.949792, -76.734041,92.0);
+		POI northSide = new POI(39.949792, -76.734041,28.3464);
 		northSide.setName("North Side Commons");
 		
-		POI campbellHall = new POI(39.946461, -76.730509,31.0);
+		POI campbellHall = new POI(39.946461, -76.730509,9.4488);
 		campbellHall.setName("Campbell Hall");
 		
 		POI schmidtLibrary = new POI(39.947177, -76.729852,17.0);
 		schmidtLibrary.setName("Schmidt Library");
 		
-		POI millerAdmin = new POI(39.946165, -76.727993,43.0);
+		POI millerAdmin = new POI(39.946165, -76.727993,5.1816);
 		millerAdmin.setName("Miller Administration Building");		
 		
 		

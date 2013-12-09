@@ -1,4 +1,5 @@
 package edu.ycp.cs481.arna.client.ui;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class CompassModeView extends Activity {
 
 	private DatabaseHelper db;
 	private POIList lists;
-
+	 DecimalFormat df = new DecimalFormat("#.00");
 
 	private static final float ALPHA = 0.25f;
 
@@ -96,8 +97,7 @@ public class CompassModeView extends Activity {
 		compass.setWpList(lists.getList());
 
 */
-			user = new User();
-		
+		user = new User();		
 		compass = new CompassMode(user, null); 
 		cont = new CompassController(compass); 
 		if (firstTime == false)
@@ -105,6 +105,8 @@ public class CompassModeView extends Activity {
 		waypoints = new addingCompassModeWaypoints(compass);
 		firstTime = true;
 		}
+		
+		  
 		
 		 List<String> list = new ArrayList<String>();
 		list.add(" Please Select a location");
@@ -136,7 +138,7 @@ public class CompassModeView extends Activity {
 								cont.updateDestination(poi);
 								
 								String distance = Double.toString(compass.getUser().getDistanceTo(compass.getDestination()));
-							Distance.setText(distance); // remaining distance to the waypoint								
+								Distance.setText(df.format(Double.parseDouble(distance)) + " meters");								
 							}							
 						}	
 						
@@ -150,19 +152,6 @@ public class CompassModeView extends Activity {
 
 					}
 				});
-
-
-
-		/*
-		POI kinsley = new POI(39.949120, -76.735165,32.0);
-		kinsley.setName("Kinsley Enginnering Center");
-		POI northSide = new POI(39.949792, -76.734041,70.0);
-		northSide.setName("North side Commons");*/
-		
-		
-
-
-
 
 
 	}
@@ -192,15 +181,7 @@ public class CompassModeView extends Activity {
 
 			cont.updateLocation(latitude, longitude, altitude); 
 
-			/*	String distance = Double.toString(compass.getUser().getDistanceTo(compass.getDestination()));
-			Distance.setText(distance); // remaining distance to the waypoint		
-
-			Location.setText(compass.getDestination().getName()); // Display the name of the place we want to go
-			 */
-
-
-
-		}
+			}
 
 		public void onProviderDisabled(String arg0) {
 			//TODO Auto-generated method sub
@@ -291,7 +272,7 @@ public class CompassModeView extends Activity {
 						compass.setDestination(poi);
 						cont.updateDestination(poi);
 						String distance = Double.toString(compass.getUser().getDistanceTo(compass.getDestination()));
-						Distance.setText(distance); // remaining distance to the waypoint								
+						Distance.setText(df.format(Double.parseDouble(distance)) + " meters");	 // remaining distance to the waypoint								
 					}							
 				}			
 

@@ -10,25 +10,25 @@ import android.widget.Button;
 public class MainMenu extends Activity {
 
 	
-	Button Tour;
-	Button Compass;
+	Button Tours;
+	Button Compasses;
 	Button Settings;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_menu);
-		Tour = (Button) findViewById(R.id.button1);
-		Compass = (Button) findViewById(R.id.button2);
+		Tours = (Button) findViewById(R.id.button1);
+		Compasses = (Button) findViewById(R.id.button2);
 		Settings = (Button) findViewById(R.id.button3);
 		
-		  Tour.setOnClickListener(new View.OnClickListener() {
+		  Tours.setOnClickListener(new View.OnClickListener() {
 	          public void onClick(View v) {
 	        		Intent intent = new Intent(MainMenu.this, TourModeView.class);  
 					startActivity(intent);
 	          }
 	      });
 		  
-		  Compass.setOnClickListener(new View.OnClickListener() {
+		  Compasses.setOnClickListener(new View.OnClickListener() {
 	          public void onClick(View v) {
 	        	  Intent intent = new Intent(MainMenu.this, CompassModeView.class);  
 					startActivity(intent);
