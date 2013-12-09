@@ -22,11 +22,7 @@ public class CompassMode  {
 		queue = new ArrayList<Integer>();
 		wpList = new ArrayList<POI>(); 
 	}
-	public CompassMode() {
-		 user = new User();
-		destination = new POI(39.950146, -76.734092,0.0); // for testing ONLY! NORTH SIDE
-		wpList = new ArrayList<POI>(); 
-	}
+
 	
 	public void addWaypoint(POI w) {
 		wpList.add(w); 

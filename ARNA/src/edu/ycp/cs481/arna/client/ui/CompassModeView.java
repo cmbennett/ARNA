@@ -6,6 +6,7 @@ import edu.ycp.cs481.arna.client.uicontroller.CompassController;
 import edu.ycp.cs481.arna.shared.model.CompassMode;
 import edu.ycp.cs481.arna.shared.model.POI;
 import edu.ycp.cs481.arna.shared.model.POIList;
+import edu.ycp.cs481.arna.shared.model.User;
 import edu.ycp.cs481.shared.persistence.DatabaseHelper;
 import edu.ycp.cs481.shared.persistence.addingCompassModeWaypoints;
 import edu.ycp.cs481.shared.persistence.addingTourModeWaypoints;
@@ -44,6 +45,8 @@ public class CompassModeView extends Activity {
 
 	CompassMode compass; 
 	CompassController cont; 
+	
+	User user;
 	
 	
 	addingCompassModeWaypoints waypoints;
@@ -93,8 +96,9 @@ public class CompassModeView extends Activity {
 		compass.setWpList(lists.getList());
 
 */
+			user = new User();
 		
-		compass = new CompassMode(); 
+		compass = new CompassMode(user, null); 
 		cont = new CompassController(compass); 
 		if (firstTime == false)
 		{
@@ -108,9 +112,6 @@ public class CompassModeView extends Activity {
 		for (POI poi: compass.getWpList())
 		{
 			list.add(poi.getName());
-			
-			System.out.println(poi.getName());
-
 		}
 		
 		java.util.Collections.sort(list);
@@ -124,10 +125,25 @@ public class CompassModeView extends Activity {
 				new OnItemSelectedListener() {
 					public void onItemSelected( AdapterView<?> parent, View view, int position, long id) 
 					{
-
+						
+						String name = (String) locations.getSelectedItem();
 						Location.setText((CharSequence) locations.getSelectedItem()); // Display the name of the place we want to go
-						String distance = Double.toString(compass.getUser().getDistanceTo(compass.getDestination()));
-						Distance.setText(distance); // remaining distance to the waypoint	
+						for (POI poi: compass.getWpList())
+						{
+							if (poi.getName().equals(name))
+							{
+								compass.setDestination(poi);
+								cont.updateDestination(poi);
+								
+								String distance = Double.toString(compass.getUser().getDistanceTo(compass.getDestination()));
+							Distance.setText(distance); // remaining distance to the waypoint								
+							}							
+						}	
+						
+						if (locations.getSelectedItemPosition() == 0)
+						{
+							Distance.setText(""); // remaining distance to the waypoint	
+						}
 					}
 
 					public void onNothingSelected(AdapterView<?> parent) {
@@ -266,7 +282,18 @@ public class CompassModeView extends Activity {
 				roll = (float)(orientation[2] * x180pi);			
 
 				// Update the model object.
-				cont.updateOrientation(azimuth, pitch, roll); 			
+				cont.updateOrientation(azimuth, pitch, roll); 	
+				String name = (String) locations.getSelectedItem();
+				for (POI poi: compass.getWpList())
+				{
+					if (poi.getName().equals(name))
+					{
+						compass.setDestination(poi);
+						cont.updateDestination(poi);
+						String distance = Double.toString(compass.getUser().getDistanceTo(compass.getDestination()));
+						Distance.setText(distance); // remaining distance to the waypoint								
+					}							
+				}			
 
 				if ( latitude > 0 && locations.getSelectedItemPosition() != 0) // wait till we have a location to change the angle of rotation
 				{
