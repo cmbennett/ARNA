@@ -9,6 +9,7 @@ import edu.ycp.cs481.arna.shared.model.POI;
 import edu.ycp.cs481.arna.shared.model.POIList;
 import edu.ycp.cs481.arna.shared.model.TourMode;
 import edu.ycp.cs481.shared.persistence.DatabaseHelper;
+import edu.ycp.cs481.shared.persistence.addingTourModeWaypoints;
 import android.location.LocationManager;
 import android.location.LocationListener; 
 import android.location.Location; 
@@ -48,6 +49,7 @@ public class TourModeView extends Activity {
 	int magnetometerSensor;
 
 	TourMode tour; 
+	addingTourModeWaypoints waypoints;
 	TourController cont; 
 
 	float roll;
@@ -102,6 +104,7 @@ public class TourModeView extends Activity {
 
 		tour = new TourMode(); 
 		cont = new TourController(tour); 
+		waypoints = new addingTourModeWaypoints(tour);
 
 		////// change the color of the text based on the time
 		
@@ -111,7 +114,7 @@ public class TourModeView extends Activity {
 		
 		LocationID = (TextView) findViewById(R.id.LocationID);
 		
-		if(hours > 5 || hours < 17) // its night time
+		if(hours < 05 || hours > 17) // its night time
 		{
 			LocationID.setTextColor(Color.WHITE); //white
 		}
@@ -121,12 +124,9 @@ public class TourModeView extends Activity {
 		
 		}
 		
-		/////
-		Display display = getWindowManager().getDefaultDisplay();
-		
+	
+		Display display = getWindowManager().getDefaultDisplay();		
 		display.getSize(size);
-		
-
 		
 		Description= (TextView) findViewById(R.id.textView1);
 		touched = true;
@@ -136,12 +136,17 @@ public class TourModeView extends Activity {
 
 		waypoint = (ImageView) findViewById(R.id.imageView1);
 
-		POI kinsley = new POI(39.949120, -76.735165,32.0);
+		/*POI kinsley = new POI(39.949120, -76.735165,32.0);
 		kinsley.setName("Kinsley Enginnering Center");
 		POI northSide = new POI(39.949792, -76.734041,70.0);
 		northSide.setName("North side Commons");
 		tour.addWaypoint(kinsley);
-		tour.addWaypoint(northSide);
+		tour.addWaypoint(northSide);*/
+
+		
+		
+		
+	
 		/*
 		tour.setWpList(getPOIList(null).getList());
 		
@@ -149,7 +154,7 @@ public class TourModeView extends Activity {
 		*/
 
 	}
-	
+	/*
 	public POIList getPOIList(String tag) {
 		try {
 			db.openDatabase();
@@ -163,7 +168,7 @@ public class TourModeView extends Activity {
 		db.close();
 		return poi_list;
 	}
-
+*/
 
 	LocationListener locationListener = new LocationListener() {
 		@Override
