@@ -311,12 +311,14 @@ public class TourModeView extends Activity {
 					//waypoint.setY(tour.getOnScreen().get(0).getVector().getY());
 						waypoint.setY(300.0f);
 					LocationID.setText(tour.getOnScreen().get(0).getName()); // if not empty
+					Description.setText(tour.getOnScreen().get(0).getName());
 
 				}	// end of populate on screen			
 				else if(tour.getOnScreen().isEmpty())
 				{
 					waypoint.setVisibility(View.INVISIBLE);
 					LocationID.setText(""); // if not empty
+					Description.setText("");
 					
 				}
 				waypoint.setOnClickListener(new View.OnClickListener(){

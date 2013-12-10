@@ -18,6 +18,7 @@ public final class R {
     }
     public static final class dimen {
         public static final int Heights=0x7f050002;
+        public static final int Size=0x7f050003;
         /**  Default screen margins, per the Android Design guidelines. 
 
          Customize dimensions originally defined in res/values/dimens.xml (such as

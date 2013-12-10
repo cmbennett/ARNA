@@ -39,7 +39,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="50dp"
-        android:text="THIS IS THE DESCRIPTION FOR THE BUILDINGS "
-        android:visibility="invisible" />
+        android:textSize="25sp" />
 
 </RelativeLayout>
