@@ -281,7 +281,7 @@ public class CompassModeView extends Activity {
 
 				if ( latitude > 0 && locations.getSelectedItemPosition() != 0) // wait till we have a location to change the angle of rotation
 				{
-					float degree = (float) (compass.getUser().getBearingTo(compass.getDestination())) - azimuth +90; // to adjust for rotation
+					float degree = (float) (compass.getUser().getBearingTo(compass.getDestination())) - azimuth; // to adjust for rotation
 					arrow.setRotation(degree);
 				}
 			}

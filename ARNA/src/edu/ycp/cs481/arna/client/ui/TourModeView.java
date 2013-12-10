@@ -334,8 +334,7 @@ public class TourModeView extends Activity {
 					LocationID.setY(tour.getOnScreen().get(0).getVector().getY() - 50);
 				
 					waypoint.setY(tour.getOnScreen().get(0).getVector().getY());
-						//waypoint.setY(300.0f);					
-						
+					
 					LocationID.setText(tour.getOnScreen().get(0).getName()); // if not empty
 					Description.setMovementMethod(new ScrollingMovementMethod());
 					Description.setText(tour.getOnScreen().get(0).getDescription());
@@ -346,11 +345,12 @@ public class TourModeView extends Activity {
 					waypoint.setVisibility(View.INVISIBLE);
 					LocationID.setText(""); // if not empty
 					Description.setText("");
+					Description.setVisibility(View.INVISIBLE);
 					
 				}
 				waypoint.setOnClickListener(new View.OnClickListener(){
 				    public void onClick(View v) {
-				    	touched = !touched; // first time, you have to tap TWICE!
+				    	touched = !touched; 
 				        if (!touched)
 				        {
 				    	Description.setVisibility(View.VISIBLE);
