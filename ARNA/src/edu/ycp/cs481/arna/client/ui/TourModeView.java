@@ -16,6 +16,9 @@ import android.location.Location;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -24,8 +27,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.hardware.SensorEventListener; 
 import android.hardware.SensorEvent;  
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Display;
+import android.view.Surface;
 import android.view.SurfaceHolder; 
 import android.view.SurfaceView;
 import android.view.View;
@@ -71,6 +76,7 @@ public class TourModeView extends Activity {
 	int counterForMarker;
 	boolean flagForMarker;
 
+	double GEOIDHEIGHT = 34;
 	double viewAngle;
 	double viewVertAngle;
 	
@@ -138,28 +144,11 @@ public class TourModeView extends Activity {
 		Description= (TextView) findViewById(R.id.textView1);
 		touched = true;
 
+	
 		counterForMarker = 0;
 		flagForMarker = false;
 
 		waypoint = (ImageView) findViewById(R.id.imageView1);
-
-		/*POI kinsley = new POI(39.949120, -76.735165,32.0);
-		kinsley.setName("Kinsley Enginnering Center");
-		POI northSide = new POI(39.949792, -76.734041,70.0);
-		northSide.setName("North side Commons");
-		tour.addWaypoint(kinsley);
-		tour.addWaypoint(northSide);*/
-
-		
-		
-		
-	
-		/*
-		tour.setWpList(getPOIList(null).getList());
-		
-		System.out.println(tour.getWpList().get(0));
-		*/
-
 	}
 	/*
 	public POIList getPOIList(String tag) {
@@ -183,7 +172,7 @@ public class TourModeView extends Activity {
 
 			latitude = location.getLatitude(); 
 			longitude = location.getLongitude(); 
-			altitude = location.getAltitude(); 
+			altitude = location.getAltitude() + GEOIDHEIGHT; 
 
 			cont.updateLocation(latitude, longitude, altitude); 
 			tour.populateOnScreen(viewAngle);
@@ -203,13 +192,43 @@ public class TourModeView extends Activity {
 		}
 	}; 
 
+	
+	public void Sensor()
+	{
+		
+		
+	}
 	final SensorEventListener sensorEventListener = new SensorEventListener(){
 		float[] gravity; 
 		float[] geomagnetic; 
 		float var;
 		float inclination;
+
 		@SuppressLint("NewApi")
 		public void onSensorChanged(SensorEvent sensorEvent){
+			Context contex;
+			int SCREEN_ORIENTATION_SENSOR_LANDSCAPE = 6;
+			  final int rotation = getResources().getConfiguration().orientation;
+	         switch (rotation) {
+	            case Surface.ROTATION_0:
+	               // return "portrait";
+	            	setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+	            case Surface.ROTATION_90:
+	            	setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+	                //return "landscape";
+	            case Surface.ROTATION_180:
+	            	setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+	               // return "reverse portrait";
+	            default:
+	               // return "reverse landscape";
+	            	setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+	            	
+	            }
+			
+			
+			
+			
+			
 			//int orientations =  getResources().getConfiguration().orientation;
 			float R[] = new float[9]; 
 			float I[] = new float[9]; 
@@ -274,7 +293,7 @@ public class TourModeView extends Activity {
 				
 				tour.populateOnScreen(viewAngle);
 				tour.computePOIVector(viewAngle, viewVertAngle, size.x, size.y);
-				//tour.computePOIVector(viewAngle, 1, size.x, size.y);
+				
 				
 				if (!tour.getOnScreen().isEmpty() )
 				{
@@ -295,6 +314,8 @@ public class TourModeView extends Activity {
 
 					if (!flagForMarker)
 					{
+		
+						
 						waypoint.setX(x);
 					}
 					else
@@ -306,12 +327,18 @@ public class TourModeView extends Activity {
 						}
 						x = x/10;
 						waypoint.setX(x);
+						
 					}
-
-					//waypoint.setY(tour.getOnScreen().get(0).getVector().getY());
-						waypoint.setY(300.0f);
+						
+					LocationID.setX(x);
+					LocationID.setY(tour.getOnScreen().get(0).getVector().getY() - 50);
+				
+					waypoint.setY(tour.getOnScreen().get(0).getVector().getY());
+						//waypoint.setY(300.0f);					
+						
 					LocationID.setText(tour.getOnScreen().get(0).getName()); // if not empty
-					Description.setText(tour.getOnScreen().get(0).getName());
+					Description.setMovementMethod(new ScrollingMovementMethod());
+					Description.setText(tour.getOnScreen().get(0).getDescription());
 
 				}	// end of populate on screen			
 				else if(tour.getOnScreen().isEmpty())
@@ -346,6 +373,9 @@ public class TourModeView extends Activity {
 				Intent intent = new Intent(TourModeView.this, CompassModeView.class);  
 				startActivity(intent);
 			}*/
+			
+			
+		 
 		}	
 
 

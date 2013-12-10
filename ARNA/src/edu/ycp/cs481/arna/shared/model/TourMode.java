@@ -63,8 +63,7 @@ public class TourMode extends Mode {
 		double dx; 
 		double dz; 
 		
-		double pitch = user.getOrient().getPitch(); 
-		double roll = user.getOrient().getRoll(); 
+		double roll = user.getOrient().getRoll()-90; 
 		
 		//Populate array of vectors (each i vector in the list corresponds with the i POI in the onScreen list)
 		for(POI w: onScreen) {
@@ -90,18 +89,26 @@ public class TourMode extends Mode {
 				dx = dx * -1; 
 			}	
 			dx = (maxX/2) + dx;
+			
+			
 			//Map Y using trigonometry
 			double POIheight = w.getLocation().getElevation() - user.getLocation().getElevation(); 
-			double maxHeight = Math.tan(vertCamAngle) * user.getDistanceTo(w); 
+		
 			
-			dy = (POIheight * maxY) / maxHeight; 
+			double YtotalArc = twoPiR * (vertCamAngle / 360);
+			double yBearing = Math.toDegrees(Math.atan(Math.abs(POIheight)/user.getDistanceTo(w)));
+			double POIYAngle = Math.abs(roll - yBearing);
+			double POIYArc = twoPiR * (Math.abs(POIYAngle) / 360);
+			dy = (POIYArc * maxY) / YtotalArc; 
+			
+			if(roll - yBearing > 0){
+				dy = dy * -1; 
+			}
+			
 			dz = 0.0; 
 			w.setVector((float) dx, (float) dy, (float) dz); 
 			
-			
-			//TODO: Rotate Vector by pitch and roll and determine the screen coordinates
-			//If screen coordinates are outside of the device coordinate system, we can disregard
-			//drawing it
+	
 		}
 	}
 }

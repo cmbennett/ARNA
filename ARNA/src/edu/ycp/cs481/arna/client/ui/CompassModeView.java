@@ -62,6 +62,7 @@ public class CompassModeView extends Activity {
 	boolean started;
 	
 	boolean firstTime = false;
+	double GEOIDHEIGHT = 34;
 
 	TextView Location;
 	TextView Distance;
@@ -177,7 +178,9 @@ public class CompassModeView extends Activity {
 		public void onLocationChanged(Location location) {
 			latitude = location.getLatitude(); 
 			longitude = location.getLongitude(); 
-			altitude = location.getAltitude(); 
+			altitude = location.getAltitude() + GEOIDHEIGHT; 
+			
+			System.out.println(altitude);
 
 			cont.updateLocation(latitude, longitude, altitude); 
 
@@ -278,7 +281,7 @@ public class CompassModeView extends Activity {
 
 				if ( latitude > 0 && locations.getSelectedItemPosition() != 0) // wait till we have a location to change the angle of rotation
 				{
-					float degree = (float) (compass.getUser().getBearingTo(compass.getDestination())) - azimuth + (float) (compass.getUser().getBearingTo(compass.getDestination()))  ;
+					float degree = (float) (compass.getUser().getBearingTo(compass.getDestination())) - azimuth +90; // to adjust for rotation
 					arrow.setRotation(degree);
 				}
 			}
