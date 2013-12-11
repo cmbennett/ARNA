@@ -19,7 +19,7 @@ public class addingTourModeWaypoints {
 		northSide.setDescription("A co-ed, traditional style residence hall that features both singles and" +
 				" doubles and houses a mix of new and returning students.");
 		
-		POI campbellHall = new POI(39.946461, -76.730509,114.52);
+		POI campbellHall = new POI(39.946461, -76.730509,128.321);
 		campbellHall.setName("Campbell Hall");
 		campbellHall.setDescription("Campbell is home to Academic Services, which includes " +
 				"Academic Advising, the Center for Professional Excellence, the Career Development " +
@@ -27,14 +27,14 @@ public class addingTourModeWaypoints {
 				" state-of-the-art chemistry instrumentation to support majors in Chemistry," +
 				" Forensic Chemistry and Pre-Med");
 		
-		POI schmidtLibrary = new POI(39.947177, -76.729852,70.51);
+		POI schmidtLibrary = new POI(39.947177, -76.729852,126.492);
 		schmidtLibrary.setName("Schmidt Library");
 		schmidtLibrary.setDescription("YCP's library provides dynamic group study spaces, quiet study " +
 				"floors, wireless laptops for use in the library, technology-enhanced group study " +
 				"rooms, comfortable lounge areas, wireless network connections including the outdoor" +
 				" courtyard, college archives, and Special Collections.");
 		
-		POI millerAdmin = new POI(39.946165, -76.727993,81.54);
+		POI millerAdmin = new POI(39.946165, -76.727993,126.797);
 		millerAdmin.setName("Miller Administration Building");		
 		millerAdmin.setDescription("Bearing the name of the College's first president, " +
 				"it includes the President's Office, Admissions, Academic Affairs, Business Affairs, " +

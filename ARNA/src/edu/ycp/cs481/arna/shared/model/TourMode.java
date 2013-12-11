@@ -82,8 +82,7 @@ public class TourMode extends Mode {
 			double POIArc = twoPiR * (POIAngle / 360); 
 			
 			//(poiarc / totalarc) = (dx / DX)
-			dx = (POIArc * maxX / totalArc); 
-			
+			dx = (POIArc * maxX / totalArc); 		
 			
 			if(azimuth - bearing > 0){
 				dx = dx * -1; 
@@ -106,6 +105,8 @@ public class TourMode extends Mode {
 			}
 			
 			dy = (maxY/2) + dy;
+			
+			
 			dz = 0.0; 
 			w.setVector((float) dx, (float) dy, (float) dz); 
 			
