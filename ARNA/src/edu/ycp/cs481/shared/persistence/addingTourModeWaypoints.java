@@ -14,7 +14,7 @@ public class addingTourModeWaypoints {
 				"materials science and engineering lab, machine shop and welding lab, thermodynamics and " +
 				"fluid mechanics lab, and CAD lab.");
 		
-		POI northSide = new POI(39.949792, -76.734041,92.47);
+		POI northSide = new POI(39.949792, -76.734041,121.45);
 		northSide.setName("North Side Commons");
 		northSide.setDescription("A co-ed, traditional style residence hall that features both singles and" +
 				" doubles and houses a mix of new and returning students.");
