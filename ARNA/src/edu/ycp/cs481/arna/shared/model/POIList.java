@@ -6,6 +6,7 @@ import java.util.List;
 import android.database.Cursor;
 
 public class POIList {
+	
 	private List<POI> list;
 	
 	public POIList() {

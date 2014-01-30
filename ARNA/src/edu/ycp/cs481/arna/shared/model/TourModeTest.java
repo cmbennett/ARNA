@@ -16,7 +16,6 @@ public class TourModeTest extends TestCase {
 		test.setUser(user); 
 		user.setLocation(39.949778, -76.734095,0.0); // middle of the road outside Kinsley
 		test.addWaypoint(poi);
-
 	}
 	
 	public void testGetOnScreen() throws Exception {
@@ -32,11 +31,9 @@ public class TourModeTest extends TestCase {
 		test.populateOnScreen(54.0);	
 		assertEquals(poi,test.getOnScreen().get(0));
 		
-		
 		user.setOrient(90.0, 90.0, 1.0); 
 		test.populateOnScreen(54.0); 
 		assertTrue(test.getOnScreen().isEmpty());
-		
 		
 		/*//West
 		user.setLocation(39.949383, -76.732899,0.0); 
@@ -50,8 +47,7 @@ public class TourModeTest extends TestCase {
 		user.setOrient(90.0, 90.0, 1.0); 
 		test.populateOnScreen(54.0); 
 		System.out.println(user.getBearingTo(poi)); 
-		assertTrue(test.getOnScreen().isEmpty());
-		*/
+		assertTrue(test.getOnScreen().isEmpty());*/
 	}
 	
 	public void testComputeDisplacementVector() throws Exception {

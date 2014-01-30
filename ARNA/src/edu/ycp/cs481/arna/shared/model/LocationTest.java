@@ -12,7 +12,7 @@ public class LocationTest extends TestCase {
 	}
 	
 	public void testGetX() throws Exception {
-			assertEquals(1.0, test.getLatitude());
+		assertEquals(1.0, test.getLatitude());
 	}
 	
 	public void testsetLatitude() throws Exception {

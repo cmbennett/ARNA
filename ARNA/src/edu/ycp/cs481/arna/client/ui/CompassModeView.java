@@ -24,13 +24,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.database.Cursor;
 import android.hardware.Camera; 
 import android.hardware.Sensor; 
 import android.hardware.SensorManager;
 import android.hardware.SensorEventListener; 
 import android.hardware.SensorEvent;
-
 
 @SuppressLint("NewApi")
 public class CompassModeView extends Activity {
@@ -47,7 +45,6 @@ public class CompassModeView extends Activity {
 	CompassMode compass; 
 	CompassController cont; 
 
-	
 	addingCompassModeWaypoints waypoints;
 
 	float roll;
@@ -93,25 +90,21 @@ public class CompassModeView extends Activity {
 		Distance =  (TextView) findViewById(R.id.DistanceTo);
 
 		/*lists = getPOIList(null);
-		compass.setWpList(lists.getList());
-
-*/
+		compass.setWpList(lists.getList()) */
 	
 		compass = new CompassMode(new User(), null); 
-		cont = new CompassController(compass); 
+		cont = new CompassController(compass);
+
 		if (firstTime == false)
 		{
-		waypoints = new addingCompassModeWaypoints(compass);
-		firstTime = true;
+			waypoints = new addingCompassModeWaypoints(compass);
+			firstTime = true;
 		}
 		
-		  
-		
-		 List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<String>();
 		list.add(" Please Select a location");
 
-		for (POI poi: compass.getWpList())
-		{
+		for (POI poi: compass.getWpList()) {
 			list.add(poi.getName());
 		}
 		
@@ -151,10 +144,8 @@ public class CompassModeView extends Activity {
 
 					}
 				});
-
-
 	}
-/*
+	/*
 	public POIList getPOIList(String tag) {
 		try {
 			db.openDatabase();
@@ -167,11 +158,9 @@ public class CompassModeView extends Activity {
 		poi_list.getListFromCursor(cursor);
 		db.close();
 		return poi_list;
-	}
-
-*/
+	} */
+	
 	LocationListener locationListener = new LocationListener() {
-
 		// Event handler for change in location.
 		public void onLocationChanged(Location location) {
 			latitude = location.getLatitude(); 
@@ -181,8 +170,7 @@ public class CompassModeView extends Activity {
 			System.out.println(altitude);
 
 			cont.updateLocation(latitude, longitude, altitude); 
-
-			}
+		}
 
 		public void onProviderDisabled(String arg0) {
 			//TODO Auto-generated method sub
@@ -343,8 +331,7 @@ public class CompassModeView extends Activity {
 				}
 			}
 		}
-
+		
 		return(result); 
 	}
-
 }

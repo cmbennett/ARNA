@@ -1,12 +1,9 @@
 package edu.ycp.cs481.arna.client.ui;
 
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import edu.ycp.cs481.arna.client.uicontroller.TourController;
-import edu.ycp.cs481.arna.shared.model.POI;
-import edu.ycp.cs481.arna.shared.model.POIList;
 import edu.ycp.cs481.arna.shared.model.TourMode;
 import edu.ycp.cs481.shared.persistence.DatabaseHelper;
 import edu.ycp.cs481.shared.persistence.addingTourModeWaypoints;
@@ -17,9 +14,6 @@ import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.hardware.Camera; 
@@ -52,7 +46,7 @@ public class TourModeView extends Activity {
 
 	LocationManager locationManager; 
 	int magnetometerSensor;
-	
+
 	addingTourModeWaypoints waypoints;
 	TourController cont; 
 
@@ -67,9 +61,9 @@ public class TourModeView extends Activity {
 	TextView LocationID;
 	TextView Description;
 	boolean touched;
-	
+
 	boolean firstTime = false;
-	
+
 	ImageView waypoint;
 
 	int counterForMarker;
@@ -78,7 +72,7 @@ public class TourModeView extends Activity {
 	double GEOIDHEIGHT = 34;
 	double viewAngle;
 	double viewVertAngle;
-	
+
 	Point size = new Point();
 
 	private DatabaseHelper db;
@@ -107,48 +101,38 @@ public class TourModeView extends Activity {
 
 		cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
 		previewHolder = cameraPreview.getHolder(); 
-		previewHolder.addCallback(surfaceCallback); 
+		previewHolder.addCallback(surfaceCallback);
 
-		
 		cont = new TourController(new TourMode()); 
-		
-		if (firstTime == false)
-		{
-		waypoints = new addingTourModeWaypoints(cont.getModel());
-		firstTime = true;
+
+		if (firstTime == false) {
+			waypoints = new addingTourModeWaypoints(cont.getModel());
+			firstTime = true;
 		}
-		
-		////// change the color of the text based on the time
-		
+
+		// "Night mode".
 		Calendar c = Calendar.getInstance();
 		SimpleDateFormat hour = new SimpleDateFormat("HH"); // 24 hour 		
 		int hours = Integer.parseInt(hour.format(c.getTime()));
-		
+
 		LocationID = (TextView) findViewById(R.id.LocationID);
-		
-		if(hours < 05 || hours > 17) // its night time
-		{
-			LocationID.setTextColor(Color.WHITE); //white
+
+		if(hours < 05 || hours > 17) { // Night time
+			LocationID.setTextColor(Color.WHITE);
+		} else {			
+			LocationID.setTextColor(Color.BLACK);
 		}
-		else
-		{			
-			LocationID.setTextColor(Color.BLACK); //black
-		
-		}
-		
-	
+
 		Display display = getWindowManager().getDefaultDisplay();		
 		display.getSize(size);
-		
+
 		Description= (TextView) findViewById(R.id.textView1);
 		touched = true;
-
-	
 		counterForMarker = 0;
 		flagForMarker = false;
-
 		waypoint = (ImageView) findViewById(R.id.imageView1);
 	}
+
 	/*
 	public POIList getPOIList(String tag) {
 		try {
@@ -162,42 +146,40 @@ public class TourModeView extends Activity {
 		poi_list.getListFromCursor(cursor);
 		db.close();
 		return poi_list;
-	}
-*/
+	} */
 
 	LocationListener locationListener = new LocationListener() {
 		@Override
-		public void onLocationChanged(Location location){	
-
+		public void onLocationChanged(Location location) {
 			latitude = location.getLatitude(); 
 			longitude = location.getLongitude(); 
 			altitude = location.getAltitude() + GEOIDHEIGHT; 
 
 			cont.updateLocation(latitude, longitude, altitude); 
 			cont.getModel().populateOnScreen(viewAngle);
-
 		}
+
 		@Override
 		public void onProviderDisabled(String arg0){
 			//TODO Auto-generated method sub
 		}
+
 		@Override
 		public void onProviderEnabled(String arg0){
 			//TODO Auto-generated method sub
 		}
+
 		@Override
 		public void onStatusChanged(String arg0, int arg1, Bundle arg2){
 			//TODO Auto-generated method sub
 		}
 	}; 
 
-	
-	public void Sensor()
-	{
-		
-		
+	public void Sensor() {
+
 	}
-	final SensorEventListener sensorEventListener = new SensorEventListener(){
+
+	final SensorEventListener sensorEventListener = new SensorEventListener() {
 		float[] gravity; 
 		float[] geomagnetic; 
 		float var;
@@ -205,25 +187,24 @@ public class TourModeView extends Activity {
 
 		@SuppressLint("NewApi")
 		public void onSensorChanged(SensorEvent sensorEvent){
-			Context contex;
+			Context context;
 			int SCREEN_ORIENTATION_SENSOR_LANDSCAPE = 6;
-			  final int rotation = getResources().getConfiguration().orientation;
-	         switch (rotation) {
-	            case Surface.ROTATION_0:
-	               // return "portrait";
-	            	setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-	            case Surface.ROTATION_90:
-	            	setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-	                //return "landscape";
-	            case Surface.ROTATION_180:
-	            	setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-	               // return "reverse portrait";
-	            default:
-	               // return "reverse landscape";
-	            	setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-	            	
-	            }		
-			
+			final int rotation = getResources().getConfiguration().orientation;
+			switch (rotation) {
+			case Surface.ROTATION_0:
+				// return "portrait";
+				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+			case Surface.ROTATION_90:
+				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+				//return "landscape";
+			case Surface.ROTATION_180:
+				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+				// return "reverse portrait";
+			default:
+				// return "reverse landscape";
+				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+			}		
+
 			//int orientations =  getResources().getConfiguration().orientation;
 			float R[] = new float[9]; 
 			float I[] = new float[9]; 
@@ -285,11 +266,9 @@ public class TourModeView extends Activity {
 				// Update the model object.
 				cont.updateOrientation(azimuth, pitch, roll);
 
-				
 				cont.getModel().populateOnScreen(viewAngle);
 				cont.getModel().computePOIVector(viewAngle, viewVertAngle, size.x, size.y);
-				
-				
+
 				if (!cont.getModel().getOnScreen().isEmpty() )
 				{
 					waypoint.setVisibility(View.VISIBLE);
@@ -297,24 +276,17 @@ public class TourModeView extends Activity {
 					buffer[counterForMarker] = x;
 					counterForMarker++;
 
-					if (counterForMarker == 10)
-					{
+					if (counterForMarker == 10) {
 						flagForMarker = true;
 					}
 
-					if (counterForMarker >= 10)
-					{
+					if (counterForMarker >= 10) {
 						counterForMarker = 0;
 					}
 
-					if (!flagForMarker)
-					{
-		
-						
+					if (!flagForMarker) {
 						waypoint.setX(x);
-					}
-					else
-					{
+					} else{
 						x = 0;
 						for (int i= 0; i < 10; i++)
 						{
@@ -322,44 +294,35 @@ public class TourModeView extends Activity {
 						}
 						x = x/10;
 						waypoint.setX(x);
-						
 					}
-						
+
 					LocationID.setX(x);
 					LocationID.setY(cont.getModel().getOnScreen().get(0).getVector().getY() - 50);
-				
+
 					waypoint.setY(cont.getModel().getOnScreen().get(0).getVector().getY());
-					
+
 					LocationID.setText(cont.getModel().getOnScreen().get(0).getName()); // if not empty
 					Description.setMovementMethod(new ScrollingMovementMethod());
 					Description.setText(cont.getModel().getOnScreen().get(0).getDescription());
 
 				}	// end of populate on screen			
-				else if(cont.getModel().getOnScreen().isEmpty())
-				{
+				else if(cont.getModel().getOnScreen().isEmpty()) {
 					waypoint.setVisibility(View.INVISIBLE);
 					LocationID.setText(""); // if not empty
 					Description.setText("");
 					Description.setVisibility(View.INVISIBLE);
-					
 				}
+
 				waypoint.setOnClickListener(new View.OnClickListener(){
-				    public void onClick(View v) {
-				    	touched = !touched; 
-				        if (!touched)
-				        {
-				    	Description.setVisibility(View.VISIBLE);
-			
-				        }    
-				        else
-				       if (touched)
-				        {
-				    	Description.setVisibility(View.INVISIBLE);
-				    	
-				        }  
-				      
-				        
-				    }
+					public void onClick(View v) {
+						touched = !touched;
+
+						if (!touched) {
+							Description.setVisibility(View.VISIBLE);
+						} else if (touched) {
+							Description.setVisibility(View.INVISIBLE);
+						}
+					}
 				});
 			}
 
@@ -368,12 +331,7 @@ public class TourModeView extends Activity {
 				Intent intent = new Intent(TourModeView.this, CompassModeView.class);  
 				startActivity(intent);
 			}*/
-			
-			
-		 
 		}	
-
-
 
 		protected float[] lowPass( float[] input, float[] output) {
 			if(output == null) return input;
@@ -389,20 +347,16 @@ public class TourModeView extends Activity {
 	}; 
 
 	@Override
-	public void onResume(){
-
+	public void onResume() {
 		Sensor gsensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 		Sensor asensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		Sensor msensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-
 
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, locationListener);
 		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_UI);
 		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_UI);
 		camera = Camera.open(); 
 		super.onResume(); 
-
-
 	}
 
 	@Override
@@ -427,8 +381,7 @@ public class TourModeView extends Activity {
 			if(size.width<=width && size.height <= height){
 				if(result == null){
 					result = size; 
-				}
-				else{
+				} else {
 					int resultArea = result.width * result.height; 
 					int newArea = size.width * size.height; 
 

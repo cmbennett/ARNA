@@ -1,9 +1,6 @@
 package edu.ycp.cs481.arna.client.ui;
 
-import java.io.IOException;
-
 import edu.ycp.cs481.arna.client.uicontroller.TourController;
-import edu.ycp.cs481.arna.shared.model.POIList;
 import edu.ycp.cs481.arna.shared.model.TourMode;
 import edu.ycp.cs481.shared.persistence.DatabaseHelper;
 import android.location.Location;
@@ -13,9 +10,6 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.SQLException;
-
 
 public class Splashscreen extends Activity {
 	LocationManager locationManager;
@@ -42,7 +36,8 @@ public class Splashscreen extends Activity {
 		cont = new TourController(tour); 
 		count = 0;
 		found = false;
-/*
+		
+		/*
 		db = new DatabaseHelper(this);
 		// Create database (if doesn't exist)
 		try {
@@ -60,7 +55,6 @@ public class Splashscreen extends Activity {
 			throw new Error("Cannot open database");
 		}
 		db.close();*/
-
 	}
 
 	LocationListener locationListener = new LocationListener() {

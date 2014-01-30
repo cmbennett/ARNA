@@ -32,7 +32,6 @@ public class OrientationTest  extends TestCase {
 	public void testsetAzimuth() throws Exception {
 		test.setAzimuth(3.4);
 		assertEquals(3.4, test.getAzimuth());
-
 	}
 	
 	public void testsetPitch() throws Exception {

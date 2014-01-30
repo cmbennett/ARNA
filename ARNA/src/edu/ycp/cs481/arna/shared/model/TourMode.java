@@ -9,7 +9,6 @@ public class TourMode extends Mode {
 	private List<POI> onScreen;
 	private static double CUTOFF = 400; //400
 
-	
 	public TourMode(User u, List<POI> wpList) {
 		super(u, wpList); 
 		onScreen = new ArrayList<POI>(); 
@@ -41,8 +40,8 @@ public class TourMode extends Mode {
 		
 		/*if(onScreen.isEmpty()){
 			System.out.println("SUCCESS"); 
-		}
-		*/
+		}*/
+		
 		double halfAngle = cameraAngle/2; 
 		for(POI w: wpList){
 			double distance = user.getDistanceTo(w); 
@@ -59,7 +58,6 @@ public class TourMode extends Mode {
 	public void computePOIVector(double horzCamAngle, double vertCamAngle, double maxX, double maxY) {
 		
 		double dy; 
-	
 		double dx; 
 		double dz; 
 		
@@ -89,11 +87,8 @@ public class TourMode extends Mode {
 			}	
 			dx = (maxX/2) + dx;
 			
-			
 			//Map Y using trigonometry
 			double POIheight = w.getLocation().getElevation() - user.getLocation().getElevation(); 
-		
-			
 			double YtotalArc = twoPiR * (vertCamAngle / 360);
 			double yBearing = Math.toDegrees(Math.atan(Math.abs(POIheight)/user.getDistanceTo(w)));
 			double POIYAngle = Math.abs(roll - yBearing);
@@ -106,11 +101,8 @@ public class TourMode extends Mode {
 			
 			dy = (maxY/2) + dy;
 			
-			
 			dz = 0.0; 
 			w.setVector((float) dx, (float) dy, (float) dz); 
-			
-	
 		}
 	}
 }
