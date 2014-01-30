@@ -13,6 +13,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -26,6 +27,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private SQLiteDatabase database;
 
 	private final Context context;
+	
+	private static final String TAG = DatabaseHelper.class.getSimpleName();
+
+	
+    public static final boolean Debug = false;
+
 
 	public DatabaseHelper(Context context) {
 		super(context, DB_NAME, null, 1);
@@ -35,6 +42,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+		  /* Create table Logic, once the Application has ran for the first time. */
+	
+		        String sql = String.format("CREATE TABLE %s (aid INTEGER PRIMARY KEY AUTOINCREMENT, test)", POI_TABLE);
+		
+		        db.execSQL(sql);
+	
+		        if (Debug) {
+	
+		            Log.d(TAG, "onCreate Called.");
+		
+		        }
 
 	}
 

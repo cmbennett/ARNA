@@ -46,9 +46,7 @@ public class CompassModeView extends Activity {
 
 	CompassMode compass; 
 	CompassController cont; 
-	
-	User user;
-	
+
 	
 	addingCompassModeWaypoints waypoints;
 
@@ -98,8 +96,8 @@ public class CompassModeView extends Activity {
 		compass.setWpList(lists.getList());
 
 */
-		user = new User();		
-		compass = new CompassMode(user, null); 
+	
+		compass = new CompassMode(new User(), null); 
 		cont = new CompassController(compass); 
 		if (firstTime == false)
 		{
