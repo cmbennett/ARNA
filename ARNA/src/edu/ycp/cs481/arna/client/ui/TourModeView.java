@@ -52,7 +52,7 @@ public class TourModeView extends Activity {
 
 	LocationManager locationManager; 
 	int magnetometerSensor;
-	
+
 	addingTourModeWaypoints waypoints;
 	TourController cont; 
 
@@ -67,9 +67,9 @@ public class TourModeView extends Activity {
 	TextView LocationID;
 	TextView Description;
 	boolean touched;
-	
+
 	boolean firstTime = false;
-	
+
 	ImageView waypoint;
 
 	int counterForMarker;
@@ -78,12 +78,15 @@ public class TourModeView extends Activity {
 	double GEOIDHEIGHT = 34;
 	double viewAngle;
 	double viewVertAngle;
-	
+
 	Point size = new Point();
 
 	private DatabaseHelper db;
 
 	private static final float ALPHA = 0.25f;
+
+	@SuppressLint("NewApi")
+	public android.hardware.Camera.CameraInfo info =  new android.hardware.Camera.CameraInfo();
 
 	@SuppressLint("NewApi")
 	@Override
@@ -109,23 +112,23 @@ public class TourModeView extends Activity {
 		previewHolder = cameraPreview.getHolder(); 
 		previewHolder.addCallback(surfaceCallback); 
 
-		
+
 		cont = new TourController(new TourMode()); 
-		
+
 		if (firstTime == false)
 		{
-		waypoints = new addingTourModeWaypoints(cont.getModel());
-		firstTime = true;
+			waypoints = new addingTourModeWaypoints(cont.getModel());
+			firstTime = true;
 		}
-		
+
 		////// change the color of the text based on the time
-		
+
 		Calendar c = Calendar.getInstance();
 		SimpleDateFormat hour = new SimpleDateFormat("HH"); // 24 hour 		
 		int hours = Integer.parseInt(hour.format(c.getTime()));
-		
+
 		LocationID = (TextView) findViewById(R.id.LocationID);
-		
+
 		if(hours < 05 || hours > 17) // its night time
 		{
 			LocationID.setTextColor(Color.WHITE); //white
@@ -133,17 +136,17 @@ public class TourModeView extends Activity {
 		else
 		{			
 			LocationID.setTextColor(Color.BLACK); //black
-		
+
 		}
-		
-	
+
+
 		Display display = getWindowManager().getDefaultDisplay();		
 		display.getSize(size);
-		
+
 		Description= (TextView) findViewById(R.id.textView1);
 		touched = true;
 
-	
+
 		counterForMarker = 0;
 		flagForMarker = false;
 
@@ -163,7 +166,7 @@ public class TourModeView extends Activity {
 		db.close();
 		return poi_list;
 	}
-*/
+	 */
 
 	LocationListener locationListener = new LocationListener() {
 		@Override
@@ -191,11 +194,11 @@ public class TourModeView extends Activity {
 		}
 	}; 
 
-	
+
 	public void Sensor()
 	{
-		
-		
+
+
 	}
 	final SensorEventListener sensorEventListener = new SensorEventListener(){
 		float[] gravity; 
@@ -207,24 +210,28 @@ public class TourModeView extends Activity {
 		public void onSensorChanged(SensorEvent sensorEvent){
 			Context contex;
 			int SCREEN_ORIENTATION_SENSOR_LANDSCAPE = 6;
-			  final int rotation = getResources().getConfiguration().orientation;
-	         switch (rotation) {
-	            case Surface.ROTATION_0:
-	               // return "portrait";
-	            	setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-	            case Surface.ROTATION_90:
-	            	setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-	                //return "landscape";
-	            case Surface.ROTATION_180:
-	            	setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-	               // return "reverse portrait";
-	            default:
-	               // return "reverse landscape";
-	            	setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-	            	
-	            }		
-			
-			//int orientations =  getResources().getConfiguration().orientation;
+			final int rotation = getResources().getConfiguration().orientation;
+			switch (rotation) {
+			case Surface.ROTATION_0:
+				// return "portrait";
+				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+			case Surface.ROTATION_90:
+				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+				//return "landscape";
+			case Surface.ROTATION_180:
+				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+				// return "reverse portrait";	
+				int  degrees = 180;
+				int result = (info.orientation - degrees + 360) % 360;
+				camera.setDisplayOrientation(result);
+
+			default:
+				// return "reverse landscape";
+				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+
+			}		
+
+
 			float R[] = new float[9]; 
 			float I[] = new float[9]; 
 			float outR[] = new float[9]; 
@@ -285,11 +292,11 @@ public class TourModeView extends Activity {
 				// Update the model object.
 				cont.updateOrientation(azimuth, pitch, roll);
 
-				
+
 				cont.getModel().populateOnScreen(viewAngle);
 				cont.getModel().computePOIVector(viewAngle, viewVertAngle, size.x, size.y);
-				
-				
+
+
 				if (!cont.getModel().getOnScreen().isEmpty() )
 				{
 					waypoint.setVisibility(View.VISIBLE);
@@ -309,8 +316,8 @@ public class TourModeView extends Activity {
 
 					if (!flagForMarker)
 					{
-		
-						
+
+
 						waypoint.setX(x);
 					}
 					else
@@ -322,14 +329,14 @@ public class TourModeView extends Activity {
 						}
 						x = x/10;
 						waypoint.setX(x);
-						
+
 					}
-						
+
 					LocationID.setX(x);
 					LocationID.setY(cont.getModel().getOnScreen().get(0).getVector().getY() - 50);
-				
+
 					waypoint.setY(cont.getModel().getOnScreen().get(0).getVector().getY());
-					
+
 					LocationID.setText(cont.getModel().getOnScreen().get(0).getName()); // if not empty
 					Description.setMovementMethod(new ScrollingMovementMethod());
 					Description.setText(cont.getModel().getOnScreen().get(0).getDescription());
@@ -341,25 +348,25 @@ public class TourModeView extends Activity {
 					LocationID.setText(""); // if not empty
 					Description.setText("");
 					Description.setVisibility(View.INVISIBLE);
-					
+
 				}
 				waypoint.setOnClickListener(new View.OnClickListener(){
-				    public void onClick(View v) {
-				    	touched = !touched; 
-				        if (!touched)
-				        {
-				    	Description.setVisibility(View.VISIBLE);
-			
-				        }    
-				        else
-				       if (touched)
-				        {
-				    	Description.setVisibility(View.INVISIBLE);
-				    	
-				        }  
-				      
-				        
-				    }
+					public void onClick(View v) {
+						touched = !touched; 
+						if (!touched)
+						{
+							Description.setVisibility(View.VISIBLE);
+
+						}    
+						else
+							if (touched)
+							{
+								Description.setVisibility(View.INVISIBLE);
+
+							}  
+
+
+					}
 				});
 			}
 
@@ -368,9 +375,9 @@ public class TourModeView extends Activity {
 				Intent intent = new Intent(TourModeView.this, CompassModeView.class);  
 				startActivity(intent);
 			}*/
-			
-			
-		 
+
+
+
 		}	
 
 
@@ -414,6 +421,7 @@ public class TourModeView extends Activity {
 		locationManager.removeUpdates(locationListener);
 		sensorManager.unregisterListener(sensorEventListener);
 		camera.release();
+		//camera.setDisplayOrientation(-180); // this is to set the camera upside down
 		camera=null;
 		inPreview=false;
 
