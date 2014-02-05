@@ -47,7 +47,7 @@ public class UserTest extends TestCase {
 		assertEquals(0.4, test_user.getDistanceTo(test_wp), .05);
 	}
 	
-	public void testGetBearingTo(){
+	public void testGetBearingTo() {
 		
 		//assertEquals(195, test_user.getBearingTo(test_wp), 5);
 		test_wp.setLocation(39.949120, -76.735165,0.0); //Kinsley
@@ -57,8 +57,5 @@ public class UserTest extends TestCase {
 		
 		test_user.setLocation(39.944201, -76.733221, 0.0); 
 		assertEquals(345.0, test_user.getBearingTo(test_wp), 15.0); 
-		
-		
-		
 	}
 }

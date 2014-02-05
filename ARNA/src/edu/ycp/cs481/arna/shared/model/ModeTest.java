@@ -40,5 +40,4 @@ public class ModeTest extends TestCase {
 	public void testaddWaypoint() throws Exception {
 		assertEquals(wpList, test.getWpList());
 	}
-
 }

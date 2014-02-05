@@ -32,8 +32,6 @@ public class Settings extends Activity {
 		    }
 		});
 		
-		
-		
 		return true;
 	}
 
