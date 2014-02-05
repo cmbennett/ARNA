@@ -105,7 +105,7 @@ public class TourMode extends Mode {
 				dy = dy * -1; 
 			}
 			
-			dy = (maxY/2) + dy;
+			//dy = (maxY/2) + dy;
 			dz = 0.0; 
 			w.setVector((float) dx, (float) dy, (float) dz); 
 			
