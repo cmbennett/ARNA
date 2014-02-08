@@ -3,8 +3,10 @@ package edu.ycp.cs481.arna.client.ui;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 import edu.ycp.cs481.arna.client.uicontroller.TourController;
+import edu.ycp.cs481.arna.shared.model.POI;
 import edu.ycp.cs481.arna.shared.model.TourMode;
 import edu.ycp.cs481.shared.persistence.DatabaseHelper;
 import edu.ycp.cs481.shared.persistence.addingTourModeWaypoints;
@@ -65,7 +67,7 @@ public class TourModeView extends Activity {
 
 	boolean firstTime = false;
 
-	ImageView waypoint;
+	ImageView image;
 
 	int counterForMarker;
 	boolean flagForMarker;
@@ -137,7 +139,7 @@ public class TourModeView extends Activity {
 		counterForMarker = 0;
 		flagForMarker = false;
 
-		waypoint = (ImageView) findViewById(R.id.imageView1);
+		image = (ImageView) findViewById(R.id.imageView1);
 	}
 	/*
 	public POIList getPOIList(String tag) {
@@ -202,7 +204,7 @@ public class TourModeView extends Activity {
 				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 			case Surface.ROTATION_90:
 				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-				//return "landscape";
+				// return "landscape";
 			case Surface.ROTATION_180:
 				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 				// return "reverse portrait";	
@@ -278,51 +280,66 @@ public class TourModeView extends Activity {
 				cont.getModel().populateOnScreen(viewAngle);
 				cont.getModel().computePOIVector(viewAngle, viewVertAngle, size.x, size.y);
 
-				if (!cont.getModel().getOnScreen().isEmpty() ) {
-					waypoint.setVisibility(View.VISIBLE);
-					float x = cont.getModel().getOnScreen().get(0).getVector().getX();
-					buffer[counterForMarker] = x;
-					counterForMarker++;
-
-					if (counterForMarker == 10) {
-						flagForMarker = true;
-					}
-
-					if (counterForMarker >= 10) {
-						counterForMarker = 0;
-					}
-
-					if (!flagForMarker) {
-
-
-						waypoint.setX(x);
-					} else {
-						x = 0;
-						for (int i= 0; i < 10; i++)
-						{
-							x += buffer[i];
+				// If there are points to be drawn on the screen...
+				if(!cont.getModel().getOnScreen().isEmpty() ) {
+					image.setVisibility(View.VISIBLE);
+					
+					List<POI> list = cont.getModel().getOnScreen();
+					
+					// For each point-of-interest to be drawn onto the screen...
+					for(POI poi : list) {
+						
+						float x = poi.getVector().getX();
+						buffer[counterForMarker] = x;
+						counterForMarker++;
+		
+						if (counterForMarker == 10) {
+							flagForMarker = true;
 						}
-						x = x/10;
-						waypoint.setX(x);
+		
+						if (counterForMarker >= 10) {
+							counterForMarker = 0;
+						}
+		
+						if (!flagForMarker) {
+							image.setX(x);
+						} else {
+							x = 0;
+							
+							for (int i= 0; i < 10; i++) {
+								x += buffer[i];
+							}
+							
+							x = x/10;
+							
+							image.setX(x);
+						}
+		
+						/*LocationID.setX(x);
+						LocationID.setY(cont.getModel().getOnScreen().get(0).getVector().getY() - 50);
+		
+						image.setY(cont.getModel().getOnScreen().get(0).getVector().getY());
+		
+						LocationID.setText(cont.getModel().getOnScreen().get(0).getName()); // if not empty
+						Description.setMovementMethod(new ScrollingMovementMethod());
+						Description.setText(cont.getModel().getOnScreen().get(0).getDescription());*/
+						
+						LocationID.setY(poi.getVector().getY() - 50);
+						
+						image.setY(poi.getVector().getY());
+		
+						LocationID.setText(poi.getName());
+						Description.setMovementMethod(new ScrollingMovementMethod());
+						Description.setText(poi.getDescription());
 					}
-
-					LocationID.setX(x);
-					LocationID.setY(cont.getModel().getOnScreen().get(0).getVector().getY() - 50);
-
-					waypoint.setY(cont.getModel().getOnScreen().get(0).getVector().getY());
-
-					LocationID.setText(cont.getModel().getOnScreen().get(0).getName()); // if not empty
-					Description.setMovementMethod(new ScrollingMovementMethod());
-					Description.setText(cont.getModel().getOnScreen().get(0).getDescription());
-
 				} else if(cont.getModel().getOnScreen().isEmpty()) {
-					waypoint.setVisibility(View.INVISIBLE);
+					image.setVisibility(View.INVISIBLE);
 					LocationID.setText(""); // if not empty
 					Description.setText("");
 					Description.setVisibility(View.INVISIBLE);
 				}
 				
-				waypoint.setOnClickListener(new View.OnClickListener(){
+				image.setOnClickListener(new View.OnClickListener(){
 					public void onClick(View v) {
 						touched = !touched; 
 						if (!touched)
