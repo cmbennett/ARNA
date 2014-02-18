@@ -2,6 +2,7 @@ package edu.ycp.cs481.arna.client.ui;
 
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -68,6 +69,8 @@ public class TourModeView extends Activity {
 	boolean firstTime = false;
 
 	ImageView image;
+	
+	private List<ImageView> image_list;
 
 	int counterForMarker;
 	boolean flagForMarker;
@@ -78,7 +81,7 @@ public class TourModeView extends Activity {
 
 	Point size = new Point();
 
-	private DatabaseHelper db;
+	// private DatabaseHelper db;
 
 	private static final float ALPHA = 0.25f;
 
@@ -109,11 +112,9 @@ public class TourModeView extends Activity {
 		previewHolder = cameraPreview.getHolder(); 
 		previewHolder.addCallback(surfaceCallback); 
 
-
 		cont = new TourController(new TourMode()); 
 
-		if (firstTime == false)
-		{
+		if(firstTime == false) {
 			waypoints = new addingTourModeWaypoints(cont.getModel());
 			firstTime = true;
 		}
@@ -125,7 +126,7 @@ public class TourModeView extends Activity {
 
 		LocationID = (TextView) findViewById(R.id.LocationID);
 
-		if(hours < 05 || hours > 17) {
+		if(hours < 5 || hours > 17) {
 			LocationID.setTextColor(Color.WHITE);
 		} else {			
 			LocationID.setTextColor(Color.BLACK);
@@ -139,8 +140,11 @@ public class TourModeView extends Activity {
 		counterForMarker = 0;
 		flagForMarker = false;
 
-		image = (ImageView) findViewById(R.id.imageView1);
+		// image = (ImageView) findViewById(R.id.imageView1);
+		
+		image_list = new ArrayList<ImageView>();
 	}
+	
 	/*
 	public POIList getPOIList(String tag) {
 		try {
@@ -194,26 +198,26 @@ public class TourModeView extends Activity {
 		float inclination;
 
 		@SuppressLint("NewApi")
-		public void onSensorChanged(SensorEvent sensorEvent){
-			Context contex;
+		public void onSensorChanged(SensorEvent sensorEvent) {
+			Context context;
 			int SCREEN_ORIENTATION_SENSOR_LANDSCAPE = 6;
 			final int rotation = getResources().getConfiguration().orientation;
 			switch (rotation) {
 			case Surface.ROTATION_0:
-				// return "portrait";
+				// return "Portrait";
 				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 			case Surface.ROTATION_90:
 				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-				// return "landscape";
+				// return "Landscape";
 			case Surface.ROTATION_180:
 				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-				// return "reverse portrait";	
+				// return "Reverse Portrait";	
 				int  degrees = 180;
 				int result = (info.orientation - degrees + 360) % 360;
 				camera.setDisplayOrientation(result);
 
 			default:
-				// return "reverse landscape";
+				// return "Reverse Landscape";
 				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 			}		
 
@@ -286,55 +290,20 @@ public class TourModeView extends Activity {
 					
 					List<POI> list = cont.getModel().getOnScreen();
 					
-					// For each point-of-interest to be drawn onto the screen...
-					for(POI poi : list) {
-						
-						float x = poi.getVector().getX();
-						buffer[counterForMarker] = x;
-						counterForMarker++;
-		
-						if (counterForMarker == 10) {
-							flagForMarker = true;
-						}
-		
-						if (counterForMarker >= 10) {
-							counterForMarker = 0;
-						}
-		
-						if (!flagForMarker) {
-							image.setX(x);
-						} else {
-							x = 0;
-							
-							for (int i= 0; i < 10; i++) {
-								x += buffer[i];
-							}
-							
-							x = x/10;
-							
-							image.setX(x);
-						}
-		
-						/*LocationID.setX(x);
-						LocationID.setY(cont.getModel().getOnScreen().get(0).getVector().getY() - 50);
-		
-						image.setY(cont.getModel().getOnScreen().get(0).getVector().getY());
-		
-						LocationID.setText(cont.getModel().getOnScreen().get(0).getName()); // if not empty
-						Description.setMovementMethod(new ScrollingMovementMethod());
-						Description.setText(cont.getModel().getOnScreen().get(0).getDescription());*/
-						
-						LocationID.setY(poi.getVector().getY() - 50);
-						
-						image.setY(poi.getVector().getY());
-		
-						LocationID.setText(poi.getName());
-						Description.setMovementMethod(new ScrollingMovementMethod());
-						Description.setText(poi.getDescription());
+					// renderMarkers(image_list, list);
+				
+					/*LocationID.setX(x);
+					LocationID.setY(cont.getModel().getOnScreen().get(0).getVector().getY() - 50);
+	
+					image.setY(cont.getModel().getOnScreen().get(0).getVector().getY());
+	
+					LocationID.setText(cont.getModel().getOnScreen().get(0).getName()); // if not empty
+					Description.setMovementMethod(new ScrollingMovementMethod());
+					Description.setText(cont.getModel().getOnScreen().get(0).getDescription());*/
 					}
 				} else if(cont.getModel().getOnScreen().isEmpty()) {
 					image.setVisibility(View.INVISIBLE);
-					LocationID.setText(""); // if not empty
+					LocationID.setText(""); // If not empty...
 					Description.setText("");
 					Description.setVisibility(View.INVISIBLE);
 				}
@@ -342,19 +311,12 @@ public class TourModeView extends Activity {
 				image.setOnClickListener(new View.OnClickListener(){
 					public void onClick(View v) {
 						touched = !touched; 
-						if (!touched)
-						{
+						if (!touched) {
 							Description.setVisibility(View.VISIBLE);
-
-						}    
-						else
-							if (touched)
-							{
+						} else {
+							if(touched)
 								Description.setVisibility(View.INVISIBLE);
-
-							}  
-
-
+						}
 					}
 				});
 			}
@@ -364,7 +326,6 @@ public class TourModeView extends Activity {
 				Intent intent = new Intent(TourModeView.this, CompassModeView.class);  
 				startActivity(intent);
 			}*/
-		}	
 
 		protected float[] lowPass( float[] input, float[] output) {
 			if(output == null) return input;
@@ -402,7 +363,7 @@ public class TourModeView extends Activity {
 		locationManager.removeUpdates(locationListener);
 		sensorManager.unregisterListener(sensorEventListener);
 		camera.release();
-		//camera.setDisplayOrientation(-180); // this is to set the camera upside down
+		//camera.setDisplayOrientation(-180); // Set the camera upside down.
 		camera=null;
 		inPreview=false;
 
@@ -412,16 +373,15 @@ public class TourModeView extends Activity {
 	private Camera.Size getBestPreviewSize(int width, int height, Camera.Parameters parameters) {
 		Camera.Size result = null; 
 
-		for(Camera.Size size : parameters.getSupportedPreviewSizes()){
-			if(size.width<=width && size.height <= height){
-				if(result == null){
+		for(Camera.Size size : parameters.getSupportedPreviewSizes()) {
+			if(size.width<=width && size.height <= height) {
+				if(result == null) {
 					result = size; 
-				}
-				else{
+				} else {
 					int resultArea = result.width * result.height; 
 					int newArea = size.width * size.height; 
 
-					if(newArea > resultArea){
+					if(newArea > resultArea) {
 						result = size; 
 					}
 				}
@@ -464,4 +424,69 @@ public class TourModeView extends Activity {
 
 		}
 	};
+	
+	@SuppressLint("NewApi")
+	private void renderMarkers(List<ImageView> markers, List<POI> points) {
+		
+		// For each point to be drawn to the screen...
+		for(POI poi : points) {
+			
+			int count = 0;
+			
+			// Ensure there is one marker for each point to be drawn.
+			if(markers.size() < points.size() && points.size() != 0) {
+				do {
+					image = (ImageView) findViewById(R.id.imageView1);
+					markers.add(image);
+				} while(markers.size() < points.size());
+			} else if(markers.size() > points.size()) {
+				do {
+					markers.remove(0);
+				} while(markers.size() > points.size());
+			}
+			
+			image = markers.get(count);
+			
+			// Get the horizontal displacement of the current point.
+			float x = poi.getVector().getX();
+			
+			// Get average value using queue.
+			buffer[counterForMarker] = x;
+			counterForMarker++;
+
+			if(counterForMarker == 10) {
+				flagForMarker = true;
+			}
+
+			if (counterForMarker >= 10) {
+				counterForMarker = 0;
+			}
+
+			if (!flagForMarker) {
+				image.setX(x);
+			} else {
+				x = 0;
+				
+				for (int i= 0; i < 10; i++) {
+					x += buffer[i];
+				}
+				
+				x = x/10;
+				
+				// Update the image horizontal position.
+				image.setX(x);
+			}
+			
+			LocationID.setY(poi.getVector().getY() - 50);
+			
+			// Set image vertical position.
+			image.setY(poi.getVector().getY());
+
+			LocationID.setText(poi.getName());
+			Description.setMovementMethod(new ScrollingMovementMethod());
+			Description.setText(poi.getDescription());
+			
+			count++;
+		}
+	}
 }
