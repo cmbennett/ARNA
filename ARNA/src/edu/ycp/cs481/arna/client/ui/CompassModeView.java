@@ -85,7 +85,7 @@ public class CompassModeView extends Activity {
 		sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(magnetometerSensor), SensorManager.SENSOR_DELAY_UI); 
 		sensorManager.registerListener(sensorEventListener,  sensorManager.getDefaultSensor(accelerometerSensor), SensorManager.SENSOR_DELAY_UI); 
 
-		arrow =  (ImageView) findViewById(R.id.imageView1);
+		arrow =  (ImageView) findViewById(R.id.ImageView10);
 		Location =  (TextView) findViewById(R.id.POI);
 		Distance =  (TextView) findViewById(R.id.DistanceTo);
 

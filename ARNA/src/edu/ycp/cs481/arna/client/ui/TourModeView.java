@@ -67,13 +67,11 @@ public class TourModeView extends Activity {
 	boolean touched;
 
 	boolean firstTime = false;
+	private ArrayList<ImageView> static_list;
+	private List<ImageView> dynamic_list;
 
-	ImageView image;
-	
-	private List<ImageView> image_list;
-
-	int counterForMarker;
-	boolean flagForMarker;
+	int buffer_counter;
+	boolean readyForAverage;
 
 	double GEOIDHEIGHT = 34;
 	double viewAngle;
@@ -118,7 +116,7 @@ public class TourModeView extends Activity {
 			waypoints = new addingTourModeWaypoints(cont.getModel());
 			firstTime = true;
 		}
-		
+
 		// Night mode.
 		Calendar c = Calendar.getInstance();
 		SimpleDateFormat hour = new SimpleDateFormat("HH"); // 24 hour 		
@@ -137,14 +135,24 @@ public class TourModeView extends Activity {
 
 		Description= (TextView) findViewById(R.id.textView1);
 		touched = true;
-		counterForMarker = 0;
-		flagForMarker = false;
+		buffer_counter = 0;
+		readyForAverage = false;
 
-		// image = (ImageView) findViewById(R.id.imageView1);
-		
-		image_list = new ArrayList<ImageView>();
+		static_list = new ArrayList<ImageView>();
+		static_list.add((ImageView) findViewById(R.id.ImageView01));
+		static_list.add((ImageView) findViewById(R.id.ImageView02));
+		static_list.add((ImageView) findViewById(R.id.ImageView03));
+		static_list.add((ImageView) findViewById(R.id.ImageView04));
+		static_list.add((ImageView) findViewById(R.id.ImageView05));
+		static_list.add((ImageView) findViewById(R.id.ImageView06));
+		static_list.add((ImageView) findViewById(R.id.ImageView07));
+		static_list.add((ImageView) findViewById(R.id.ImageView08));
+		static_list.add((ImageView) findViewById(R.id.ImageView09));
+		static_list.add((ImageView) findViewById(R.id.ImageView10));
+
+		dynamic_list = new ArrayList<ImageView>();
 	}
-	
+
 	/*
 	public POIList getPOIList(String tag) {
 		try {
@@ -190,7 +198,7 @@ public class TourModeView extends Activity {
 	public void Sensor() {
 
 	}
-	
+
 	final SensorEventListener sensorEventListener = new SensorEventListener(){
 		float[] gravity; 
 		float[] geomagnetic; 
@@ -202,7 +210,7 @@ public class TourModeView extends Activity {
 			Context context;
 			int SCREEN_ORIENTATION_SENSOR_LANDSCAPE = 6;
 			final int rotation = getResources().getConfiguration().orientation;
-			switch (rotation) {
+			/*switch (rotation) {
 			case Surface.ROTATION_0:
 				// return "Portrait";
 				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
@@ -220,12 +228,15 @@ public class TourModeView extends Activity {
 				// return "Reverse Landscape";
 				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 			}		
-
+			 */
+		
+			
+			
 			float R[] = new float[9]; 
 			float I[] = new float[9]; 
 			float outR[] = new float[9]; 
 			float orientation[] = new float[3];
-
+			List<POI> list = cont.getModel().getOnScreen();
 			// Acquire and filter magnetic field data from device.
 			if(sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
 				gravity = lowPass(sensorEvent.values.clone(), gravity);
@@ -283,45 +294,64 @@ public class TourModeView extends Activity {
 
 				cont.getModel().populateOnScreen(viewAngle);
 				cont.getModel().computePOIVector(viewAngle, viewVertAngle, size.x, size.y);
-
-				// If there are points to be drawn on the screen...
-				if(!cont.getModel().getOnScreen().isEmpty() ) {
-					image.setVisibility(View.VISIBLE);
-					
-					List<POI> list = cont.getModel().getOnScreen();
-					
-					// renderMarkers(image_list, list);
 				
+				renderMarkers(dynamic_list, list);
+				
+				for(ImageView image : dynamic_list)
+				{
+					image.setVisibility(View.INVISIBLE);
+					LocationID.setText("");
+					Description.setText("");
+					Description.setVisibility(View.INVISIBLE);
+				}
+				
+				// If there are points to be drawn on the screen...
+				if(!list.isEmpty() ) { 
+			
+					for(ImageView image : dynamic_list)
+					{
+						image.setVisibility(View.VISIBLE);
+					}
+
+					renderMarkers(dynamic_list, list);
+
 					/*LocationID.setX(x);
 					LocationID.setY(cont.getModel().getOnScreen().get(0).getVector().getY() - 50);
-	
+
 					image.setY(cont.getModel().getOnScreen().get(0).getVector().getY());
-	
+
 					LocationID.setText(cont.getModel().getOnScreen().get(0).getName()); // if not empty
 					Description.setMovementMethod(new ScrollingMovementMethod());
 					Description.setText(cont.getModel().getOnScreen().get(0).getDescription());*/
-					}
-				} else if(cont.getModel().getOnScreen().isEmpty()) {
+				}
+			} else if(list.isEmpty()) { // if there is NO elements 
+				for(ImageView image : dynamic_list)
+				{
 					image.setVisibility(View.INVISIBLE);
 					LocationID.setText(""); // If not empty...
 					Description.setText("");
 					Description.setVisibility(View.INVISIBLE);
 				}
-				
-				image.setOnClickListener(new View.OnClickListener(){
-					public void onClick(View v) {
-						touched = !touched; 
-						if (!touched) {
-							Description.setVisibility(View.VISIBLE);
-						} else {
-							if(touched)
-								Description.setVisibility(View.INVISIBLE);
-						}
-					}
-				});
 			}
+				
 
-			/*if(roll > 145)
+
+			
+			/*
+			image.setOnClickListener(new View.OnClickListener(){
+				public void onClick(View v) {
+					touched = !touched; 
+					if (!touched) {
+						Description.setVisibility(View.VISIBLE);
+					} else {
+						if(touched)
+							Description.setVisibility(View.INVISIBLE);
+					}
+				}
+			});*/
+		}
+
+		/*if(roll > 145)
 			{
 				Intent intent = new Intent(TourModeView.this, CompassModeView.class);  
 				startActivity(intent);
@@ -335,7 +365,7 @@ public class TourModeView extends Activity {
 			}
 			return output;
 		}
-		
+
 		public void onAccuracyChanged(Sensor sensor, int accuracy){
 			//
 		}
@@ -424,69 +454,72 @@ public class TourModeView extends Activity {
 
 		}
 	};
-	
+
 	@SuppressLint("NewApi")
 	private void renderMarkers(List<ImageView> markers, List<POI> points) {
-		
+		// Ensure there is one marker for each point to be drawn.
+		if(markers.size() < points.size() && points.size() != 0) {
+			do {
+
+				markers.add(static_list.get(markers.size()));				
+
+			} while(markers.size() < points.size());
+		} else if(markers.size() > points.size()) {
+			do {
+				markers.remove(markers.size()-1);
+			} while(markers.size() > points.size());
+		}
+		int count = 0;
+		buffer_counter = 0;
 		// For each point to be drawn to the screen...
-		for(POI poi : points) {
-			
-			int count = 0;
-			
-			// Ensure there is one marker for each point to be drawn.
-			if(markers.size() < points.size() && points.size() != 0) {
-				do {
-					image = (ImageView) findViewById(R.id.imageView1);
-					markers.add(image);
-				} while(markers.size() < points.size());
-			} else if(markers.size() > points.size()) {
-				do {
-					markers.remove(0);
-				} while(markers.size() > points.size());
-			}
-			
-			image = markers.get(count);
-			
+		for(POI poi : points) {	
+
 			// Get the horizontal displacement of the current point.
 			float x = poi.getVector().getX();
-			
-			// Get average value using queue.
-			buffer[counterForMarker] = x;
-			counterForMarker++;
 
-			if(counterForMarker == 10) {
-				flagForMarker = true;
-			}
+			/*// Get average value using queue.
+			buffer[buffer_counter] = x;
+			buffer_counter++;
 
-			if (counterForMarker >= 10) {
-				counterForMarker = 0;
-			}
-
-			if (!flagForMarker) {
-				image.setX(x);
+			if(buffer_counter == 10) {
+				readyForAverage = true;
+			}		
+		
+			if (!readyForAverage) { 
+				markers.get(count).setX(x);
 			} else {
 				x = 0;
-				
+
 				for (int i= 0; i < 10; i++) {
 					x += buffer[i];
 				}
-				
+
 				x = x/10;
-				
+
 				// Update the image horizontal position.
-				image.setX(x);
+				markers.get(count).setX(x);
 			}
 			
+			if (buffer_counter >= 10) {
+				buffer_counter = 0;
+			}*/
+
+			LocationID.setX(poi.getVector().getX());
 			LocationID.setY(poi.getVector().getY() - 50);
 			
-			// Set image vertical position.
-			image.setY(poi.getVector().getY());
+			// Update the image horizontal position.
+			markers.get(count).setX(x);
+
+			// Set images vertical position.
+			markers.get(count).setY(poi.getVector().getY());
 
 			LocationID.setText(poi.getName());
 			Description.setMovementMethod(new ScrollingMovementMethod());
 			Description.setText(poi.getDescription());
-			
+
 			count++;
+			
 		}
+		
 	}
 }

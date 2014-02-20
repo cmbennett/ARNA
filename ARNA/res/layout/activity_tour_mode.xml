@@ -21,7 +21,7 @@
         android:visibility="visible" />
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/ImageView10"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"
@@ -44,5 +44,95 @@
         android:maxLines = "6"
         android:scrollbars = "vertical" 
         android:background="#000"/>
+
+    <ImageView
+        android:id="@+id/ImageView01"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:clickable="true"
+        android:src="@drawable/waypoint_node"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/ImageView02"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:clickable="true"
+        android:src="@drawable/waypoint_node"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/ImageView03"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:clickable="true"
+        android:src="@drawable/waypoint_node"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/ImageView04"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:clickable="true"
+        android:src="@drawable/waypoint_node"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/ImageView05"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:clickable="true"
+        android:src="@drawable/waypoint_node"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/ImageView06"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:clickable="true"
+        android:src="@drawable/waypoint_node"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/ImageView07"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:clickable="true"
+        android:src="@drawable/waypoint_node"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/ImageView08"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:clickable="true"
+        android:src="@drawable/waypoint_node"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/ImageView09"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:clickable="true"
+        android:src="@drawable/waypoint_node"
+        android:visibility="invisible" />
 
 </RelativeLayout>

@@ -41,7 +41,7 @@
         android:text="Point of Interest: " />
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/ImageView10"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_above="@+id/POI"
