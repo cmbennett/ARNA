@@ -297,12 +297,12 @@ public class TourModeView extends Activity {
 				
 				renderMarkers(dynamic_list, list);
 				
-				for(ImageView image : dynamic_list)
+				for(ImageView image : static_list)
 				{
 					image.setVisibility(View.INVISIBLE);
 					LocationID.setText("");
-					Description.setText("");
-					Description.setVisibility(View.INVISIBLE);
+					//Description.setText("");
+					//Description.setVisibility(View.INVISIBLE);
 				}
 				
 				// If there are points to be drawn on the screen...
@@ -322,7 +322,7 @@ public class TourModeView extends Activity {
 
 					LocationID.setText(cont.getModel().getOnScreen().get(0).getName()); // if not empty
 					Description.setMovementMethod(new ScrollingMovementMethod());
-					Description.setText(cont.getModel().getOnScreen().get(0).getDescription());*/
+					*/
 				}
 			} else if(list.isEmpty()) { // if there is NO elements 
 				for(ImageView image : dynamic_list)
@@ -337,18 +337,7 @@ public class TourModeView extends Activity {
 
 
 			
-			/*
-			image.setOnClickListener(new View.OnClickListener(){
-				public void onClick(View v) {
-					touched = !touched; 
-					if (!touched) {
-						Description.setVisibility(View.VISIBLE);
-					} else {
-						if(touched)
-							Description.setVisibility(View.INVISIBLE);
-					}
-				}
-			});*/
+			
 		}
 
 		/*if(roll > 145)
@@ -471,54 +460,49 @@ public class TourModeView extends Activity {
 		}
 		int count = 0;
 		buffer_counter = 0;
+
+	
+		
 		// For each point to be drawn to the screen...
-		for(POI poi : points) {	
+		for( POI poi : points) {	
 
 			// Get the horizontal displacement of the current point.
 			float x = poi.getVector().getX();
 
-			/*// Get average value using queue.
-			buffer[buffer_counter] = x;
-			buffer_counter++;
+			poi.addBufferValue(x);
 
-			if(buffer_counter == 10) {
-				readyForAverage = true;
-			}		
-		
-			if (!readyForAverage) { 
-				markers.get(count).setX(x);
-			} else {
-				x = 0;
-
-				for (int i= 0; i < 10; i++) {
-					x += buffer[i];
-				}
-
-				x = x/10;
-
-				// Update the image horizontal position.
-				markers.get(count).setX(x);
-			}
-			
-			if (buffer_counter >= 10) {
-				buffer_counter = 0;
-			}*/
-
-			LocationID.setX(poi.getVector().getX());
+			LocationID.setX(poi.getRollingAverage());
 			LocationID.setY(poi.getVector().getY() - 50);
 			
 			// Update the image horizontal position.
-			markers.get(count).setX(x);
+			markers.get(count).setX(poi.getRollingAverage());
 
 			// Set images vertical position.
 			markers.get(count).setY(poi.getVector().getY());
 
 			LocationID.setText(poi.getName());
-			Description.setMovementMethod(new ScrollingMovementMethod());
 			Description.setText(poi.getDescription());
+			
+			for(ImageView image : dynamic_list) {
+			
+				image.setOnClickListener(new View.OnClickListener(){ 
+				public void onClick(View v) {
+				
+					touched = !touched; 
+					if (!touched) {
+					
+						Description.setVisibility(View.VISIBLE);
+						Description.setMovementMethod(new ScrollingMovementMethod());						
+					} else {
+						if(touched)
+							Description.setVisibility(View.INVISIBLE);
+					}
+				}
+			
+			});
+			}
 
 			count++;
-			
 		}
 		
 	}
