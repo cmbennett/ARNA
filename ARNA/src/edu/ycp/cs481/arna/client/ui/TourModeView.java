@@ -126,12 +126,6 @@ public class TourModeView extends Activity {
 		int hours = Integer.parseInt(hour.format(c.getTime()));
 
 
-		if(hours < 5 || hours > 17) {
-			LocationID.setTextColor(Color.WHITE);
-		} else {			
-			LocationID.setTextColor(Color.BLACK);
-		}
-
 		Display display = getWindowManager().getDefaultDisplay();		
 		display.getSize(size);
 
@@ -168,6 +162,14 @@ public class TourModeView extends Activity {
 		Location_IDS.add((TextView) findViewById(R.id.LocationID10));
 
 		Location_list = new ArrayList<TextView>();
+		
+		for (TextView ids : Location_IDS){
+		if(hours < 5 || hours > 17) {
+			ids.setTextColor(Color.WHITE);
+		} else {			
+			ids.setTextColor(Color.BLACK);
+		}
+		}
 	}
 
 	/*
@@ -312,7 +314,7 @@ public class TourModeView extends Activity {
 				cont.getModel().populateOnScreen(viewAngle);
 				cont.getModel().computePOIVector(viewAngle, viewVertAngle, size.x, size.y);
 
-				renderMarkers(dynamic_list, list);
+				renderMarkers(dynamic_list, list,Location_list);
 
 				for(ImageView image : static_list) 
 				{
@@ -331,7 +333,7 @@ public class TourModeView extends Activity {
 						image.setVisibility(View.VISIBLE);
 					}
 
-					renderMarkers(dynamic_list, list);
+					renderMarkers(dynamic_list, list,Location_list);
 
 					/*LocationID.setX(x);
 					LocationID.setY(cont.getModel().getOnScreen().get(0).getVector().getY() - 50);
@@ -466,17 +468,19 @@ public class TourModeView extends Activity {
 	};
 
 	@SuppressLint("NewApi")
-	private void renderMarkers(List<ImageView> markers, List<POI> points) {
+	private void renderMarkers(List<ImageView> markers, List<POI> points, List<TextView> ids) {
 		// Ensure there is one marker for each point to be drawn.
 		if(markers.size() < points.size() && points.size() != 0) {
 			do {
 
-				markers.add(static_list.get(markers.size()));				
+				markers.add(static_list.get(markers.size()));	
+				ids.add(Location_IDS.get(ids.size()));
 
 			} while(markers.size() < points.size());
 		} else if(markers.size() > points.size()) {
 			do {
 				markers.remove(markers.size()-1);
+				ids.remove(ids.size()-1);
 			} while(markers.size() > points.size());
 		}
 		int count = 0;
@@ -501,11 +505,11 @@ public class TourModeView extends Activity {
 
 			for(ImageView image : dynamic_list) {
 
-				for (TextView ids : Location_list)
+				for (TextView IDS : Location_list)
 				{
-					ids.setText(poi.getName());
-					ids.setX(poi.getRollingAverage());
-					ids.setY(poi.getVector().getY() - 50);
+					IDS.setText(poi.getName());
+					IDS.setX(poi.getRollingAverage());
+					IDS.setY(poi.getVector().getY() - 50);
 					
 					
 					image.setOnClickListener(new View.OnClickListener(){ 
