@@ -70,6 +70,9 @@ public class TourModeView extends Activity {
 	private ArrayList<ImageView> static_list;
 	private List<ImageView> dynamic_list;
 
+	private ArrayList<TextView> Location_IDS;
+	private List<TextView> Location_list;
+
 	int buffer_counter;
 	boolean readyForAverage;
 
@@ -122,7 +125,6 @@ public class TourModeView extends Activity {
 		SimpleDateFormat hour = new SimpleDateFormat("HH"); // 24 hour 		
 		int hours = Integer.parseInt(hour.format(c.getTime()));
 
-		LocationID = (TextView) findViewById(R.id.LocationID);
 
 		if(hours < 5 || hours > 17) {
 			LocationID.setTextColor(Color.WHITE);
@@ -151,6 +153,21 @@ public class TourModeView extends Activity {
 		static_list.add((ImageView) findViewById(R.id.ImageView10));
 
 		dynamic_list = new ArrayList<ImageView>();
+
+
+		Location_IDS = new ArrayList<TextView>();
+		Location_IDS.add((TextView) findViewById(R.id.LocationID01));
+		Location_IDS.add((TextView) findViewById(R.id.LocationID02));
+		Location_IDS.add((TextView) findViewById(R.id.LocationID03));
+		Location_IDS.add((TextView) findViewById(R.id.LocationID04));
+		Location_IDS.add((TextView) findViewById(R.id.LocationID05));
+		Location_IDS.add((TextView) findViewById(R.id.LocationID06));
+		Location_IDS.add((TextView) findViewById(R.id.LocationID07));
+		Location_IDS.add((TextView) findViewById(R.id.LocationID08));
+		Location_IDS.add((TextView) findViewById(R.id.LocationID09));
+		Location_IDS.add((TextView) findViewById(R.id.LocationID10));
+
+		Location_list = new ArrayList<TextView>();
 	}
 
 	/*
@@ -229,9 +246,9 @@ public class TourModeView extends Activity {
 				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 			}		
 			 */
-		
-			
-			
+
+
+
 			float R[] = new float[9]; 
 			float I[] = new float[9]; 
 			float outR[] = new float[9]; 
@@ -294,20 +311,21 @@ public class TourModeView extends Activity {
 
 				cont.getModel().populateOnScreen(viewAngle);
 				cont.getModel().computePOIVector(viewAngle, viewVertAngle, size.x, size.y);
-				
+
 				renderMarkers(dynamic_list, list);
-				
-				for(ImageView image : static_list)
+
+				for(ImageView image : static_list) 
 				{
-					image.setVisibility(View.INVISIBLE);
-					LocationID.setText("");
-					//Description.setText("");
-					//Description.setVisibility(View.INVISIBLE);
+					for (TextView ids : Location_IDS)
+					{
+						image.setVisibility(View.INVISIBLE);
+						ids.setText("");
+					}
 				}
-				
+
 				// If there are points to be drawn on the screen...
 				if(!list.isEmpty() ) { 
-			
+
 					for(ImageView image : dynamic_list)
 					{
 						image.setVisibility(View.VISIBLE);
@@ -322,22 +340,25 @@ public class TourModeView extends Activity {
 
 					LocationID.setText(cont.getModel().getOnScreen().get(0).getName()); // if not empty
 					Description.setMovementMethod(new ScrollingMovementMethod());
-					*/
+					 */
 				}
 			} else if(list.isEmpty()) { // if there is NO elements 
 				for(ImageView image : dynamic_list)
 				{
-					image.setVisibility(View.INVISIBLE);
-					LocationID.setText(""); // If not empty...
-					Description.setText("");
-					Description.setVisibility(View.INVISIBLE);
+					for (TextView ids : Location_list)						
+					{
+						image.setVisibility(View.INVISIBLE);
+						ids.setText(""); // If not empty...
+						Description.setText("");
+						Description.setVisibility(View.INVISIBLE);
+					}
 				}
 			}
-				
 
 
-			
-			
+
+
+
 		}
 
 		/*if(roll > 145)
@@ -459,51 +480,53 @@ public class TourModeView extends Activity {
 			} while(markers.size() > points.size());
 		}
 		int count = 0;
-		buffer_counter = 0;
 
-	
-		
+
+
+
 		// For each point to be drawn to the screen...
 		for( POI poi : points) {	
 
 			// Get the horizontal displacement of the current point.
 			float x = poi.getVector().getX();
 
-			poi.addBufferValue(x);
-
-			LocationID.setX(poi.getRollingAverage());
-			LocationID.setY(poi.getVector().getY() - 50);
-			
+			poi.addBufferValue(x);			
 			// Update the image horizontal position.
 			markers.get(count).setX(poi.getRollingAverage());
 
 			// Set images vertical position.
 			markers.get(count).setY(poi.getVector().getY());
 
-			LocationID.setText(poi.getName());
 			Description.setText(poi.getDescription());
-			
-			for(ImageView image : dynamic_list) {
-			
-				image.setOnClickListener(new View.OnClickListener(){ 
-				public void onClick(View v) {
-				
-					touched = !touched; 
-					if (!touched) {
-					
-						Description.setVisibility(View.VISIBLE);
-						Description.setMovementMethod(new ScrollingMovementMethod());						
-					} else {
-						if(touched)
-							Description.setVisibility(View.INVISIBLE);
-					}
-				}
-			
-			});
-			}
 
+			for(ImageView image : dynamic_list) {
+
+				for (TextView ids : Location_list)
+				{
+					ids.setText(poi.getName());
+					ids.setX(poi.getRollingAverage());
+					ids.setY(poi.getVector().getY() - 50);
+					
+					
+					image.setOnClickListener(new View.OnClickListener(){ 
+						public void onClick(View v) {
+
+							touched = !touched; 
+							if (!touched) {
+
+								Description.setVisibility(View.VISIBLE);
+								Description.setMovementMethod(new ScrollingMovementMethod());						
+							} else {
+								if(touched)
+									Description.setVisibility(View.INVISIBLE);
+							}
+						}
+
+					});
+				}
+			}
 			count++;
 		}
-		
+
 	}
 }
