@@ -330,6 +330,11 @@ public class TourModeView extends Activity {
 
 					for(ImageView image : dynamic_list)
 					{
+						for (TextView ids : Location_IDS)
+						{
+							ids.setVisibility(View.VISIBLE);						
+						}
+						
 						image.setVisibility(View.VISIBLE);
 					}
 
@@ -362,13 +367,6 @@ public class TourModeView extends Activity {
 
 
 		}
-
-		/*if(roll > 145)
-			{
-				Intent intent = new Intent(TourModeView.this, CompassModeView.class);  
-				startActivity(intent);
-			}*/
-
 		protected float[] lowPass( float[] input, float[] output) {
 			if(output == null) return input;
 
@@ -485,10 +483,6 @@ public class TourModeView extends Activity {
 		}
 		int count = 0;
 
-
-
-
-		// For each point to be drawn to the screen...
 		for( POI poi : points) {	
 
 			// Get the horizontal displacement of the current point.
@@ -510,8 +504,7 @@ public class TourModeView extends Activity {
 					IDS.setText(poi.getName());
 					IDS.setX(poi.getRollingAverage());
 					IDS.setY(poi.getVector().getY() - 50);
-					
-					
+										
 					image.setOnClickListener(new View.OnClickListener(){ 
 						public void onClick(View v) {
 
