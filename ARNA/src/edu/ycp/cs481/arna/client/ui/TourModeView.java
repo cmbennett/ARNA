@@ -32,6 +32,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder; 
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -65,13 +66,15 @@ public class TourModeView extends Activity {
 	TextView LocationID;
 	TextView Description;
 	boolean touched;
+	
+	ImageView reticle;
 
 	boolean firstTime = false;
-	private ArrayList<ImageView> static_list;
-	private List<ImageView> dynamic_list;
+	private ArrayList<ImageView> static_img_list;
+	private List<ImageView> dynamic_img_list;
 
-	private ArrayList<TextView> Location_IDS;
-	private List<TextView> Location_list;
+	private ArrayList<TextView> static_loc_list;
+	private List<TextView> dynamic_loc_list;
 
 	int buffer_counter;
 	boolean readyForAverage;
@@ -112,7 +115,20 @@ public class TourModeView extends Activity {
 		cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
 		previewHolder = cameraPreview.getHolder(); 
 		previewHolder.addCallback(surfaceCallback); 
+		
+		Display display = getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		int width = size.x;
+		int height = size.y;
+		reticle = (ImageView) findViewById(R.id.reticle);
+		
+		reticle.setX(width/2);
+		reticle.setY(height/2);	
 
+		
+		//reticle.setScale()
+		//reticle.setAlpha(alpha);
 		cont = new TourController(new TourMode()); 
 
 		if(firstTime == false) {
@@ -124,9 +140,7 @@ public class TourModeView extends Activity {
 		Calendar c = Calendar.getInstance();
 		SimpleDateFormat hour = new SimpleDateFormat("HH"); // 24 hour 		
 		int hours = Integer.parseInt(hour.format(c.getTime()));
-
-
-		Display display = getWindowManager().getDefaultDisplay();		
+	
 		display.getSize(size);
 
 		Description= (TextView) findViewById(R.id.textView1);
@@ -134,41 +148,41 @@ public class TourModeView extends Activity {
 		buffer_counter = 0;
 		readyForAverage = false;
 
-		static_list = new ArrayList<ImageView>();
-		static_list.add((ImageView) findViewById(R.id.ImageView01));
-		static_list.add((ImageView) findViewById(R.id.ImageView02));
-		static_list.add((ImageView) findViewById(R.id.ImageView03));
-		static_list.add((ImageView) findViewById(R.id.ImageView04));
-		static_list.add((ImageView) findViewById(R.id.ImageView05));
-		static_list.add((ImageView) findViewById(R.id.ImageView06));
-		static_list.add((ImageView) findViewById(R.id.ImageView07));
-		static_list.add((ImageView) findViewById(R.id.ImageView08));
-		static_list.add((ImageView) findViewById(R.id.ImageView09));
-		static_list.add((ImageView) findViewById(R.id.ImageView10));
+		static_img_list = new ArrayList<ImageView>();
+		static_img_list.add((ImageView) findViewById(R.id.ImageView01));
+		static_img_list.add((ImageView) findViewById(R.id.ImageView02));
+		static_img_list.add((ImageView) findViewById(R.id.ImageView03));
+		static_img_list.add((ImageView) findViewById(R.id.ImageView04));
+		static_img_list.add((ImageView) findViewById(R.id.ImageView05));
+		static_img_list.add((ImageView) findViewById(R.id.ImageView06));
+		static_img_list.add((ImageView) findViewById(R.id.ImageView07));
+		static_img_list.add((ImageView) findViewById(R.id.ImageView08));
+		static_img_list.add((ImageView) findViewById(R.id.ImageView09));
+		static_img_list.add((ImageView) findViewById(R.id.ImageView10));
 
-		dynamic_list = new ArrayList<ImageView>();
+		dynamic_img_list = new ArrayList<ImageView>();
 
 
-		Location_IDS = new ArrayList<TextView>();
-		Location_IDS.add((TextView) findViewById(R.id.LocationID01));
-		Location_IDS.add((TextView) findViewById(R.id.LocationID02));
-		Location_IDS.add((TextView) findViewById(R.id.LocationID03));
-		Location_IDS.add((TextView) findViewById(R.id.LocationID04));
-		Location_IDS.add((TextView) findViewById(R.id.LocationID05));
-		Location_IDS.add((TextView) findViewById(R.id.LocationID06));
-		Location_IDS.add((TextView) findViewById(R.id.LocationID07));
-		Location_IDS.add((TextView) findViewById(R.id.LocationID08));
-		Location_IDS.add((TextView) findViewById(R.id.LocationID09));
-		Location_IDS.add((TextView) findViewById(R.id.LocationID10));
+		static_loc_list = new ArrayList<TextView>();
+		static_loc_list.add((TextView) findViewById(R.id.LocationID01));
+		static_loc_list.add((TextView) findViewById(R.id.LocationID02));
+		static_loc_list.add((TextView) findViewById(R.id.LocationID03));
+		static_loc_list.add((TextView) findViewById(R.id.LocationID04));
+		static_loc_list.add((TextView) findViewById(R.id.LocationID05));
+		static_loc_list.add((TextView) findViewById(R.id.LocationID06));
+		static_loc_list.add((TextView) findViewById(R.id.LocationID07));
+		static_loc_list.add((TextView) findViewById(R.id.LocationID08));
+		static_loc_list.add((TextView) findViewById(R.id.LocationID09));
+		static_loc_list.add((TextView) findViewById(R.id.LocationID10));
 
-		Location_list = new ArrayList<TextView>();
-		
-		for (TextView ids : Location_IDS){
-		if(hours < 5 || hours > 17) {
-			ids.setTextColor(Color.WHITE);
-		} else {			
-			ids.setTextColor(Color.BLACK);
-		}
+		dynamic_loc_list = new ArrayList<TextView>();
+
+		for (TextView ids : static_loc_list){
+			if(hours < 5 || hours > 17) {
+				ids.setTextColor(Color.WHITE);
+			} else {			
+				ids.setTextColor(Color.BLACK);
+			}
 		}
 	}
 
@@ -226,36 +240,13 @@ public class TourModeView extends Activity {
 
 		@SuppressLint("NewApi")
 		public void onSensorChanged(SensorEvent sensorEvent) {
-			Context context;
-			int SCREEN_ORIENTATION_SENSOR_LANDSCAPE = 6;
-			final int rotation = getResources().getConfiguration().orientation;
-			/*switch (rotation) {
-			case Surface.ROTATION_0:
-				// return "Portrait";
-				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-			case Surface.ROTATION_90:
-				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-				// return "Landscape";
-			case Surface.ROTATION_180:
-				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-				// return "Reverse Portrait";	
-				int  degrees = 180;
-				int result = (info.orientation - degrees + 360) % 360;
-				camera.setDisplayOrientation(result);
 
-			default:
-				// return "Reverse Landscape";
-				setRequestedOrientation(SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-			}		
-			 */
-
-
-
+			
 			float R[] = new float[9]; 
 			float I[] = new float[9]; 
 			float outR[] = new float[9]; 
 			float orientation[] = new float[3];
-			List<POI> list = cont.getModel().getOnScreen();
+			List<POI> onscreen = cont.getModel().getOnScreen();
 			// Acquire and filter magnetic field data from device.
 			if(sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
 				gravity = lowPass(sensorEvent.values.clone(), gravity);
@@ -314,58 +305,30 @@ public class TourModeView extends Activity {
 				cont.getModel().populateOnScreen(viewAngle);
 				cont.getModel().computePOIVector(viewAngle, viewVertAngle, size.x, size.y);
 
-				renderMarkers(dynamic_list, list,Location_list);
-
-				for(ImageView image : static_list) 
+				for(ImageView image : dynamic_img_list) 
 				{
-					for (TextView ids : Location_IDS)
-					{
-						image.setVisibility(View.INVISIBLE);
-						ids.setText("");
-					}
+					image.setVisibility(View.INVISIBLE);
+				}
+				for (TextView ids : dynamic_loc_list)
+				{
+					ids.setText("");
 				}
 
 				// If there are points to be drawn on the screen...
-				if(!list.isEmpty() ) { 
+				if(!onscreen.isEmpty() ) { 
+					renderMarkers(dynamic_img_list, onscreen,dynamic_loc_list);
 
-					for(ImageView image : dynamic_list)
-					{
-						for (TextView ids : Location_IDS)
-						{
-							ids.setVisibility(View.VISIBLE);						
-						}
-						
+					for(ImageView image : dynamic_img_list)
+					{					
 						image.setVisibility(View.VISIBLE);
 					}
 
-					renderMarkers(dynamic_list, list,Location_list);
-
-					/*LocationID.setX(x);
-					LocationID.setY(cont.getModel().getOnScreen().get(0).getVector().getY() - 50);
-
-					image.setY(cont.getModel().getOnScreen().get(0).getVector().getY());
-
-					LocationID.setText(cont.getModel().getOnScreen().get(0).getName()); // if not empty
-					Description.setMovementMethod(new ScrollingMovementMethod());
-					 */
-				}
-			} else if(list.isEmpty()) { // if there is NO elements 
-				for(ImageView image : dynamic_list)
-				{
-					for (TextView ids : Location_list)						
+					for (TextView ids : dynamic_loc_list)
 					{
-						image.setVisibility(View.INVISIBLE);
-						ids.setText(""); // If not empty...
-						Description.setText("");
-						Description.setVisibility(View.INVISIBLE);
+						ids.setVisibility(View.VISIBLE);						
 					}
-				}
+				}			
 			}
-
-
-
-
-
 		}
 		protected float[] lowPass( float[] input, float[] output) {
 			if(output == null) return input;
@@ -444,10 +407,38 @@ public class TourModeView extends Activity {
 		@Override
 		public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 			Camera.Parameters parameters = camera.getParameters(); 
-			Camera.Size size = getBestPreviewSize(width, height, parameters); 
+			//Camera.Size size = getBestPreviewSize(width, height, parameters); 	
+		    	camera.stopPreview();
+	  
+	
+	        Display display = ((WindowManager)getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 
-			if(size != null) {
-				parameters.setPreviewSize(size.width, size.height); 
+	        if(display.getRotation() == Surface.ROTATION_0)
+	        {
+	            parameters.setPreviewSize(height, width);                           
+	            camera.setDisplayOrientation(90);
+	        }
+
+	        if(display.getRotation() == Surface.ROTATION_90)
+	        {
+	            parameters.setPreviewSize(width, height);                           
+	        }
+
+	        if(display.getRotation() == Surface.ROTATION_180)
+	        {
+	            parameters.setPreviewSize(height, width);   
+	            camera.setDisplayOrientation(270);
+	        }
+
+	        if(display.getRotation() == Surface.ROTATION_270)
+	        {
+	            parameters.setPreviewSize(width, height);
+	            camera.setDisplayOrientation(180);
+	        }
+
+	  
+	    	if(size != null) {
+				parameters.setPreviewSize(width, height); 
 				camera.setParameters(parameters); 
 
 				camera.startPreview(); 
@@ -456,6 +447,9 @@ public class TourModeView extends Activity {
 				viewVertAngle = camera.getParameters().getVerticalViewAngle();
 
 			}	
+			
+		  
+			
 		}
 
 		@Override
@@ -467,63 +461,83 @@ public class TourModeView extends Activity {
 
 	@SuppressLint("NewApi")
 	private void renderMarkers(List<ImageView> markers, List<POI> points, List<TextView> ids) {
-		// Ensure there is one marker for each point to be drawn.
-		if(markers.size() < points.size() && points.size() != 0) {
-			do {
-
-				markers.add(static_list.get(markers.size()));	
-				ids.add(Location_IDS.get(ids.size()));
-
-			} while(markers.size() < points.size());
-		} else if(markers.size() > points.size()) {
-			do {
-				markers.remove(markers.size()-1);
-				ids.remove(ids.size()-1);
-			} while(markers.size() > points.size());
-		}
 		int count = 0;
 
-		for( POI poi : points) {	
+		// Ensure there is one marker for each point to be drawn.
+		if(markers.size() < points.size() && ids.size() < points.size() && points.size() != 0) {
+			do {
+				markers.add(static_img_list.get(markers.size())); // Pull another ImageView object.
+				ids.add(static_loc_list.get(ids.size())); // Pull another TextView object.
+			} while(markers.size() < points.size() && ids.size() < points.size());
+		} else if(markers.size() > points.size() && ids.size() < points.size()) {
+			do {
+				markers.remove(markers.size()-1); // Remove an ImageView object.
+				ids.remove(ids.size()-1); // Remove a TextView object.
+			} while(markers.size() > points.size());
+		}
+
+		// For each PoI to be drawn onscreen...
+		for(POI poi : points) {	
 
 			// Get the horizontal displacement of the current point.
 			float x = poi.getVector().getX();
 
-			poi.addBufferValue(x);			
+			poi.addBufferValue(x);
+
 			// Update the image horizontal position.
 			markers.get(count).setX(poi.getRollingAverage());
 
 			// Set images vertical position.
 			markers.get(count).setY(poi.getVector().getY());
 
-			Description.setText(poi.getDescription());
+			/* for(ImageView image : dynamic_img_list) {
 
-			for(ImageView image : dynamic_list) {
+				image.setOnClickListener(new View.OnClickListener(){ 
+					public void onClick(View v) {
 
-				for (TextView IDS : Location_list)
-				{
-					IDS.setText(poi.getName());
-					IDS.setX(poi.getRollingAverage());
-					IDS.setY(poi.getVector().getY() - 50);
-										
-					image.setOnClickListener(new View.OnClickListener(){ 
-						public void onClick(View v) {
-
-							touched = !touched; 
-							if (!touched) {
-
-								Description.setVisibility(View.VISIBLE);
-								Description.setMovementMethod(new ScrollingMovementMethod());						
-							} else {
-								if(touched)
-									Description.setVisibility(View.INVISIBLE);
-							}
+						touched = !touched;
+						if(!touched) {
+							Description.setVisibility(View.VISIBLE);
+							Description.setMovementMethod(new ScrollingMovementMethod());						
+						} else {
+							if(touched)
+							Description.setVisibility(View.INVISIBLE);
 						}
+					}
+				});
+			} */
 
-					});
+			// Initialize ImageView object for marker display.
+			ImageView image = static_img_list.get(count);
+			final String des = poi.getDescription();
+			image.setOnClickListener(new View.OnClickListener(){ 
+				public void onClick(View v) {
+
+					touched = !touched;
+					if(!touched) {
+						Description.setVisibility(View.VISIBLE);
+						Description.setMovementMethod(new ScrollingMovementMethod());
+						Description.setText(des);
+					} else {
+						if(touched)
+							Description.setVisibility(View.INVISIBLE);
+					}
 				}
-			}
+			});
+
+			/* for(TextView id : dynamic_loc_list) {
+				id.setText(poi.getName());
+				id.setX(poi.getRollingAverage());
+				id.setY(poi.getVector().getY() - 50);
+			} */
+
+			// Attach name to POI.
+			TextView id = static_loc_list.get(count);
+			id.setText(poi.getName());
+			id.setX(poi.getRollingAverage());
+			id.setY(poi.getVector().getY() - 50);
+
 			count++;
 		}
-
 	}
 }
