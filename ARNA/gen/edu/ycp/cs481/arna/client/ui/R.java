@@ -58,14 +58,13 @@ public final class R {
         public static final int LocationID09=0x7f0a001f;
         public static final int LocationID10=0x7f0a0020;
         public static final int POI=0x7f0a0001;
-        public static final int action_settings=0x7f0a0022;
+        public static final int action_settings=0x7f0a0021;
         public static final int button1=0x7f0a0008;
         public static final int button2=0x7f0a0009;
         public static final int button3=0x7f0a000a;
         public static final int cameraPreview=0x7f0a000d;
         public static final int map=0x7f0a0007;
         public static final int relativeLayout1=0x7f0a0000;
-        public static final int reticle=0x7f0a0021;
         public static final int spinner1=0x7f0a0006;
         public static final int textView1=0x7f0a000b;
         public static final int textView12=0x7f0a0002;

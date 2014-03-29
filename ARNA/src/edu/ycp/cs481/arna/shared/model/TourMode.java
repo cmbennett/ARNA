@@ -7,8 +7,8 @@ import java.util.List;
 public class TourMode extends Mode {
 	
 	private List<POI> onScreen;
-	private static double CUTOFF = 400; //400
-
+	private static double CUTOFF = 9999999; //400
+	
 	public TourMode(User u, List<POI> wpList) {
 		super(u, wpList); 
 		onScreen = new ArrayList<POI>(); 
@@ -63,6 +63,9 @@ public class TourMode extends Mode {
 		
 		double roll = user.getOrient().getRoll()-90; 
 		
+		//System.out.println(roll + " roll"); 
+		//System.out.println(vertCamAngle); 
+		
 		//Populate array of vectors (each i vector in the list corresponds with the i POI in the onScreen list)
 		for(POI w: onScreen) {
 			
@@ -71,12 +74,13 @@ public class TourMode extends Mode {
 			
 			//Map X using arc lengths
 			double twoPiR = 2 * Math.PI * user.getDistanceTo(w); 
+		//	System.out.println(user.getDistanceTo(w) +  " USER"); 
 			double totalArc = twoPiR * (horzCamAngle / 360); 
 			
 			double azimuth = user.getOrient().getAzimuth(); 
 			double bearing = user.getBearingTo(w); 
 			double POIAngle = Math.abs(azimuth - bearing); 
-			
+			System.out.println(POIAngle +  " POI"); 
 			double POIArc = twoPiR * (POIAngle / 360); 
 			
 			//(poiarc / totalarc) = (dx / DX)
@@ -102,6 +106,9 @@ public class TourMode extends Mode {
 			dy = (maxY/2) + dy;
 			dz = 0.0; 
 			w.setVector((float) dx, (float) dy, (float) dz); 
+			
+			System.out.println("dx: " + dx); 
+			//System.out.println("dy: " + dy); 
 		}
 	}
 }

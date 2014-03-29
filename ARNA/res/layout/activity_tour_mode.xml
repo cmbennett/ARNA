@@ -27,10 +27,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignTop="@+id/LocationID01"
         android:layout_marginLeft="18dp"
-        android:alpha=".6"
-        android:clickable="true"
         android:src="@drawable/waypoint_node"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        android:clickable="true" />
 
     <TextView
         android:id="@+id/textView1"
@@ -52,7 +51,6 @@
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:alpha=".6"
         android:clickable="true"
         android:src="@drawable/waypoint_node"
         android:visibility="invisible" />
@@ -63,7 +61,6 @@
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:alpha=".6"
         android:clickable="true"
         android:src="@drawable/waypoint_node"
         android:visibility="invisible" />
@@ -74,7 +71,6 @@
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:alpha=".6"
         android:clickable="true"
         android:src="@drawable/waypoint_node"
         android:visibility="invisible" />
@@ -85,7 +81,6 @@
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:alpha=".6"
         android:clickable="true"
         android:src="@drawable/waypoint_node"
         android:visibility="invisible" />
@@ -96,7 +91,6 @@
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:alpha=".6"
         android:clickable="true"
         android:src="@drawable/waypoint_node"
         android:visibility="invisible" />
@@ -107,7 +101,6 @@
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:alpha=".6"
         android:clickable="true"
         android:src="@drawable/waypoint_node"
         android:visibility="invisible" />
@@ -118,7 +111,6 @@
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:alpha=".6"
         android:clickable="true"
         android:src="@drawable/waypoint_node"
         android:visibility="invisible" />
@@ -129,7 +121,6 @@
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:alpha=".6"
         android:clickable="true"
         android:src="@drawable/waypoint_node"
         android:visibility="invisible" />
@@ -140,7 +131,6 @@
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:alpha=".6"
         android:clickable="true"
         android:src="@drawable/waypoint_node"
         android:visibility="invisible" />
@@ -225,14 +215,5 @@
         android:layout_alignParentTop="true"
         android:textSize="25sp"
         android:visibility="visible" />
-
-    <ImageView
-        android:id="@+id/reticle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/LocationID01"
-        android:layout_alignParentBottom="true"
-        android:alpha=".5"
-        android:src="@drawable/indicator" />
 
 </RelativeLayout>

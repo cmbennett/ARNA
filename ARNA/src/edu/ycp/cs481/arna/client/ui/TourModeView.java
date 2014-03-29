@@ -32,7 +32,6 @@ import android.view.Surface;
 import android.view.SurfaceHolder; 
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -66,15 +65,13 @@ public class TourModeView extends Activity {
 	TextView LocationID;
 	TextView Description;
 	boolean touched;
-	
-	ImageView reticle;
 
 	boolean firstTime = false;
 	private ArrayList<ImageView> static_img_list;
-	private List<ImageView> dynamic_img_list;
+	private List<ImageView> dynamic_list;
 
 	private ArrayList<TextView> static_loc_list;
-	private List<TextView> dynamic_loc_list;
+	private List<TextView> Location_list;
 
 	int buffer_counter;
 	boolean readyForAverage;
@@ -115,20 +112,7 @@ public class TourModeView extends Activity {
 		cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
 		previewHolder = cameraPreview.getHolder(); 
 		previewHolder.addCallback(surfaceCallback); 
-		
-		Display display = getWindowManager().getDefaultDisplay();
-		Point size = new Point();
-		display.getSize(size);
-		int width = size.x;
-		int height = size.y;
-		reticle = (ImageView) findViewById(R.id.reticle);
-		
-		reticle.setX(width/2);
-		reticle.setY(height/2);	
 
-		
-		//reticle.setScale()
-		//reticle.setAlpha(alpha);
 		cont = new TourController(new TourMode()); 
 
 		if(firstTime == false) {
@@ -140,7 +124,9 @@ public class TourModeView extends Activity {
 		Calendar c = Calendar.getInstance();
 		SimpleDateFormat hour = new SimpleDateFormat("HH"); // 24 hour 		
 		int hours = Integer.parseInt(hour.format(c.getTime()));
-	
+
+
+		Display display = getWindowManager().getDefaultDisplay();		
 		display.getSize(size);
 
 		Description= (TextView) findViewById(R.id.textView1);
@@ -160,7 +146,7 @@ public class TourModeView extends Activity {
 		static_img_list.add((ImageView) findViewById(R.id.ImageView09));
 		static_img_list.add((ImageView) findViewById(R.id.ImageView10));
 
-		dynamic_img_list = new ArrayList<ImageView>();
+		dynamic_list = new ArrayList<ImageView>();
 
 
 		static_loc_list = new ArrayList<TextView>();
@@ -175,32 +161,16 @@ public class TourModeView extends Activity {
 		static_loc_list.add((TextView) findViewById(R.id.LocationID09));
 		static_loc_list.add((TextView) findViewById(R.id.LocationID10));
 
-		dynamic_loc_list = new ArrayList<TextView>();
-
+		Location_list = new ArrayList<TextView>();
+		
 		for (TextView ids : static_loc_list){
-			if(hours < 5 || hours > 17) {
-				ids.setTextColor(Color.WHITE);
-			} else {			
-				ids.setTextColor(Color.BLACK);
-			}
+		if(hours < 5 || hours > 17) {
+			ids.setTextColor(Color.WHITE);
+		} else {			
+			ids.setTextColor(Color.BLACK);
+		}
 		}
 	}
-
-	/*
-	public POIList getPOIList(String tag) {
-		try {
-			db.openDatabase();
-		} catch (java.sql.SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Cursor cursor = db.getCursorfromDatabase(tag);
-		POIList poi_list = new POIList();    
-		poi_list.getListFromCursor(cursor);
-		db.close();
-		return poi_list;
-	}
-	 */
 
 	LocationListener locationListener = new LocationListener() {
 		@Override
@@ -240,13 +210,14 @@ public class TourModeView extends Activity {
 
 		@SuppressLint("NewApi")
 		public void onSensorChanged(SensorEvent sensorEvent) {
-
-			
+			Context context;
+			int SCREEN_ORIENTATION_SENSOR_LANDSCAPE = 6;
+			final int rotation = getResources().getConfiguration().orientation;
 			float R[] = new float[9]; 
 			float I[] = new float[9]; 
 			float outR[] = new float[9]; 
 			float orientation[] = new float[3];
-			List<POI> onscreen = cont.getModel().getOnScreen();
+			List<POI> list = cont.getModel().getOnScreen();
 			// Acquire and filter magnetic field data from device.
 			if(sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
 				gravity = lowPass(sensorEvent.values.clone(), gravity);
@@ -305,29 +276,44 @@ public class TourModeView extends Activity {
 				cont.getModel().populateOnScreen(viewAngle);
 				cont.getModel().computePOIVector(viewAngle, viewVertAngle, size.x, size.y);
 
-				for(ImageView image : dynamic_img_list) 
+				renderMarkers(dynamic_list, list,Location_list);
+
+				for(ImageView image : static_img_list) 
 				{
-					image.setVisibility(View.INVISIBLE);
-				}
-				for (TextView ids : dynamic_loc_list)
-				{
-					ids.setText("");
+					for (TextView ids : static_loc_list)
+					{
+						image.setVisibility(View.INVISIBLE);
+						ids.setText("");
+					}
 				}
 
 				// If there are points to be drawn on the screen...
-				if(!onscreen.isEmpty() ) { 
-					renderMarkers(dynamic_img_list, onscreen,dynamic_loc_list);
+				if(!list.isEmpty() ) { 
 
-					for(ImageView image : dynamic_img_list)
-					{					
+					for(ImageView image : dynamic_list)
+					{
+						for (TextView ids : static_loc_list)
+						{
+							ids.setVisibility(View.VISIBLE);						
+						}
+						
 						image.setVisibility(View.VISIBLE);
 					}
 
-					for (TextView ids : dynamic_loc_list)
+					renderMarkers(dynamic_list, list,Location_list);
+
+				}
+			} else if(list.isEmpty()) { // if there is NO elements 
+				for(ImageView image : dynamic_list)
+				{
+					for (TextView ids : Location_list)						
 					{
-						ids.setVisibility(View.VISIBLE);						
+						image.setVisibility(View.INVISIBLE);
+						ids.setText(""); // If not empty...
+						Description.setText("");
+						Description.setVisibility(View.INVISIBLE);
 					}
-				}			
+				}
 			}
 		}
 		protected float[] lowPass( float[] input, float[] output) {
@@ -407,38 +393,10 @@ public class TourModeView extends Activity {
 		@Override
 		public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 			Camera.Parameters parameters = camera.getParameters(); 
-			//Camera.Size size = getBestPreviewSize(width, height, parameters); 	
-		    	camera.stopPreview();
-	  
-	
-	        Display display = ((WindowManager)getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+			Camera.Size size = getBestPreviewSize(width, height, parameters); 
 
-	        if(display.getRotation() == Surface.ROTATION_0)
-	        {
-	            parameters.setPreviewSize(height, width);                           
-	            camera.setDisplayOrientation(90);
-	        }
-
-	        if(display.getRotation() == Surface.ROTATION_90)
-	        {
-	            parameters.setPreviewSize(width, height);                           
-	        }
-
-	        if(display.getRotation() == Surface.ROTATION_180)
-	        {
-	            parameters.setPreviewSize(height, width);   
-	            camera.setDisplayOrientation(270);
-	        }
-
-	        if(display.getRotation() == Surface.ROTATION_270)
-	        {
-	            parameters.setPreviewSize(width, height);
-	            camera.setDisplayOrientation(180);
-	        }
-
-	  
-	    	if(size != null) {
-				parameters.setPreviewSize(width, height); 
+			if(size != null) {
+				parameters.setPreviewSize(size.width, size.height); 
 				camera.setParameters(parameters); 
 
 				camera.startPreview(); 
@@ -447,9 +405,6 @@ public class TourModeView extends Activity {
 				viewVertAngle = camera.getParameters().getVerticalViewAngle();
 
 			}	
-			
-		  
-			
 		}
 
 		@Override
@@ -490,23 +445,6 @@ public class TourModeView extends Activity {
 			// Set images vertical position.
 			markers.get(count).setY(poi.getVector().getY());
 
-			/* for(ImageView image : dynamic_img_list) {
-
-				image.setOnClickListener(new View.OnClickListener(){ 
-					public void onClick(View v) {
-
-						touched = !touched;
-						if(!touched) {
-							Description.setVisibility(View.VISIBLE);
-							Description.setMovementMethod(new ScrollingMovementMethod());						
-						} else {
-							if(touched)
-							Description.setVisibility(View.INVISIBLE);
-						}
-					}
-				});
-			} */
-
 			// Initialize ImageView object for marker display.
 			ImageView image = static_img_list.get(count);
 			final String des = poi.getDescription();
@@ -524,12 +462,6 @@ public class TourModeView extends Activity {
 					}
 				}
 			});
-
-			/* for(TextView id : dynamic_loc_list) {
-				id.setText(poi.getName());
-				id.setX(poi.getRollingAverage());
-				id.setY(poi.getVector().getY() - 50);
-			} */
 
 			// Attach name to POI.
 			TextView id = static_loc_list.get(count);
