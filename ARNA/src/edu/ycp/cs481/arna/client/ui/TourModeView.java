@@ -71,7 +71,7 @@ public class TourModeView extends Activity {
 	private List<ImageView> dynamic_list;
 
 	private ArrayList<TextView> static_loc_list;
-	private List<TextView> Location_list;
+	private List<TextView> dynamic_loc_list;
 
 	int buffer_counter;
 	boolean readyForAverage;
@@ -161,14 +161,14 @@ public class TourModeView extends Activity {
 		static_loc_list.add((TextView) findViewById(R.id.LocationID09));
 		static_loc_list.add((TextView) findViewById(R.id.LocationID10));
 
-		Location_list = new ArrayList<TextView>();
-		
+		dynamic_loc_list = new ArrayList<TextView>();
+
 		for (TextView ids : static_loc_list){
-		if(hours < 5 || hours > 17) {
-			ids.setTextColor(Color.WHITE);
-		} else {			
-			ids.setTextColor(Color.BLACK);
-		}
+			if(hours < 5 || hours > 17) {
+				ids.setTextColor(Color.WHITE);
+			} else {			
+				ids.setTextColor(Color.BLACK);
+			}
 		}
 	}
 
@@ -182,16 +182,18 @@ public class TourModeView extends Activity {
 
 			cont.updateLocation(latitude, longitude, altitude); 
 			cont.getModel().populateOnScreen(viewAngle);
-
 		}
+
 		@Override
 		public void onProviderDisabled(String arg0){
 			//TODO Auto-generated method sub
 		}
+
 		@Override
 		public void onProviderEnabled(String arg0){
 			//TODO Auto-generated method sub
 		}
+
 		@Override
 		public void onStatusChanged(String arg0, int arg1, Bundle arg2){
 			//TODO Auto-generated method sub
@@ -217,7 +219,8 @@ public class TourModeView extends Activity {
 			float I[] = new float[9]; 
 			float outR[] = new float[9]; 
 			float orientation[] = new float[3];
-			List<POI> list = cont.getModel().getOnScreen();
+			List<POI> onScreenList = cont.getModel().getOnScreen();
+
 			// Acquire and filter magnetic field data from device.
 			if(sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
 				gravity = lowPass(sensorEvent.values.clone(), gravity);
@@ -267,55 +270,51 @@ public class TourModeView extends Activity {
 				}
 
 				pitch = (float)(orientation[1] * x180pi);
-
 				roll = (float)(orientation[2] * x180pi);	
 
 				// Update the model object.
 				cont.updateOrientation(azimuth, pitch, roll);
-
 				cont.getModel().populateOnScreen(viewAngle);
 				cont.getModel().computePOIVector(viewAngle, viewVertAngle, size.x, size.y);
 
-				renderMarkers(dynamic_list, list,Location_list);
+				// If the dynamic lists are not the same sizes, wipe them.
+				if(dynamic_list.size() != dynamic_loc_list.size()) {
+					dynamic_list.removeAll(dynamic_list);
+					dynamic_loc_list.removeAll(dynamic_loc_list);
+				}
 
-				for(ImageView image : static_img_list) 
-				{
-					for (TextView ids : static_loc_list)
-					{
-						image.setVisibility(View.INVISIBLE);
-						ids.setText("");
-					}
+				// Ensure there is an ImageView and TextView object for each POI onscreen.
+				if(dynamic_list.size() < onScreenList.size() && dynamic_loc_list.size() < onScreenList.size()) {
+					do {
+						dynamic_list.add(static_img_list.get(dynamic_list.size())); // Pull another ImageView object.
+						dynamic_loc_list.add(static_loc_list.get(dynamic_loc_list.size())); // Pull another TextView object.
+					} while(dynamic_list.size() < onScreenList.size() && dynamic_loc_list.size() < onScreenList.size());
+
+				} else if(dynamic_list.size() > onScreenList.size() && dynamic_loc_list.size() > onScreenList.size()) {
+					do {
+						dynamic_list.remove(dynamic_list.size()-1); // Remove an ImageView object.
+						dynamic_loc_list.remove(dynamic_loc_list.size()-1); // Remove a TextView object.
+					} while(dynamic_list.size() > onScreenList.size() && dynamic_loc_list.size() > onScreenList.size());
+				}
+				
+				for(ImageView image : static_img_list) {
+					image.setVisibility(View.INVISIBLE);
+					Description.setText("");
+					Description.setVisibility(View.INVISIBLE);
+				}
+
+				for (TextView ids : static_loc_list) {
+					ids.setText(""); // If not empty...
+					ids.setVisibility(View.INVISIBLE); 
 				}
 
 				// If there are points to be drawn on the screen...
-				if(!list.isEmpty() ) { 
-
-					for(ImageView image : dynamic_list)
-					{
-						for (TextView ids : static_loc_list)
-						{
-							ids.setVisibility(View.VISIBLE);						
-						}
-						
-						image.setVisibility(View.VISIBLE);
-					}
-
-					renderMarkers(dynamic_list, list,Location_list);
-
-				}
-			} else if(list.isEmpty()) { // if there is NO elements 
-				for(ImageView image : dynamic_list)
-				{
-					for (TextView ids : Location_list)						
-					{
-						image.setVisibility(View.INVISIBLE);
-						ids.setText(""); // If not empty...
-						Description.setText("");
-						Description.setVisibility(View.INVISIBLE);
-					}
+				if(!onScreenList.isEmpty() ) {	
+					renderMarkers(onScreenList);		
 				}
 			}
 		}
+
 		protected float[] lowPass( float[] input, float[] output) {
 			if(output == null) return input;
 
@@ -415,24 +414,11 @@ public class TourModeView extends Activity {
 	};
 
 	@SuppressLint("NewApi")
-	private void renderMarkers(List<ImageView> markers, List<POI> points, List<TextView> ids) {
+	private void renderMarkers( List<POI> POIList) {
 		int count = 0;
 
-		// Ensure there is one marker for each point to be drawn.
-		if(markers.size() < points.size() && ids.size() < points.size() && points.size() != 0) {
-			do {
-				markers.add(static_img_list.get(markers.size())); // Pull another ImageView object.
-				ids.add(static_loc_list.get(ids.size())); // Pull another TextView object.
-			} while(markers.size() < points.size() && ids.size() < points.size());
-		} else if(markers.size() > points.size() && ids.size() < points.size()) {
-			do {
-				markers.remove(markers.size()-1); // Remove an ImageView object.
-				ids.remove(ids.size()-1); // Remove a TextView object.
-			} while(markers.size() > points.size());
-		}
-
 		// For each PoI to be drawn onscreen...
-		for(POI poi : points) {	
+		for(POI poi : POIList) {	
 
 			// Get the horizontal displacement of the current point.
 			float x = poi.getVector().getX();
@@ -440,14 +426,15 @@ public class TourModeView extends Activity {
 			poi.addBufferValue(x);
 
 			// Update the image horizontal position.
-			markers.get(count).setX(poi.getRollingAverage());
+			dynamic_list.get(count).setX(poi.getRollingAverage());
 
 			// Set images vertical position.
-			markers.get(count).setY(poi.getVector().getY());
+			dynamic_list.get(count).setY(poi.getVector().getY());
 
 			// Initialize ImageView object for marker display.
 			ImageView image = static_img_list.get(count);
 			final String des = poi.getDescription();
+			image.setVisibility(View.VISIBLE);
 			image.setOnClickListener(new View.OnClickListener(){ 
 				public void onClick(View v) {
 
@@ -465,6 +452,7 @@ public class TourModeView extends Activity {
 
 			// Attach name to POI.
 			TextView id = static_loc_list.get(count);
+			id.setVisibility(View.VISIBLE);
 			id.setText(poi.getName());
 			id.setX(poi.getRollingAverage());
 			id.setY(poi.getVector().getY() - 50);
