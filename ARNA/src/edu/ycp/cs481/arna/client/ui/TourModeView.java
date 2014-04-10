@@ -9,7 +9,7 @@ import java.util.List;
 import edu.ycp.cs481.arna.client.uicontroller.TourController;
 import edu.ycp.cs481.arna.shared.model.POI;
 import edu.ycp.cs481.arna.shared.model.TourMode;
-import edu.ycp.cs481.shared.persistence.DatabaseHelper;
+
 import edu.ycp.cs481.shared.persistence.addingTourModeWaypoints;
 import android.location.LocationManager;
 import android.location.LocationListener; 
@@ -76,7 +76,7 @@ public class TourModeView extends Activity {
 	int buffer_counter;
 	boolean readyForAverage;
 
-	double GEOIDHEIGHT = 34;
+	double GEOIDHEIGHT = 161.415; // changed from 34
 	double viewAngle;
 	double viewVertAngle;
 

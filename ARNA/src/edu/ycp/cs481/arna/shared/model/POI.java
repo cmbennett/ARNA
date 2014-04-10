@@ -6,7 +6,7 @@ import java.util.List;
 
 
 public class POI {
-	private int id;
+	private long id;
 	private Location loc;
 	private String description, name;
 	private Vector displacement;
@@ -33,11 +33,15 @@ public class POI {
 		}
 	}
 
-	public void setID(int id) {
-		this.id = id;
+	public POI() {
+		// TODO Auto-generated constructor stub
 	}
 
-	public int getID() {
+	public void setID(long insertId) {
+		this.id = insertId;
+	}
+
+	public long getID() {
 		return id;
 	}
 

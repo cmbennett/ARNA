@@ -8,7 +8,7 @@ import edu.ycp.cs481.arna.shared.model.CompassMode;
 import edu.ycp.cs481.arna.shared.model.POI;
 import edu.ycp.cs481.arna.shared.model.POIList;
 import edu.ycp.cs481.arna.shared.model.User;
-import edu.ycp.cs481.shared.persistence.DatabaseHelper;
+
 import edu.ycp.cs481.shared.persistence.addingCompassModeWaypoints;
 import edu.ycp.cs481.shared.persistence.addingTourModeWaypoints;
 import android.location.LocationManager;
@@ -64,7 +64,6 @@ public class CompassModeView extends Activity {
 
 	Spinner locations;
 
-	private DatabaseHelper db;
 	private POIList lists;
 	 DecimalFormat df = new DecimalFormat("#.00");
 

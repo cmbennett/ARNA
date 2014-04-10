@@ -2,7 +2,7 @@ package edu.ycp.cs481.arna.client.ui;
 
 import edu.ycp.cs481.arna.client.uicontroller.TourController;
 import edu.ycp.cs481.arna.shared.model.TourMode;
-import edu.ycp.cs481.shared.persistence.DatabaseHelper;
+
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -21,7 +21,7 @@ public class Splashscreen extends Activity {
 
 	static int width;
 	static int height;
-	private DatabaseHelper db;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
