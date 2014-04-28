@@ -1,6 +1,8 @@
 package edu.ycp.cs481.shared.persistence;
 
 import java.util.List;
+
+import edu.ycp.cs481.arna.shared.model.Location;
 import edu.ycp.cs481.arna.shared.model.POI;
 
 public interface IDatabase {	
@@ -9,7 +11,10 @@ public interface IDatabase {
 	 * 
 	 * @return the current notes (list of {@link Note}s
 	 */
-	public List<POI> getPOI();
+	public List<POI> getPOIs();
+	
+	
+	public POI getPOI(String name);
 
 	/**
 	 * Add a {@link Note} to the database.
@@ -18,14 +23,5 @@ public interface IDatabase {
 	 */
 	public void addPOI(POI poi);
 
-	/**
-	 * Delete specific note from the database.
-	 */
-	public void deletePOI(POI poi);
-
-	/**
-	 * Delete all notes from the database.
-	 */
-	public void deleteAllPOI();
 
 }

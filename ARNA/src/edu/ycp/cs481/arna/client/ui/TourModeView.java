@@ -9,7 +9,7 @@ import java.util.List;
 import edu.ycp.cs481.arna.client.uicontroller.TourController;
 import edu.ycp.cs481.arna.shared.model.POI;
 import edu.ycp.cs481.arna.shared.model.TourMode;
-
+import edu.ycp.cs481.shared.persistence.POIDataSource;
 import edu.ycp.cs481.shared.persistence.addingTourModeWaypoints;
 import android.location.LocationManager;
 import android.location.LocationListener; 
@@ -76,12 +76,15 @@ public class TourModeView extends Activity {
 	int buffer_counter;
 	boolean readyForAverage;
 
-	double GEOIDHEIGHT = 161.415; // changed from 34
+	double GEOIDHEIGHT = 34; 
 	double viewAngle;
 	double viewVertAngle;
 
 	Point size = new Point();
 
+	
+	
+	private POIDataSource datasource;
 	// private DatabaseHelper db;
 
 	private static final float ALPHA = 0.25f;
@@ -94,6 +97,11 @@ public class TourModeView extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tour_mode);
+		
+		// opens the database
+		datasource = new POIDataSource(this);
+	    datasource.open();
+	    
 
 		// Initialize sensor objects.
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
@@ -113,12 +121,31 @@ public class TourModeView extends Activity {
 		previewHolder = cameraPreview.getHolder(); 
 		previewHolder.addCallback(surfaceCallback); 
 
-		cont = new TourController(new TourMode()); 
 
-		if(firstTime == false) {
-			waypoints = new addingTourModeWaypoints(cont.getModel());
-			firstTime = true;
+		
+		
+		/*POISingleton.getInstance();
+	if (POISingleton.getPOIS(datasource) == null)
+	{*/
+		cont = new TourController(new TourMode(datasource)); 
+		waypoints = new addingTourModeWaypoints(cont.getModel());
+		ArrayList<POI> pois = waypoints.getPOI();	
+		for (int i = 0; i < pois.size(); i++)
+		{
+			 // this adds the points to the database
+			datasource.addPOI(new POI( pois.get(i).getName(),pois.get(i).getDescription(), pois.get(i).getLocation().getLatitude(),
+					 pois.get(i).getLocation().getLongitude(), pois.get(i).getLocation().getElevation()));
+			
+	
 		}
+		
+	//}
+		
+		
+		
+
+		
+		
 
 		// Night mode.
 		Calendar c = Calendar.getInstance();

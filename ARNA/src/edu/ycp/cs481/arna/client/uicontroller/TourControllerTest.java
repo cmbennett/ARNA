@@ -9,7 +9,7 @@ public class TourControllerTest extends TestCase {
 	
 	@Override
 	protected void setUp() throws Exception {
-		t = new TourMode(); 
+		t = new TourMode(null); 
 		cont = new TourController(); 
 	}
 	

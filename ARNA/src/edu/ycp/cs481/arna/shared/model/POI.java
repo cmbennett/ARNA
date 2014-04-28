@@ -12,8 +12,8 @@ public class POI {
 	private Vector displacement;
 	private List<Float> buffer;
 
-	public POI(int id, String name, String desc, double x, double y, double z) {
-		this.id = id;
+	public POI( String name, String desc, double x, double y, double z) {
+		
 		this.name = name;
 		this.description = desc;
 		loc = new Location(x, y, z);
@@ -34,7 +34,16 @@ public class POI {
 	}
 
 	public POI() {
-		// TODO Auto-generated constructor stub
+		loc = new Location(0, 0, 0);
+		description = "No Description.";
+		name = "No name.";
+		displacement = new Vector();
+		buffer = new LinkedList<Float>();
+		
+		// Populate buffer with nonzero values.
+		for(int i = 0; i < 10; i++) {
+			buffer.add(0.0f);
+		}
 	}
 
 	public void setID(long insertId) {
@@ -74,6 +83,8 @@ public class POI {
 	}
 
 	public void setVector(float x, float y, float z){
+		
+		
 		displacement.set(x, y, z); 
 	}
 

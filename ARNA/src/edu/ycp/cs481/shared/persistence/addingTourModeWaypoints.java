@@ -1,11 +1,18 @@
 package edu.ycp.cs481.shared.persistence;
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.ycp.cs481.arna.shared.model.POI;
 import edu.ycp.cs481.arna.shared.model.TourMode;
 
 
-public class addingTourModeWaypoints {
+public class addingTourModeWaypoints {	
 
+	
+	private ArrayList<POI> pois;
 	public addingTourModeWaypoints(TourMode tour) {
+		pois  = new ArrayList<POI>();
+			    
 		// adding waypoints to the tour mode		 
 		POI kinsley = new POI(39.949120, -76.735165,120.396);
 		kinsley.setName("Kinsley Enginnering Center");
@@ -41,12 +48,19 @@ public class addingTourModeWaypoints {
 				"Campus Operations, Financial Aid Office and Registrar.");
 		
 		
-		// adding the waypoints to the tour Mode
-		tour.addWaypoint(kinsley);
-		tour.addWaypoint(northSide);
-		tour.addWaypoint(campbellHall);
-		tour.addWaypoint(schmidtLibrary);
-		tour.addWaypoint(millerAdmin);
+		// adding the waypoints to POI array list
+		
+		pois.add(kinsley);
+		pois.add(northSide);
+		pois.add(campbellHall);
+		pois.add(schmidtLibrary);
+		pois.add(millerAdmin);
 	 }
+	
+	public ArrayList<POI> getPOI()
+	{
+		return pois;
+		
+	}
 
 }

@@ -2,7 +2,7 @@ package edu.ycp.cs481.arna.client.ui;
 
 import edu.ycp.cs481.arna.client.uicontroller.TourController;
 import edu.ycp.cs481.arna.shared.model.TourMode;
-
+import edu.ycp.cs481.shared.persistence.POIDataSource;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -21,40 +21,28 @@ public class Splashscreen extends Activity {
 
 	static int width;
 	static int height;
+	
+	private POIDataSource datasource;
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_splash_screen);
+		setContentView(R.layout.activity_splash_screen);	
 
 
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener); 
+		
+		datasource = new POIDataSource(this);
+	    datasource.open();
 
-		tour = new TourMode(); 
+		tour = new TourMode(datasource); 
 		cont = new TourController(tour); 
 		count = 0;
 		found = false;
 		
-		/*
-		db = new DatabaseHelper(this);
-		// Create database (if doesn't exist)
-		try {
-			db.createDatabase();
-		}
-		catch (IOException e) {
-			throw new Error("Unable to create database");
-		}
 
-		// Open database
-		try {
-			db.openDatabase();
-		}
-		catch (java.sql.SQLException e) {
-			throw new Error("Cannot open database");
-		}
-		db.close();*/
 	}
 
 	LocationListener locationListener = new LocationListener() {

@@ -1,5 +1,6 @@
 package edu.ycp.cs481.arna.client.ui;
 
+import edu.ycp.cs481.shared.persistence.POIDataSource;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.widget.Button;
 
 public class MainMenu extends Activity {
 
+
 	
 	Button Tours;
 	Button Compasses;
@@ -16,6 +18,10 @@ public class MainMenu extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+	    
+	    
+	    
 		setContentView(R.layout.activity_main_menu);
 		Tours = (Button) findViewById(R.id.button1);
 		Compasses = (Button) findViewById(R.id.button2);

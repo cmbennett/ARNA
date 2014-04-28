@@ -12,7 +12,7 @@ public class TourModeTest extends TestCase {
 	protected void setUp() throws Exception {
 		user = new User();
 		poi = new POI(39.949120, -76.735165,0.0); // kinsley
-		test = new TourMode();
+		test = new TourMode(null);
 		test.setUser(user); 
 		user.setLocation(39.949778, -76.734095,0.0); // middle of the road outside Kinsley
 		test.addWaypoint(poi);

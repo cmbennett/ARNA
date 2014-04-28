@@ -12,7 +12,7 @@ public class TourController {
 	}
 	
 	public TourController() {
-		tour = new TourMode(); 
+		tour = new TourMode(null); 
 	}
 
 	public void setModel(TourMode t){

@@ -55,7 +55,7 @@ public class POIList {
 			locY = cursor.getDouble(4);
 			locZ = cursor.getDouble(5);
 			try {
-				addPOI(new POI(id, name, description, locX, locY, locZ));
+				addPOI(new POI( name, description, locX, locY, locZ));
 			} catch (POIException e) {
 				e.printStackTrace();
 			}

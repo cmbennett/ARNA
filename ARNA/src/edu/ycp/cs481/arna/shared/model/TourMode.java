@@ -3,20 +3,51 @@ package edu.ycp.cs481.arna.shared.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
+import edu.ycp.cs481.arna.client.ui.POISingleton;
+import edu.ycp.cs481.shared.persistence.POIDataSource;
+
 
 public class TourMode extends Mode {
-	
+
+
 	private List<POI> onScreen;
 	private static double CUTOFF = 9999999; //400
-	
-	public TourMode(User u, List<POI> wpList) {
+	private POIDataSource datasource;
+
+	public TourMode(User u, List<POI> wpList, POIDataSource datasource) {
 		super(u, wpList); 
 		onScreen = new ArrayList<POI>(); 
+		this.datasource = datasource;
+		
+			POISingleton.getInstance();
+			this.setWpList(POISingleton.getPOIS(datasource));
+		
+
 	}
-	
-	public TourMode() {
+
+	public TourMode(POIDataSource datasource) {
 		super(new User(), new ArrayList<POI>()); 
 		onScreen = new ArrayList<POI>(); 
+		this.datasource = datasource;
+	
+			POISingleton.getInstance();
+			this.setWpList(POISingleton.getPOIS(datasource));
+		
+
+		for(int i = 0; i < wpList.size(); i++)
+		{
+
+			System.out.println(wpList.get(i).getID());
+			System.out.println(wpList.get(i).getName());
+			System.out.println(wpList.get(i).getDescription());
+			System.out.println(wpList.get(i).getLocation().getLatitude());
+			System.out.println(wpList.get(i).getLocation().getLongitude());
+			System.out.println(wpList.get(i).getLocation().getElevation());
+
+
+
+		}
 	}
 
 	public List<POI> getOnScreen() {
@@ -26,26 +57,23 @@ public class TourMode extends Mode {
 	public void setOnScreen(List<POI> onScreen) {
 		this.onScreen = onScreen;
 	}
-	
+
 	public void addWaypoint(POI w) {
 		wpList.add(w);
 	}
-	
+
 	public void removeWaypoint(POI w) {
 		onScreen.remove(w); 
 	}
-	
+
+
 	public void populateOnScreen(double cameraAngle) {
 		onScreen.clear();
-		
-		/*if(onScreen.isEmpty()){
-			System.out.println("SUCCESS"); 
-		}*/
-		
+
 		double halfAngle = cameraAngle/2; 
 		for(POI w: wpList){
 			double distance = user.getDistanceTo(w); 
-			
+
 			if(distance < CUTOFF){				
 				double bearing = user.getBearingTo(w); 
 				if(bearing < user.getOrient().getAzimuth() + halfAngle && bearing > user.getOrient().getAzimuth() - halfAngle ) {
@@ -54,41 +82,41 @@ public class TourMode extends Mode {
 			}
 		}
 	}
-	
+
 	public void computePOIVector(double horzCamAngle, double vertCamAngle, double maxX, double maxY) {
-		
+
 		double dy; 
 		double dx; 
 		double dz; 
-		
+
 		double roll = user.getOrient().getRoll()-90; 
 
-		
+
 		//Populate array of vectors (each i vector in the list corresponds with the i POI in the onScreen list)
 		for(POI w: onScreen) {
-			
+
 			//Use arc lengths and to compute a ratio of distance from azimuth to
 			//total distance at cutoff to map the coordinates to the screen
-			
+
 			//Map X using arc lengths
 			double twoPiR = 2 * Math.PI * user.getDistanceTo(w); 
-		 
+
 			double totalArc = twoPiR * (horzCamAngle / 360); 
-			
+
 			double azimuth = user.getOrient().getAzimuth(); 
 			double bearing = user.getBearingTo(w); 
 			double POIAngle = Math.abs(azimuth - bearing); 
-			
+
 			double POIArc = twoPiR * (POIAngle / 360); 
-			
+
 			//(poiarc / totalarc) = (dx / DX)
 			dx = (POIArc * maxX / totalArc); 		
-			
+
 			if(azimuth - bearing > 0){
 				dx = dx * -1; 
 			}	
 			dx = (maxX/2) + dx;
-			
+
 			//Map Y using trigonometry
 			double POIheight = w.getLocation().getElevation() - user.getLocation().getElevation(); 
 			double YtotalArc = twoPiR * (vertCamAngle / 360);
@@ -96,15 +124,15 @@ public class TourMode extends Mode {
 			double POIYAngle = Math.abs(roll - yBearing);
 			double POIYArc = twoPiR * (Math.abs(POIYAngle) / 360);
 			dy = (POIYArc * maxY) / YtotalArc; 
-			
+
 			if(roll - yBearing > 0){
 				dy = dy * -1; 
 			}
-			
+
 			dy = (maxY/2) + dy;
 			dz = 0.0; 
 			w.setVector((float) dx, (float) dy, (float) dz); 
-			
+
 			//System.out.println("dx: " + dx); 
 			//System.out.println("dy: " + dy); 
 		}
