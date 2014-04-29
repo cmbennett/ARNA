@@ -22,8 +22,6 @@ public class TourMode extends Mode {
 		
 			POISingleton.getInstance();
 			this.setWpList(POISingleton.getPOIS(datasource));
-		
-
 	}
 
 	public TourMode(POIDataSource datasource) {
@@ -35,19 +33,7 @@ public class TourMode extends Mode {
 			this.setWpList(POISingleton.getPOIS(datasource));
 		
 
-		for(int i = 0; i < wpList.size(); i++)
-		{
 
-			System.out.println(wpList.get(i).getID());
-			System.out.println(wpList.get(i).getName());
-			System.out.println(wpList.get(i).getDescription());
-			System.out.println(wpList.get(i).getLocation().getLatitude());
-			System.out.println(wpList.get(i).getLocation().getLongitude());
-			System.out.println(wpList.get(i).getLocation().getElevation());
-
-
-
-		}
 	}
 
 	public List<POI> getOnScreen() {

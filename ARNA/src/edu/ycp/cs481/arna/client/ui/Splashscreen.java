@@ -22,9 +22,6 @@ public class Splashscreen extends Activity {
 	static int width;
 	static int height;
 	
-	private POIDataSource datasource;
-
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -34,10 +31,9 @@ public class Splashscreen extends Activity {
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener); 
 		
-		datasource = new POIDataSource(this);
-	    datasource.open();
-
-		tour = new TourMode(datasource); 
+		POISingleton.getInstance();
+		POISingleton.setDataSource(this);		
+		tour = new TourMode(POISingleton.getDataSource()); 
 		cont = new TourController(tour); 
 		count = 0;
 		found = false;

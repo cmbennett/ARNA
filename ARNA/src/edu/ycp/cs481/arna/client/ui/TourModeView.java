@@ -84,8 +84,8 @@ public class TourModeView extends Activity {
 
 	
 	
-	private POIDataSource datasource;
-	// private DatabaseHelper db;
+
+	private static POIDataSource datasource;
 
 	private static final float ALPHA = 0.25f;
 
@@ -98,9 +98,7 @@ public class TourModeView extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tour_mode);
 		
-		// opens the database
-		datasource = new POIDataSource(this);
-	    datasource.open();
+	
 	    
 
 		// Initialize sensor objects.
@@ -124,10 +122,14 @@ public class TourModeView extends Activity {
 
 		
 		
-		/*POISingleton.getInstance();
-	if (POISingleton.getPOIS(datasource) == null)
-	{*/
-		cont = new TourController(new TourMode(datasource)); 
+		POISingleton.getInstance();		
+		datasource = POISingleton.getDataSource();
+		TourMode tourMode = new TourMode(datasource);
+		cont = new TourController(tourMode); 
+	
+	if (POISingleton.getPOIS(datasource).size() == 0)
+	{
+		
 		waypoints = new addingTourModeWaypoints(cont.getModel());
 		ArrayList<POI> pois = waypoints.getPOI();	
 		for (int i = 0; i < pois.size(); i++)
@@ -135,13 +137,10 @@ public class TourModeView extends Activity {
 			 // this adds the points to the database
 			datasource.addPOI(new POI( pois.get(i).getName(),pois.get(i).getDescription(), pois.get(i).getLocation().getLatitude(),
 					 pois.get(i).getLocation().getLongitude(), pois.get(i).getLocation().getElevation()));
-			
+		tourMode.addWaypoint(pois.get(i));
 	
 		}
-		
-	//}
-		
-		
+	}
 		
 
 		
@@ -326,8 +325,7 @@ public class TourModeView extends Activity {
 				
 				for(ImageView image : static_img_list) {
 					image.setVisibility(View.INVISIBLE);
-					Description.setText("");
-					Description.setVisibility(View.INVISIBLE);
+					
 				}
 
 				for (TextView ids : static_loc_list) {
@@ -338,6 +336,11 @@ public class TourModeView extends Activity {
 				// If there are points to be drawn on the screen...
 				if(!onScreenList.isEmpty() ) {	
 					renderMarkers(onScreenList);		
+				}
+				else
+				{
+					Description.setText("");
+					Description.setVisibility(View.INVISIBLE);
 				}
 			}
 		}
@@ -472,7 +475,9 @@ public class TourModeView extends Activity {
 						Description.setText(des);
 					} else {
 						if(touched)
+						{
 							Description.setVisibility(View.INVISIBLE);
+						}
 					}
 				}
 			});
