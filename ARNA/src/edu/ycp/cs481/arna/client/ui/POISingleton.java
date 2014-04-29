@@ -3,13 +3,14 @@ package edu.ycp.cs481.arna.client.ui;
 import java.util.List;
 
 import android.content.Context;
-
 import edu.ycp.cs481.arna.shared.model.POI;
+import edu.ycp.cs481.arna.shared.model.TourMode;
 import edu.ycp.cs481.shared.persistence.POIDataSource;
 
 public class POISingleton {
 
 	private static POIDataSource datasource;
+	private static TourMode tour;
 
 	private static POISingleton instance = null;
 	protected POISingleton() {
@@ -36,7 +37,26 @@ public class POISingleton {
 
 	public static List<POI> getPOIS(POIDataSource datasource)
 	{
-		List<POI> pois = datasource.getPOIs();	   
+		List<POI> pois = datasource.getTourModePOIs();	   
+
+		return pois;
+
+	}
+	
+	public static void setTourMode( TourMode tourMode)
+	{
+		tour = tourMode;
+	
+	}
+
+	public static TourMode getTourMode( )
+	{
+		return tour;
+	}
+	
+	public static List<POI> getCompassPOIS(POIDataSource datasource)
+	{
+		List<POI> pois = datasource.getCompassModePOIs();	   
 
 		return pois;
 

@@ -8,9 +8,8 @@ import edu.ycp.cs481.arna.shared.model.CompassMode;
 import edu.ycp.cs481.arna.shared.model.POI;
 import edu.ycp.cs481.arna.shared.model.POIList;
 import edu.ycp.cs481.arna.shared.model.User;
-
 import edu.ycp.cs481.shared.persistence.addingCompassModeWaypoints;
-import edu.ycp.cs481.shared.persistence.addingTourModeWaypoints;
+import edu.ycp.cs481.shared.persistence.addingWaypoints;
 import android.location.LocationManager;
 import android.location.LocationListener; 
 import android.location.Location; 
@@ -88,16 +87,19 @@ public class CompassModeView extends Activity {
 		Location =  (TextView) findViewById(R.id.POI);
 		Distance =  (TextView) findViewById(R.id.DistanceTo);
 
-		/*lists = getPOIList(null);
-		compass.setWpList(lists.getList()) */
 	
 		compass = new CompassMode(new User(), null); 
 		cont = new CompassController(compass);
 
-		if (firstTime == false)
-		{
-			waypoints = new addingCompassModeWaypoints(compass);
-			firstTime = true;
+	
+	//	waypoints = new addingCompassModeWaypoints(compass);
+		POISingleton.getInstance();
+		
+		List<POI> pois = POISingleton.getCompassPOIS(POISingleton.getDataSource());
+	
+		
+		for (POI poi: pois) {
+			compass.addWaypoint(poi);
 		}
 		
 		List<String> list = new ArrayList<String>();
@@ -144,20 +146,7 @@ public class CompassModeView extends Activity {
 					}
 				});
 	}
-	/*
-	public POIList getPOIList(String tag) {
-		try {
-			db.openDatabase();
-		} catch (java.sql.SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Cursor cursor = db.getCursorfromDatabase(tag);
-		POIList poi_list = new POIList();    
-		poi_list.getListFromCursor(cursor);
-		db.close();
-		return poi_list;
-	} */
+
 	
 	LocationListener locationListener = new LocationListener() {
 		// Event handler for change in location.

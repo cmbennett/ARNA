@@ -6,11 +6,11 @@ import edu.ycp.cs481.arna.shared.model.POI;
 import edu.ycp.cs481.arna.shared.model.TourMode;
 
 
-public class addingTourModeWaypoints {	
+public class addingWaypoints {	
 
 	
 	private ArrayList<POI> pois;
-	public addingTourModeWaypoints(TourMode tour) {
+	public addingWaypoints(TourMode tour) {
 		pois  = new ArrayList<POI>();
 			    
 		// adding waypoints to the tour mode		 

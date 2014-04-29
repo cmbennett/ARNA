@@ -1,8 +1,12 @@
 package edu.ycp.cs481.arna.client.ui;
 
+import java.util.ArrayList;
+
 import edu.ycp.cs481.arna.client.uicontroller.TourController;
+import edu.ycp.cs481.arna.shared.model.POI;
 import edu.ycp.cs481.arna.shared.model.TourMode;
 import edu.ycp.cs481.shared.persistence.POIDataSource;
+import edu.ycp.cs481.shared.persistence.addingWaypoints;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -22,6 +26,8 @@ public class Splashscreen extends Activity {
 	static int width;
 	static int height;
 	
+	addingWaypoints waypoints;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,10 +39,30 @@ public class Splashscreen extends Activity {
 		
 		POISingleton.getInstance();
 		POISingleton.setDataSource(this);		
+		
+		
+		
 		tour = new TourMode(POISingleton.getDataSource()); 
+		
+		POISingleton.setTourMode(tour);	
 		cont = new TourController(tour); 
 		count = 0;
-		found = false;
+		found = false; 
+		
+		if (POISingleton.getPOIS(POISingleton.getDataSource()).size() == 0)
+		{
+			
+			waypoints = new addingWaypoints(cont.getModel());
+			ArrayList<POI> pois = waypoints.getPOI();	
+			for (int i = 0; i < pois.size(); i++)
+			{
+				 // this adds the points to the database
+				POISingleton.getDataSource().addPOI(new POI( pois.get(i).getName(),pois.get(i).getDescription(), pois.get(i).getLocation().getLatitude(),
+						 pois.get(i).getLocation().getLongitude(), pois.get(i).getLocation().getElevation()));
+			tour.addWaypoint(pois.get(i));
+		
+			}
+		}
 		
 
 	}

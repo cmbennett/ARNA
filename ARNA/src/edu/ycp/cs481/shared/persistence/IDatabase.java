@@ -11,7 +11,7 @@ public interface IDatabase {
 	 * 
 	 * @return the current notes (list of {@link Note}s
 	 */
-	public List<POI> getPOIs();
+	public List<POI> getTourModePOIs();
 	
 	
 	public POI getPOI(String name);
@@ -22,6 +22,9 @@ public interface IDatabase {
 	 * @param item the {@link Item} to add
 	 */
 	public void addPOI(POI poi);
+
+
+	public List<POI> getCompassModePOIs();
 
 
 }

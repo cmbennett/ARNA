@@ -50,7 +50,7 @@ public class POIDataSource implements IDatabase {
 		poi.setID(insertId);
 	}
 	@Override
-	public List<POI> getPOIs() {		
+	public List<POI> getTourModePOIs() {		
 
 		List<POI> pois = new ArrayList<POI>();
 
@@ -68,6 +68,43 @@ public class POIDataSource implements IDatabase {
 		// make sure to close the cursor
 		cursor.close();
 		return pois;
+	}
+	
+	@Override
+	public List<POI> getCompassModePOIs() {		
+
+		List<POI> pois = new ArrayList<POI>();
+
+		Cursor cursor = database.query(MySQLiteHelper.POI_LIST,
+				allColumns, null, null, null, null, null);
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			POI poi = cursorToCompassPOI(cursor);
+			pois.add(poi);
+
+			cursor.moveToNext();
+
+		}
+		// make sure to close the cursor
+		cursor.close();
+		return pois;
+	}
+
+	// ORM method
+	private POI cursorToCompassPOI(Cursor cursor) {
+		// must add the poi in this order, ID, NAME,DESCRIPTION , LOCATION
+
+		POI poi = new POI();
+		poi.setID(cursor.getLong(0));
+		poi.setName(cursor.getString(1));
+		
+		String location = cursor.getString(3);
+		String delims = "[ ]";
+		String[] tokens = location.split(delims);
+
+		poi.setLocation(Double.parseDouble(tokens[0]), Double.parseDouble(tokens[1]),Double.parseDouble(tokens[2]));
+		return poi;
 	}
 
 	// get a single POI

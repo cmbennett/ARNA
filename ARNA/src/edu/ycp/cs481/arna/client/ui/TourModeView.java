@@ -10,7 +10,7 @@ import edu.ycp.cs481.arna.client.uicontroller.TourController;
 import edu.ycp.cs481.arna.shared.model.POI;
 import edu.ycp.cs481.arna.shared.model.TourMode;
 import edu.ycp.cs481.shared.persistence.POIDataSource;
-import edu.ycp.cs481.shared.persistence.addingTourModeWaypoints;
+import edu.ycp.cs481.shared.persistence.addingWaypoints;
 import android.location.LocationManager;
 import android.location.LocationListener; 
 import android.location.Location; 
@@ -51,7 +51,7 @@ public class TourModeView extends Activity {
 	LocationManager locationManager; 
 	int magnetometerSensor;
 
-	addingTourModeWaypoints waypoints;
+
 	TourController cont; 
 
 	float roll;
@@ -117,33 +117,12 @@ public class TourModeView extends Activity {
 
 		cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
 		previewHolder = cameraPreview.getHolder(); 
-		previewHolder.addCallback(surfaceCallback); 
-
-
-		
+		previewHolder.addCallback(surfaceCallback); 		
 		
 		POISingleton.getInstance();		
 		datasource = POISingleton.getDataSource();
 		TourMode tourMode = new TourMode(datasource);
-		cont = new TourController(tourMode); 
-	
-	if (POISingleton.getPOIS(datasource).size() == 0)
-	{
-		
-		waypoints = new addingTourModeWaypoints(cont.getModel());
-		ArrayList<POI> pois = waypoints.getPOI();	
-		for (int i = 0; i < pois.size(); i++)
-		{
-			 // this adds the points to the database
-			datasource.addPOI(new POI( pois.get(i).getName(),pois.get(i).getDescription(), pois.get(i).getLocation().getLatitude(),
-					 pois.get(i).getLocation().getLongitude(), pois.get(i).getLocation().getElevation()));
-		tourMode.addWaypoint(pois.get(i));
-	
-		}
-	}
-		
-
-		
+		cont = new TourController(tourMode); 		
 		
 
 		// Night mode.
