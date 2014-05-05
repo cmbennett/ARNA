@@ -52,6 +52,8 @@ public class TourModeView extends Activity {
 	int magnetometerSensor;
 
 
+	TourMode tourMode;
+
 	TourController cont; 
 
 	float roll;
@@ -82,8 +84,8 @@ public class TourModeView extends Activity {
 
 	Point size = new Point();
 
-	
-	
+
+
 
 	private static POIDataSource datasource;
 
@@ -96,10 +98,7 @@ public class TourModeView extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_tour_mode);
-		
-	
-	    
+		setContentView(R.layout.activity_tour_mode);	    
 
 		// Initialize sensor objects.
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
@@ -118,12 +117,12 @@ public class TourModeView extends Activity {
 		cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
 		previewHolder = cameraPreview.getHolder(); 
 		previewHolder.addCallback(surfaceCallback); 		
-		
+
 		POISingleton.getInstance();		
 		datasource = POISingleton.getDataSource();
-		TourMode tourMode = new TourMode(datasource);
-		cont = new TourController(tourMode); 		
-		
+		tourMode = POISingleton.getTourMode();
+		cont = POISingleton.getTourCont();		
+
 
 		// Night mode.
 		Calendar c = Calendar.getInstance();
@@ -301,25 +300,32 @@ public class TourModeView extends Activity {
 						dynamic_loc_list.remove(dynamic_loc_list.size()-1); // Remove a TextView object.
 					} while(dynamic_list.size() > onScreenList.size() && dynamic_loc_list.size() > onScreenList.size());
 				}
-				
-				for(ImageView image : static_img_list) {
-					image.setVisibility(View.INVISIBLE);
-					
-				}
 
-				for (TextView ids : static_loc_list) {
-					ids.setText(""); // If not empty...
-					ids.setVisibility(View.INVISIBLE); 
-				}
+
 
 				// If there are points to be drawn on the screen...
 				if(!onScreenList.isEmpty() ) {	
 					renderMarkers(onScreenList);		
 				}
-				else
+				else if (onScreenList.isEmpty())
 				{
+
 					Description.setText("");
 					Description.setVisibility(View.INVISIBLE);
+					
+					// makes images not appear when they are supposed too. 
+					
+					
+
+					/*for(ImageView image : static_img_list) {
+						image.setVisibility(View.INVISIBLE);
+
+					}
+
+					for (TextView ids : static_loc_list) {
+						ids.setText(""); // If not empty...
+						ids.setVisibility(View.INVISIBLE); 
+					}*/
 				}
 			}
 		}
@@ -425,9 +431,20 @@ public class TourModeView extends Activity {
 	@SuppressLint("NewApi")
 	private void renderMarkers( List<POI> POIList) {
 		int count = 0;
+		for(ImageView image : static_img_list) {
+			image.setVisibility(View.INVISIBLE);
+
+		}
+
+		for (TextView ids : static_loc_list) {
+			ids.setText(""); // If not empty...
+			ids.setVisibility(View.INVISIBLE); 
+		}
+
 
 		// For each PoI to be drawn onscreen...
 		for(POI poi : POIList) {	
+
 
 			// Get the horizontal displacement of the current point.
 			float x = poi.getVector().getX();
@@ -442,6 +459,57 @@ public class TourModeView extends Activity {
 
 			// Initialize ImageView object for marker display.
 			ImageView image = static_img_list.get(count);
+
+			// scale for distance 
+
+			double distance = cont.getUser().getDistanceTo(poi);
+			
+			float yDiff = 0.0f;
+			
+			TextView id = static_loc_list.get(count);
+
+			if (distance > 0 && distance <= 100)
+			{
+				image.setScaleX(1.0f);
+				image.setScaleY(1.0f);	
+				
+			id.setTextSize(25);
+			yDiff = 40.0f;
+
+			}
+			else if (distance > 100 && distance <= 200)
+			{
+				image.setScaleX(0.8f);
+				image.setScaleY(0.8f);
+				id.setTextSize(22);
+				yDiff = 30.0f;
+				
+			}
+			else if (distance > 200 && distance <= 300)
+			{
+				image.setScaleX(0.6f);
+				image.setScaleY(0.6f);
+				id.setTextSize(19);
+				yDiff = 20.0f;
+			}
+			else if (distance > 300 && distance <= 400)
+			{
+				image.setScaleX(0.4f);
+				image.setScaleY(0.4f);
+				id.setTextSize(16);
+				yDiff = 10.0f;
+			}
+
+
+			// this is to test the distance without moving from computer, remove for real result
+			else if (distance > 400 && distance <= 9000)
+			{
+				image.setScaleX(0.4f);
+				image.setScaleY(0.4f);
+				id.setTextSize(16);
+				yDiff = 10.0f;
+			}
+
 			final String des = poi.getDescription();
 			image.setVisibility(View.VISIBLE);
 			image.setOnClickListener(new View.OnClickListener(){ 
@@ -461,12 +529,11 @@ public class TourModeView extends Activity {
 				}
 			});
 
-			// Attach name to POI.
-			TextView id = static_loc_list.get(count);
+			// Attach name to POI.			
 			id.setVisibility(View.VISIBLE);
 			id.setText(poi.getName());
 			id.setX(poi.getRollingAverage());
-			id.setY(poi.getVector().getY() - 50);
+			id.setY(poi.getVector().getY() - yDiff);
 
 			count++;
 		}

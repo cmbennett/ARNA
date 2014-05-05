@@ -23,6 +23,11 @@ public class TourController {
 		return tour; 
 	}
 	
+	
+	public User getUser()
+	{
+		return tour.getUser();
+	}
 	public void updateLocation(double lat, double lon, double elev){
 		User u = tour.getUser();
 		u.setLocation(lat, lon, elev);

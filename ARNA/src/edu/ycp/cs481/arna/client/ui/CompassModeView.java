@@ -155,7 +155,7 @@ public class CompassModeView extends Activity {
 			longitude = location.getLongitude(); 
 			altitude = location.getAltitude() + GEOIDHEIGHT; 
 			
-			System.out.println(altitude);
+			//System.out.println(altitude);
 
 			cont.updateLocation(latitude, longitude, altitude); 
 		}

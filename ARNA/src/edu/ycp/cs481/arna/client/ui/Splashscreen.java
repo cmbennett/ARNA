@@ -45,7 +45,10 @@ public class Splashscreen extends Activity {
 		tour = new TourMode(POISingleton.getDataSource()); 
 		
 		POISingleton.setTourMode(tour);	
+	
+		
 		cont = new TourController(tour); 
+		POISingleton.setTourCont(cont);	
 		count = 0;
 		found = false; 
 		
