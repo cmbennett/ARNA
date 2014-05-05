@@ -75,6 +75,7 @@ public class CompassModeView extends Activity {
 
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, locationListener); 
+		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 2, locationListener); 
 
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); 
 
