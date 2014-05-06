@@ -27,16 +27,15 @@ public class Splashscreen extends Activity {
 	static int height;
 	
 	addingWaypoints waypoints;
-	boolean gotConnection = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash_screen);	
-	
-			locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
-			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener); 
-			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener); 		
+
+
+		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener); 
 		
 		POISingleton.getInstance();
 		POISingleton.setDataSource(this);		
@@ -82,10 +81,10 @@ public class Splashscreen extends Activity {
 			if(latitude > 0 && count == 5 && found ==  false)
 			{
 				cont.updateLocation(latitude, longitude, altitude); 
-				gotConnection = true;
 				Intent intent = new Intent(Splashscreen.this, MainMenu.class);  
 				startActivity(intent);
 				count = 0;
+				found = true;
 			}
 			if(count > 5)
 			{
